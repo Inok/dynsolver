@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -21,6 +22,12 @@ namespace DynamicSolver.ExpressionCompiler
 
         public IFunction Compile(string expression, string[] allowedArguments)
         {
+            if (string.IsNullOrWhiteSpace(expression))
+                throw new ArgumentException("Expression is null or empty.");
+
+            if (allowedArguments.Any(string.IsNullOrWhiteSpace))
+                throw new ArgumentException("Array has arguments with null or whitespace value.");
+
             if (allowedArguments.Distinct().Count() != allowedArguments.Length)
                 throw new ArgumentException("Array has multiple arguments with same value.");
             
@@ -28,9 +35,9 @@ namespace DynamicSolver.ExpressionCompiler
                 throw new ArgumentException("Argument has name equal to system function.");
 
             var functions = string.Join(Environment.NewLine, _systemFunctions.Values);
-            var arguments = string.Join(Environment.NewLine, allowedArguments.Select((arg, i) => $@"double {arg} = args[i];"));
+            var arguments = string.Join(Environment.NewLine, allowedArguments.Select((arg, i) => $@"double {arg} = args[{i}];"));
 
-            var sourceTemplate = CSharpSyntaxTree.ParseText(
+            var sourceSyntaxTree = CSharpSyntaxTree.ParseText(
 $@"using System;
 namespace DynamicSolver.DynamicFunctionCompilation {{
 public class FunctionContainer : {typeof (IFunction).FullName} {{
@@ -49,7 +56,7 @@ return {expression};
             };
 
             var compilation = CSharpCompilation.Create(
-                assemblyName, new[] {sourceTemplate}, references,
+                assemblyName, new[] {sourceSyntaxTree}, references,
                 new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
             using (var ms = new MemoryStream())
@@ -58,6 +65,7 @@ return {expression};
 
                 if (!result.Success)
                 {
+                    Console.Error.WriteLine(sourceSyntaxTree.GetText().ToString());
                     var failures = result.Diagnostics.Where(diagnostic =>
                         diagnostic.IsWarningAsError ||
                         diagnostic.Severity == DiagnosticSeverity.Error);
