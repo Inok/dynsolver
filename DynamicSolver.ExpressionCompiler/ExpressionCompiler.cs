@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,14 +13,18 @@ namespace DynamicSolver.ExpressionCompiler
 {
     public class ExpressionCompiler : IExpressionCompiler
     {
-        private readonly IDictionary<string, string> _systemFunctions = new Dictionary<string, string>()
+        private static readonly IReadOnlyDictionary<string, string> SystemFunctions = new Dictionary<string, string>()
         {
+            {"e", "double e => Math.E;"},
             {"pi", "double pi => Math.PI;"},
             {"sin", "double sin(double arg) => Math.Sin(arg);"},
-            {"cos", "double cos(double arg) => Math.Cos(arg);"}
+            {"cos", "double cos(double arg) => Math.Cos(arg);"},
+            {"tg", "double tg(double arg) => Math.Tan(arg);"},
+            {"ctg", "double ctg(double arg) => 1.0/Math.Tan(arg);"},
+            {"exp", "double exp(double arg) => Math.Exp(arg);"},
+            {"pow", "double pow(double arg, double pow) => Math.Pow(arg, pow);"}
         };
-
-
+        
         public IFunction Compile(string expression, string[] allowedArguments)
         {
             if (string.IsNullOrWhiteSpace(expression))
@@ -31,10 +36,10 @@ namespace DynamicSolver.ExpressionCompiler
             if (allowedArguments.Distinct().Count() != allowedArguments.Length)
                 throw new ArgumentException("Array has multiple arguments with same value.");
             
-            if(allowedArguments.Any(arg => _systemFunctions.ContainsKey(arg)))
+            if(allowedArguments.Any(arg => SystemFunctions.ContainsKey(arg)))
                 throw new ArgumentException("Argument has name equal to system function.");
 
-            var functions = string.Join(Environment.NewLine, _systemFunctions.Values);
+            var functions = string.Join(Environment.NewLine, SystemFunctions.Values);
             var arguments = string.Join(Environment.NewLine, allowedArguments.Select((arg, i) => $@"double {arg} = args[{i}];"));
 
             var sourceSyntaxTree = CSharpSyntaxTree.ParseText(
