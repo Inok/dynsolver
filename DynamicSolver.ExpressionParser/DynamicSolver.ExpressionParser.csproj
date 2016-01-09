@@ -31,6 +31,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,6 +49,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DumpExtension.cs" />
+    <Compile Include="Expression\AddBinaryOperator.cs" />
+    <Compile Include="Expression\BinaryOperator.cs" />
+    <Compile Include="Expression\Constant.cs" />
+    <Compile Include="Expression\ConstantPrimitive.cs" />
+    <Compile Include="Expression\DivideBinaryOperator.cs" />
+    <Compile Include="Expression\FunctionCall.cs" />
+    <Compile Include="Expression\MultiplyBinaryOperator.cs" />
+    <Compile Include="Expression\NumericPrimitive.cs" />
+    <Compile Include="Expression\PowBinaryOperator.cs" />
+    <Compile Include="Expression\Statement.cs" />
+    <Compile Include="Expression\SubtractBinaryOperator.cs" />
+    <Compile Include="Expression\UnaryMinusOperator.cs" />
+    <Compile Include="Expression\VariablePrimitive.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -48,6 +70,12 @@
       <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
       <Name>DynamicSolver.Abstractions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
