@@ -166,6 +166,7 @@ namespace DynamicSolver.ExpressionCompiler.Tests
             Assert.That(() => compiler.Compile("x", new string[] { "" }), Throws.ArgumentException);
             Assert.That(() => compiler.Compile("x", new string[] { "  " }), Throws.ArgumentException);
             Assert.That(() => compiler.Compile("x", new string[] { "x1", "x1" }), Throws.ArgumentException);
+            Assert.That(() => compiler.Compile("cos", new string[] { "cos" }), Throws.ArgumentException);
         }
 
     }
