@@ -21,7 +21,7 @@ namespace DynamicSolver.ExpressionParser.Expression
 
         public override string ToString()
         {
-            return $"{FunctionName}({(Argument as IBinaryOperator)?.ToString(false) ?? Argument.ToString()})";
+            return $"{FunctionName}({Argument})";
         }
     }
 }

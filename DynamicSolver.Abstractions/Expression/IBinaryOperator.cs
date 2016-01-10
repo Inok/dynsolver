@@ -4,7 +4,6 @@
     {
         string OperatorToken { get; }
         IExpression LeftOperand { get; }
-        IExpression RightOperand { get; }
-        string ToString(bool addParentheses);
+        IExpression RightOperand { get; }        
     }
 }

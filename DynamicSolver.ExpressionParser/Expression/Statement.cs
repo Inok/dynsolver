@@ -13,7 +13,7 @@ namespace DynamicSolver.ExpressionParser.Expression
 
         public override string ToString()
         {
-            return (Expression as IBinaryOperator)?.ToString(false) ?? Expression.ToString();
+            return Expression.ToString();
         }
     }
 }

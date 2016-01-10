@@ -17,7 +17,7 @@ namespace DynamicSolver.ExpressionParser.Expression
 
         public override string ToString()
         {
-            return $"-{Operand}";
+            return Operand is IBinaryOperator ? $"-({Operand})" : $"-{Operand}";
         }
     }
 }
