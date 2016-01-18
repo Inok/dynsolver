@@ -1,9 +1,0 @@
-language: csharp
-solution: DynamicSolver.sln
-install:
-  - nuget restore DynamicSolver.sln
-  - nuget install NUnit.Runners -Version 3.0.1 -OutputDirectory testrunner
-script:
-  - xbuild /p:Configuration=Release DynamicSolver.sln
-  - mono ./testrunner/NUnit.Runners.3.0.1/tools/nunit-console.exe ./artifacts/Release/DynamicSolver.ExpressionParser.Tests.dll
-  - mono ./testrunner/NUnit.Runners.3.0.1/tools/nunit-console.exe ./artifacts/Release/DynamicSolver.ExpressionCompiler.Tests.dll
