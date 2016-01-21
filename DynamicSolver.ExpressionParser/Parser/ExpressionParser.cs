@@ -24,17 +24,65 @@ namespace DynamicSolver.ExpressionParser.Parser
 
         private static IExpression ParseExpr(Lexer lexer)
         {
-            return ParseMulDiv(lexer);
+            var expr = ParseMulDiv(lexer);
+
+            while (true)
+            {
+                if (lexer.AdvanceToken('+'))
+                {
+                    var right = ParseMulDiv(lexer);
+                    expr = new AddBinaryOperator(expr, right);
+                    continue;
+                }
+
+                if (lexer.AdvanceToken('-'))
+                {
+                    var right = ParseMulDiv(lexer);
+                    expr = new SubtractBinaryOperator(expr, right);
+                    continue;
+                }
+                break;
+            }
+
+            return expr;
         }
 
         private static IExpression ParseMulDiv(Lexer lexer)
         {
-            return ParsePow(lexer);
+            var expr = ParsePow(lexer);
+
+            while (true)
+            {
+                if (lexer.AdvanceToken('*'))
+                {
+                    var right = ParsePow(lexer);
+                    expr = new MultiplyBinaryOperator(expr, right);
+                    continue;
+                }
+
+                if (lexer.AdvanceToken('/'))
+                {
+                    var right = ParsePow(lexer);
+                    expr = new DivideBinaryOperator(expr, right);
+                    continue;
+                }
+                break;
+            }
+
+            return expr;
         }
 
         private static IExpression ParsePow(Lexer lexer)
         {
-            return ParseFactor(lexer);
+            var expr = ParseFactor(lexer);
+
+            while (lexer.AdvanceToken('^'))
+            {
+                var right = ParseFactor(lexer);
+                expr = new PowBinaryOperator(expr, right);
+            }
+
+            return expr;
         }
 
         private static IExpression ParseFactor(Lexer lexer)
@@ -45,24 +93,22 @@ namespace DynamicSolver.ExpressionParser.Parser
                 throw new FormatException("Primitive expected, but was <empty>");
             }
 
-            if (lexer.Input[0] == '(')
+            if (lexer.AdvanceToken('('))
             {
-                lexer.Advance();
                 lexer.SkipLeadingWhitespaces();
 
                 var expr = ParseExpr(lexer);
 
                 lexer.SkipLeadingWhitespaces();
-                if (lexer.IsEmpty || lexer.Input[0] != ')')
+                if (!lexer.AdvanceToken(')'))
+                {
                     throw new FormatException($"Closing parenthesis expected, but was {lexer.Input}");
-                lexer.Advance();
+                }
                 return expr;
             }
 
-            if (lexer.Input[0] == '-')
+            if (lexer.AdvanceToken('-'))
             {
-                lexer.Advance();
-
                 lexer.SkipLeadingWhitespaces();
                 if (!lexer.IsEmpty && lexer.Input[0] == '-')
                 {
@@ -124,16 +170,16 @@ namespace DynamicSolver.ExpressionParser.Parser
                 return new ConstantPrimitive(constant);
             }
 
-            if (!lexer.IsEmpty && lexer.Input[0] == '(')
+            if (lexer.AdvanceToken('(', false))
             {
-                lexer.Advance();
                 var childExpr = ParseExpr(lexer);
+
                 lexer.SkipLeadingWhitespaces();
-                if (lexer.IsEmpty || lexer.Input[0] != ')')
+                if (!lexer.AdvanceToken(')'))
                 {
                     throw new FormatException($"Closing parenthesis expected, but was {lexer.Input}");
                 }
-                lexer.Advance();
+
                 return new FunctionCall(identifier, childExpr);
             }
 

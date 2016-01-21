@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using DynamicSolver.Abstractions.Expression;
 using DynamicSolver.ExpressionParser.Expression;
@@ -12,11 +13,11 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
     {
         private class ParserLoggingWrapper : IExpressionParser
         {
-            private readonly IExpressionParser wrappedParser;
+            private readonly IExpressionParser _wrappedParser;
 
             public ParserLoggingWrapper(IExpressionParser parser)
             {
-                wrappedParser = parser;
+                _wrappedParser = parser;
             }
 
             public IStatement Parse(string inputExpression)
@@ -25,7 +26,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
 
                 try
                 {
-                    var result = wrappedParser.Parse(inputExpression);
+                    var result = _wrappedParser.Parse(inputExpression);
 
                     Console.WriteLine("Result: " + result.Dump());
                     return result;
@@ -117,7 +118,24 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             Assert.That(function.FunctionName, Is.EqualTo(expectedFunctionName));
             Assert.That(function.Argument, Is.InstanceOf<NumericPrimitive>());
             Assert.That(((NumericPrimitive)function.Argument).Token, Is.EqualTo(expectedArgumentToken));
-            Assert.That(((NumericPrimitive)function.Argument).Value, Is.EqualTo(double.Parse(expectedArgumentToken, new NumberFormatInfo() {NumberDecimalSeparator = "."})));
+            Assert.That(((NumericPrimitive)function.Argument).Value, Is.EqualTo(double.Parse(expectedArgumentToken, new NumberFormatInfo {NumberDecimalSeparator = "."})));
+        }
+
+        [Test]
+        public void ParseFunctionCall_WhenFunctionArgumentIsFunction_ReturnsCorrectStatement()
+        {
+            var actual = _parser.Parse("sin(cos(pi))");
+
+            Assert.That(actual.Expression, Is.InstanceOf<FunctionCall>());
+
+            var function = (FunctionCall)actual.Expression;
+            Assert.That(function.FunctionName, Is.EqualTo("sin"));
+            Assert.That(function.Argument, Is.InstanceOf<FunctionCall>());
+
+            var nestedFunction = (FunctionCall)function.Argument;
+            Assert.That(nestedFunction.FunctionName, Is.EqualTo("cos"));
+            Assert.That(nestedFunction.Argument, Is.InstanceOf<ConstantPrimitive>());
+            Assert.That(((ConstantPrimitive)nestedFunction.Argument).Constant, Is.EqualTo(Constant.Pi));            
         }
 
         [TestCase("cos()")]
@@ -186,9 +204,129 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             var minus = (UnaryMinusOperator) actual.Expression;
             Assert.That(minus.Operand, Is.InstanceOf<ConstantPrimitive>());
 
-            var constant = ((ConstantPrimitive)minus.Operand);
+            var constant = (ConstantPrimitive)minus.Operand;
             Assert.That(constant.Constant, Is.EqualTo(Constant.Pi));
         }
 
+        [TestCase("+", typeof(AddBinaryOperator))]
+        [TestCase("-", typeof(SubtractBinaryOperator))]
+        [TestCase("*", typeof(MultiplyBinaryOperator))]
+        [TestCase("/", typeof(DivideBinaryOperator))]
+        [TestCase("^", typeof(PowBinaryOperator))]
+        public void ParseBinary_WhenFunctionCall_ReturnsCorrectStatement(string op, Type operatorType)
+        {
+            var actual = _parser.Parse($"cos(1){op}ln(t)");
+
+            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+
+            var multiply = (BinaryOperator)actual.Expression;
+            Assert.That(multiply.LeftOperand, Is.InstanceOf<FunctionCall>());
+            Assert.That(((FunctionCall)multiply.LeftOperand).FunctionName, Is.EqualTo("cos"));
+            Assert.That(((FunctionCall)multiply.LeftOperand).Argument, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("1"));
+
+            Assert.That(multiply.RightOperand, Is.InstanceOf<FunctionCall>());
+            Assert.That(((FunctionCall)multiply.RightOperand).FunctionName, Is.EqualTo("ln"));
+            Assert.That(((FunctionCall)multiply.RightOperand).Argument, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("t"));
+        }
+
+        [TestCase("+", typeof(AddBinaryOperator))]
+        [TestCase("-", typeof(SubtractBinaryOperator))]
+        [TestCase("*", typeof(MultiplyBinaryOperator))]
+        [TestCase("/", typeof(DivideBinaryOperator))]
+        [TestCase("^", typeof(PowBinaryOperator))]
+        public void ParseBinary_WhenPrimitive_ReturnsCorrectStatement(string op, Type operatorType)
+        {
+            var actual = _parser.Parse($"x{op}2");
+
+            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+
+            var pow = (BinaryOperator) actual.Expression;
+            Assert.That(pow.LeftOperand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("x"));
+            Assert.That(pow.RightOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("2"));            
+        }
+
+        [TestCase("+", typeof(AddBinaryOperator))]
+        [TestCase("-", typeof(SubtractBinaryOperator))]
+        [TestCase("*", typeof(MultiplyBinaryOperator))]
+        [TestCase("/", typeof(DivideBinaryOperator))]
+        [TestCase("^", typeof(PowBinaryOperator))]
+        public void ParseBinary_WhenParenthesized_ReturnsCorrectStatement(string op, Type operatorType)
+        {
+            var actual = _parser.Parse($"(5){op}(y)");
+
+            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+
+            var pow = (BinaryOperator) actual.Expression;
+            Assert.That(pow.LeftOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("5"));
+            Assert.That(pow.RightOperand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("y"));
+        }
+
+        [TestCase("+", typeof(AddBinaryOperator))]
+        [TestCase("-", typeof(SubtractBinaryOperator))]
+        [TestCase("*", typeof(MultiplyBinaryOperator))]
+        [TestCase("/", typeof(DivideBinaryOperator))]
+        [TestCase("^", typeof(PowBinaryOperator))]
+        public void ParseBinary_WhenUnaryMinus_ReturnsCorrectStatement(string op, Type operatorType)
+        {
+            var actual = _parser.Parse($"-x {op} -2");
+
+            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+
+            var pow = (BinaryOperator) actual.Expression;
+            Assert.That(pow.LeftOperand, Is.InstanceOf<UnaryMinusOperator>());
+            Assert.That(((UnaryMinusOperator)pow.LeftOperand).Operand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("x"));
+            Assert.That(pow.RightOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("-2"));
+        }
+
+        // ReSharper disable once UnusedMethodReturnValue.Local
+        private static IEnumerable<object[]> InvalidBinaryCases()
+        {
+            var samples = new[] {"5#", "4# ", "#3", " #2", "1##0"};
+            var operators = new[] {"^", "*", "/", " +"};
+            foreach (var sample in samples)
+            {
+                foreach (var op in operators)
+                {
+                    yield return new object[] {sample.Replace("#", op)};
+                }
+            }
+
+            yield return new object[] {"5-"};
+            yield return new object[] {"4- "};            
+        }
+
+        [TestCaseSource(nameof(InvalidBinaryCases))]
+        public void ParseBinary_WhenInvalid_ThrowsFormatException(string input)
+        {
+            Assert.That(() => _parser.Parse(input), Throws.TypeOf<FormatException>());
+        }
+
+        [Test]
+        public void ParseComplexExpression_ReturnsCorrectStatement()
+        {
+            IStatement expected = new Statement(
+                new DivideBinaryOperator(
+                    new FunctionCall("cos",
+                        new MultiplyBinaryOperator(
+                            new UnaryMinusOperator(new VariablePrimitive("x")),
+                            new ConstantPrimitive(Constant.Pi))),
+                    new UnaryMinusOperator(
+                        new PowBinaryOperator(
+                            new SubtractBinaryOperator(
+                                new NumericPrimitive("-1.5"),
+                                new FunctionCall("ln", new VariablePrimitive("x"))),
+                            new SubtractBinaryOperator(
+                                new AddBinaryOperator(
+                                    new NumericPrimitive("1"),
+                                    new MultiplyBinaryOperator(
+                                        new VariablePrimitive("x"),
+                                        new ConstantPrimitive(Constant.E))
+                                    ),
+                                new ConstantPrimitive(Constant.Pi))
+                            )))
+                );
+
+            Assert.That(_parser.Parse("cos(-x * pi) / -((-1.5 - ln(x)) ^ (1 + x * e - pi))").Dump(), Is.EqualTo(expected.Dump()));
+        }
     }
 }

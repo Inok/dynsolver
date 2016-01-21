@@ -30,6 +30,27 @@ namespace DynamicSolver.ExpressionParser.Parser
             Input = Input.Substring(1);
         }
 
+        public bool AdvanceToken(char token, bool skipLeadingWhitespaces = true)
+        {
+            if(skipLeadingWhitespaces)
+            {
+                SkipLeadingWhitespaces();
+            }
+
+            if (IsEmpty)
+            {
+                return false;
+            }
+            
+            if (Input[0] == token)
+            {
+                Advance();
+                return true;
+            }
+
+            return false;
+        }
+
         public NumericPrimitive ReadNumeric()
         {
             var number = string.Empty;
