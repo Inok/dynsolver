@@ -1,0 +1,28 @@
+version: 0.0.0.{build}
+
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}-{branch}'
+
+nuget:
+  disable_publish_on_pr: true
+
+  
+configuration: Release
+  
+before_build:
+- cmd: nuget restore
+
+build:
+  parallel: true
+  verbosity: minimal
+
+artifacts:
+- path: artifacts/Release
+  name: artifacts
+  
+pull_requests:
+  do_not_increment_build_number: true
