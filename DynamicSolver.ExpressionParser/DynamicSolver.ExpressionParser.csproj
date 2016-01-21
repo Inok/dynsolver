@@ -65,6 +65,9 @@
     <Compile Include="Expression\SubtractBinaryOperator.cs" />
     <Compile Include="Expression\UnaryMinusOperator.cs" />
     <Compile Include="Expression\VariablePrimitive.cs" />
+    <Compile Include="Parser\ExpressionParser.cs" />
+    <Compile Include="Parser\IExpressionParser.cs" />
+    <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +82,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

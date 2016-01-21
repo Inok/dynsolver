@@ -17,7 +17,7 @@ namespace DynamicSolver.ExpressionParser.Expression
 
             Token = token;
             
-            Value = double.Parse(token, DoubleFormat);
+            Value = double.Parse(token, NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint, DoubleFormat);
         }
 
         public override string ToString()
