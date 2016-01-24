@@ -213,6 +213,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         [TestCase("*", typeof(MultiplyBinaryOperator))]
         [TestCase("/", typeof(DivideBinaryOperator))]
         [TestCase("^", typeof(PowBinaryOperator))]
+        [TestCase("=", typeof(EqualityBinaryOperator))]
         public void ParseBinary_WhenFunctionCall_ReturnsCorrectStatement(string op, Type operatorType)
         {
             var actual = _parser.Parse($"cos(1){op}ln(t)");
@@ -234,6 +235,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         [TestCase("*", typeof(MultiplyBinaryOperator))]
         [TestCase("/", typeof(DivideBinaryOperator))]
         [TestCase("^", typeof(PowBinaryOperator))]
+        [TestCase("=", typeof(EqualityBinaryOperator))]
         public void ParseBinary_WhenPrimitive_ReturnsCorrectStatement(string op, Type operatorType)
         {
             var actual = _parser.Parse($"x{op}2");
@@ -250,6 +252,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         [TestCase("*", typeof(MultiplyBinaryOperator))]
         [TestCase("/", typeof(DivideBinaryOperator))]
         [TestCase("^", typeof(PowBinaryOperator))]
+        [TestCase("=", typeof(EqualityBinaryOperator))]
         public void ParseBinary_WhenParenthesized_ReturnsCorrectStatement(string op, Type operatorType)
         {
             var actual = _parser.Parse($"(5){op}(y)");
@@ -266,6 +269,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         [TestCase("*", typeof(MultiplyBinaryOperator))]
         [TestCase("/", typeof(DivideBinaryOperator))]
         [TestCase("^", typeof(PowBinaryOperator))]
+        [TestCase("=", typeof(EqualityBinaryOperator))]
         public void ParseBinary_WhenUnaryMinus_ReturnsCorrectStatement(string op, Type operatorType)
         {
             var actual = _parser.Parse($"-x {op} -2");
@@ -282,7 +286,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         private static IEnumerable<object[]> InvalidBinaryCases()
         {
             var samples = new[] {"5#", "4# ", "#3", " #2", "1##0"};
-            var operators = new[] {"^", "*", "/", " +"};
+            var operators = new[] {"^", "*", "/", " +", "="};
             foreach (var sample in samples)
             {
                 foreach (var op in operators)
@@ -305,28 +309,30 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         public void ParseComplexExpression_ReturnsCorrectStatement()
         {
             IStatement expected = new Statement(
-                new DivideBinaryOperator(
-                    new FunctionCall("cos",
-                        new MultiplyBinaryOperator(
-                            new UnaryMinusOperator(new VariablePrimitive("x")),
-                            new ConstantPrimitive(Constant.Pi))),
-                    new UnaryMinusOperator(
-                        new PowBinaryOperator(
-                            new SubtractBinaryOperator(
-                                new NumericPrimitive("-1.5"),
-                                new FunctionCall("ln", new VariablePrimitive("x"))),
-                            new SubtractBinaryOperator(
-                                new AddBinaryOperator(
-                                    new NumericPrimitive("1"),
-                                    new MultiplyBinaryOperator(
-                                        new VariablePrimitive("x"),
-                                        new ConstantPrimitive(Constant.E))
-                                    ),
-                                new ConstantPrimitive(Constant.Pi))
-                            )))
+                new EqualityBinaryOperator(
+                    new VariablePrimitive("y"),
+                    new DivideBinaryOperator(
+                        new FunctionCall("cos",
+                            new MultiplyBinaryOperator(
+                                new UnaryMinusOperator(new VariablePrimitive("x")),
+                                new ConstantPrimitive(Constant.Pi))),
+                        new UnaryMinusOperator(
+                            new PowBinaryOperator(
+                                new SubtractBinaryOperator(
+                                    new NumericPrimitive("-1.5"),
+                                    new FunctionCall("ln", new VariablePrimitive("x"))),
+                                new SubtractBinaryOperator(
+                                    new AddBinaryOperator(
+                                        new NumericPrimitive("1"),
+                                        new MultiplyBinaryOperator(
+                                            new VariablePrimitive("x"),
+                                            new ConstantPrimitive(Constant.E))
+                                        ),
+                                    new ConstantPrimitive(Constant.Pi))
+                                ))))
                 );
 
-            Assert.That(_parser.Parse("cos(-x * pi) / -((-1.5 - ln(x)) ^ (1 + x * e - pi))").Dump(), Is.EqualTo(expected.Dump()));
+            Assert.That(_parser.Parse("y = cos(-x * pi) / -((-1.5 - ln(x)) ^ (1 + x * e - pi))").Dump(), Is.EqualTo(expected.Dump()));
         }
     }
 }

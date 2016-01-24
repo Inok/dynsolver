@@ -4,7 +4,7 @@ using DynamicSolver.Abstractions.Expression;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public class NumericPrimitive : IPrimitive
+    public class NumericPrimitive : IValuePrimitive, IPrimitive
     {
         private static readonly IFormatProvider DoubleFormat = new NumberFormatInfo() { NumberDecimalSeparator = "." };
 

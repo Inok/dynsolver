@@ -6,5 +6,10 @@ namespace DynamicSolver.Abstractions.Expression
     {
         [NotNull]
         IExpression Expression { get; }
+
+        bool IsEquation { get; }
+
+        [NotNull]
+        IEquation ToEquation();
     }
 }

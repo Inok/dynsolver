@@ -22,6 +22,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Expression
             yield return new object[] { Create<MultiplyBinaryOperator>(), Create<MultiplyBinaryOperator>()};
             yield return new object[] { Create<DivideBinaryOperator>(), Create<DivideBinaryOperator>()};
             yield return new object[] { Create<PowBinaryOperator>(), Create<PowBinaryOperator>()};
+            yield return new object[] { Create<EqualityBinaryOperator>(), Create<EqualityBinaryOperator>()};
         }
 
         [TestCaseSource(nameof(CompareEqualCases))]
@@ -33,14 +34,22 @@ namespace DynamicSolver.ExpressionParser.Tests.Expression
 
         private static IEnumerable<object[]> CompareNotEqualCases()
         {
+            yield return new object[] { Create<AddBinaryOperator>(), Create<EqualityBinaryOperator>() };
+            yield return new object[] { Create<SubtractBinaryOperator>(), Create<EqualityBinaryOperator>() };
+
+            yield return new object[] { Create<MultiplyBinaryOperator>(), Create<EqualityBinaryOperator>() };
             yield return new object[] { Create<MultiplyBinaryOperator>(), Create<AddBinaryOperator>() };
             yield return new object[] { Create<MultiplyBinaryOperator>(), Create<SubtractBinaryOperator>() };
+
+            yield return new object[] { Create<DivideBinaryOperator>(), Create<EqualityBinaryOperator>() };
             yield return new object[] { Create<DivideBinaryOperator>(), Create<AddBinaryOperator>() };
             yield return new object[] { Create<DivideBinaryOperator>(), Create<SubtractBinaryOperator>() };
+
+            yield return new object[] { Create<PowBinaryOperator>(), Create<EqualityBinaryOperator>() };
             yield return new object[] { Create<PowBinaryOperator>(), Create<AddBinaryOperator>() };
             yield return new object[] { Create<PowBinaryOperator>(), Create<SubtractBinaryOperator>() };
             yield return new object[] { Create<PowBinaryOperator>(), Create<MultiplyBinaryOperator>() };
-            yield return new object[] { Create<PowBinaryOperator>(), Create<DivideBinaryOperator>() };
+            yield return new object[] { Create<PowBinaryOperator>(), Create<DivideBinaryOperator>() };            
         }
 
         [TestCaseSource(nameof(CompareNotEqualCases))]

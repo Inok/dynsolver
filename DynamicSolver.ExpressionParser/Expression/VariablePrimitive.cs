@@ -3,7 +3,7 @@ using DynamicSolver.Abstractions.Expression;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public class VariablePrimitive : IPrimitive
+    public class VariablePrimitive : IPrimitive, IVariablePrimitive
     {
         public string Name { get; }
 
@@ -17,6 +17,5 @@ namespace DynamicSolver.ExpressionParser.Expression
         {
             return $"{Name}";
         }
-
     }
 }

@@ -46,14 +46,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expression\IBinaryOperator.cs" />
+    <Compile Include="Expression\IEquation.cs" />
     <Compile Include="Expression\IExpression.cs" />
     <Compile Include="Expression\IFunctionCall.cs" />
+    <Compile Include="Expression\IInitialState.cs" />
+    <Compile Include="Expression\IValuePrimitive.cs" />
     <Compile Include="Expression\IPrimitive.cs" />
     <Compile Include="Expression\IStatement.cs" />
     <Compile Include="Expression\IUnaryOperator.cs" />
+    <Compile Include="Expression\IVariablePrimitive.cs" />
     <Compile Include="IDynamicSystem.cs" />
     <Compile Include="IFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Range.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

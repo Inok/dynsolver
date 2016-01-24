@@ -4,9 +4,11 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public class ConstantPrimitive : IPrimitive
+    public class ConstantPrimitive : IValuePrimitive, IPrimitive
     {
         public Constant Constant { get; }
+
+        public double Value => Constant.Value;
 
         public ConstantPrimitive([NotNull] Constant constant)
         {

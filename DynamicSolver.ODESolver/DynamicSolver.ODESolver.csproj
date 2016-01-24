@@ -4,20 +4,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{75DC424A-2F66-456D-8251-91A7290FB265}</ProjectGuid>
+    <ProjectGuid>{8650939E-2C59-40D1-B696-A9DB96CA2F0E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DynamicSolver.ExpressionParser</RootNamespace>
-    <AssemblyName>DynamicSolver.ExpressionParser</AssemblyName>
+    <RootNamespace>DynamicSolver.ODESolver</RootNamespace>
+    <AssemblyName>DynamicSolver.ODESolver</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\artifacts\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\artifacts\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,10 +32,6 @@
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -49,27 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DumpExtension.cs" />
-    <Compile Include="Expression\AddBinaryOperator.cs" />
-    <Compile Include="Expression\BinaryOperator.cs" />
-    <Compile Include="Expression\BinaryOperatorsPriorityComparer.cs" />
-    <Compile Include="Expression\Constant.cs" />
-    <Compile Include="Expression\ConstantPrimitive.cs" />
-    <Compile Include="Expression\DivideBinaryOperator.cs" />
-    <Compile Include="Expression\EqualityBinaryOperator.cs" />
-    <Compile Include="Expression\Equation.cs" />
-    <Compile Include="Expression\ExpressionFormatter.cs" />
-    <Compile Include="Expression\FunctionCall.cs" />
-    <Compile Include="Expression\MultiplyBinaryOperator.cs" />
-    <Compile Include="Expression\NumericPrimitive.cs" />
-    <Compile Include="Expression\PowBinaryOperator.cs" />
-    <Compile Include="Expression\Statement.cs" />
-    <Compile Include="Expression\SubtractBinaryOperator.cs" />
-    <Compile Include="Expression\UnaryMinusOperator.cs" />
-    <Compile Include="Expression\VariablePrimitive.cs" />
-    <Compile Include="Parser\ExpressionParser.cs" />
-    <Compile Include="Parser\IExpressionParser.cs" />
-    <Compile Include="Parser\Lexer.cs" />
+    <Compile Include="DynamicSystem.cs" />
+    <Compile Include="ISolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,14 +53,14 @@
       <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
       <Name>DynamicSolver.Abstractions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
+      <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
+      <Name>DynamicSolver.ExpressionParser</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
