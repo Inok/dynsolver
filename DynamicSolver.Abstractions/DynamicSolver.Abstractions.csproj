@@ -52,7 +52,7 @@
     <Compile Include="Expression\IStatement.cs" />
     <Compile Include="Expression\IUnaryOperator.cs" />
     <Compile Include="IDynamicSystem.cs" />
-    <Compile Include="IFunction.cs" />
+    <Compile Include="IExecutableFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

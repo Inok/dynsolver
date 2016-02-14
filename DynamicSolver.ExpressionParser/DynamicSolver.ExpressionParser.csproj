@@ -69,6 +69,7 @@
     <Compile Include="Parser\IExpressionParser.cs" />
     <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\ExpressionVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">

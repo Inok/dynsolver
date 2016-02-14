@@ -4,6 +4,6 @@ namespace DynamicSolver.Abstractions
 {
     public interface IDynamicSystem
     {
-        ICollection<IFunction> Functions { get; set; }
+        ICollection<IExecutableFunction> Functions { get; set; }
     }
 }

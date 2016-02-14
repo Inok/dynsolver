@@ -1,44 +1,54 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using JetBrains.Annotations;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
 namespace DynamicSolver.ExpressionParser
 {
+    public class DumpSettings
+    {
+        public static DumpSettings Default { get; } = new DumpSettings();
+        public static DumpSettings Inline { get; } = new DumpSettings() { Indented = false };
+
+        public bool Indented { get; set; }
+
+        public bool IgnoreLoopReferences { get; set; }
+
+        public bool IgnoreExceptionsWhenSerialize { get; set; }
+
+        public bool IgnoreNull { get; set; }
+
+        public bool IncludeTypes { get; set; }
+
+        public bool EnumAsString { get; set; }
+
+        public DumpSettings()
+        {
+            Indented = true;
+            IgnoreLoopReferences = true;
+            IgnoreExceptionsWhenSerialize = true;
+            IgnoreNull = false;
+            IncludeTypes = true;
+            EnumAsString = true;
+        }
+    }
+
     public static class DumpExtension
     {
-        public class DumpSettings
-        {
-            public static DumpSettings Default { get; } = new DumpSettings();
-
-            public bool Indented { get; set; }
-
-            public bool IgnoreLoopReferences { get; set; }
-
-            public bool IgnoreExceptionsWhenSerialize { get; set; }
-
-            public bool IgnoreNull { get; set; }
-
-            public bool IncludeTypes { get; set; }
-
-            public bool EnumAsString { get; set; }
-
-            public DumpSettings()
-            {
-                Indented = true;
-                IgnoreLoopReferences = true;
-                IgnoreExceptionsWhenSerialize = true;
-                IgnoreNull = false;
-                IncludeTypes = true;
-                EnumAsString = true;
-            }
-        }
-
         public static string Dump(this object _this)
         {
             return _this.Dump(DumpSettings.Default);
         }
 
-        public static string Dump(this object _this, DumpSettings settings)
+        public static string DumpInline(this object _this)
         {
+            return _this.Dump(DumpSettings.Inline);
+        }
+
+        public static string Dump(this object _this, [NotNull] DumpSettings settings)
+        {
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+
             var serializerSettings = new JsonSerializerSettings()
             {
                 Formatting = settings.Indented ? Formatting.Indented : Formatting.None,

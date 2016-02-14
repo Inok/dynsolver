@@ -4,6 +4,6 @@ namespace DynamicSolver.ExpressionCompiler
 {
     public interface IExpressionCompiler
     {
-        IFunction Compile(string expression, string[] allowedArguments);
+        IExecutableFunction Compile(string expression, string[] allowedArguments);
     }
 }
