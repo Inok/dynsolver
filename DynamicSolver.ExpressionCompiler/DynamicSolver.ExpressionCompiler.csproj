@@ -62,8 +62,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExpressionCompiler.cs" />
-    <Compile Include="IExpressionCompiler.cs" />
+    <Compile Include="Compiler\ExpressionCompiler.cs" />
+    <Compile Include="Compiler\IExpressionCompiler.cs" />
     <Compile Include="Interpreter\InterpretedFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

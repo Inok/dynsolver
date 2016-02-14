@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DynamicSolver.Abstractions;
 using DynamicSolver.Abstractions.Expression;
-using DynamicSolver.ExpressionParser;
+using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.ExpressionParser.Expression;
 using DynamicSolver.ExpressionParser.Tools;
 using JetBrains.Annotations;

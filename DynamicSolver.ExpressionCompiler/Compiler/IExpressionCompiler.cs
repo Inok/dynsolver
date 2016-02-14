@@ -1,6 +1,6 @@
 ﻿using DynamicSolver.Abstractions;
 
-namespace DynamicSolver.ExpressionCompiler
+namespace DynamicSolver.ExpressionCompiler.Compiler
 {
     public interface IExpressionCompiler
     {

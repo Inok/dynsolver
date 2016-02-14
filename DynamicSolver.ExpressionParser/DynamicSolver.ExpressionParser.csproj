@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DumpExtension.cs" />
     <Compile Include="Expression\AddBinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparer.cs" />

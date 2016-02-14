@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DynamicSolver.Abstractions.Expression;
+using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.ExpressionParser.Expression;
 using DynamicSolver.ExpressionParser.Parser;
 using NUnit.Framework;

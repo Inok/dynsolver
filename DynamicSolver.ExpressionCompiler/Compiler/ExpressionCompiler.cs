@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace DynamicSolver.ExpressionCompiler
+namespace DynamicSolver.ExpressionCompiler.Compiler
 {
     public class ExpressionCompiler : IExpressionCompiler
     {

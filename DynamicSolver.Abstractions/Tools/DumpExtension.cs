@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace DynamicSolver.ExpressionParser
+namespace DynamicSolver.Abstractions.Tools
 {
     public class DumpSettings
     {
