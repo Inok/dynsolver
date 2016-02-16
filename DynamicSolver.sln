@@ -27,6 +27,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.ExpressionPar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.LinearAlgebra", "DynamicSolver.LinearAlgebra\DynamicSolver.LinearAlgebra.csproj", "{7091A9CF-91FE-440D-AF2D-B37345067114}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.LinearAlgebra.Tests", "DynamicSolver.LinearAlgebra.Tests\DynamicSolver.LinearAlgebra.Tests.csproj", "{B93DFA6D-ABF2-45A7-ADDB-5B611515A245}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45D18E47-66E2-4F45-A734-2F73FF91A507}"
+	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +68,10 @@ Global
 		{7091A9CF-91FE-440D-AF2D-B37345067114}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7091A9CF-91FE-440D-AF2D-B37345067114}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7091A9CF-91FE-440D-AF2D-B37345067114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B93DFA6D-ABF2-45A7-ADDB-5B611515A245}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B93DFA6D-ABF2-45A7-ADDB-5B611515A245}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B93DFA6D-ABF2-45A7-ADDB-5B611515A245}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B93DFA6D-ABF2-45A7-ADDB-5B611515A245}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,5 +86,6 @@ Global
 		{9019B105-D810-4019-8367-9254C3896935} = {2BE53A76-B20A-4A76-A5CF-B455471881F1}
 		{42F7B6FE-008D-4EC9-B5FB-7AFAE038B50B} = {9019B105-D810-4019-8367-9254C3896935}
 		{7091A9CF-91FE-440D-AF2D-B37345067114} = {2BE53A76-B20A-4A76-A5CF-B455471881F1}
+		{B93DFA6D-ABF2-45A7-ADDB-5B611515A245} = {9019B105-D810-4019-8367-9254C3896935}
 	EndGlobalSection
 EndGlobal

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.LinearAlgebra
 {
-    public class Vector : ICloneable
+    public class Vector : ICloneable, IReadOnlyCollection<double>
     {
         private readonly double[] _vector;
 
@@ -54,14 +56,9 @@ namespace DynamicSolver.LinearAlgebra
             return this * (1/length);
         }
 
-        object ICloneable.Clone()
+        public override string ToString()
         {
-            return Clone();
-        }
-
-        public Vector Clone()
-        {
-            return new Vector(_vector);
+            return $"({string.Join(",", _vector)})";
         }
 
         public static Vector operator +(Vector left, Vector right)
@@ -112,9 +109,34 @@ namespace DynamicSolver.LinearAlgebra
             return right * left;
         }
 
-        public override string ToString()
+        #region ICloneable
+
+        object ICloneable.Clone()
         {
-            return $"({string.Join(",", _vector)})";
+            return Clone();
         }
+
+        public Vector Clone()
+        {
+            return new Vector(_vector);
+        }
+
+        #endregion
+
+        #region IReadOnlyCollection<double>
+
+        public IEnumerator<double> GetEnumerator()
+        {
+            return new GenericEnumerator<double>(_vector.GetEnumerator());
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _vector.GetEnumerator();
+        }
+
+        int IReadOnlyCollection<double>.Count => Dimension;
+
+        #endregion
     }
 }

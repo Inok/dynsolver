@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using DynamicSolver.Abstractions.Tools;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.LinearAlgebra
 {
-    public class Point : ICloneable, IEquatable<Point>
+    public class Point : ICloneable, IEquatable<Point>, IReadOnlyCollection<double>
     {
         [NotNull]
         private readonly double[] _point;
@@ -23,6 +25,12 @@ namespace DynamicSolver.LinearAlgebra
             _point = copy;
         }
 
+
+        public override string ToString()
+        {
+            return _point.DumpInline();
+        }
+
         public object Clone()
         {
             var copy = new double[_point.Length];
@@ -30,14 +38,26 @@ namespace DynamicSolver.LinearAlgebra
             return new Point(copy);
         }
 
+        #region IEquatable<Point>
 
-        bool IEquatable<Point>.Equals([NotNull] Point other)
+        public override int GetHashCode()
         {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            if(Dimension != other.Dimension)
-            {
-                throw new ArgumentException($"Points has different dimensions: {Dimension} and {other.Dimension}");
-            }
+            return _point.GetHashCode();
+        }
+
+        public override bool Equals(object other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (other.GetType() != this.GetType()) return false;
+            return ((IEquatable<Point>)this).Equals((Point) other);
+        }
+
+        bool IEquatable<Point>.Equals(Point other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (Dimension != other.Dimension) return false;
 
             for (var i = 0; i < _point.Length; i++)
             {
@@ -52,11 +72,9 @@ namespace DynamicSolver.LinearAlgebra
         {
             if (epsilon < 0) throw new ArgumentOutOfRangeException(nameof(epsilon));
 
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            if (Dimension != other.Dimension)
-            {
-                throw new ArgumentException($"Points has different dimensions: {Dimension} and {other.Dimension}");
-            }
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            if (Dimension != other.Dimension) return false;
 
             var difference = 0D;
             for (var i = 0; i < _point.Length; i++)
@@ -68,9 +86,22 @@ namespace DynamicSolver.LinearAlgebra
             return Math.Abs(difference) < epsilon;
         }
 
-        public override string ToString()
+        #endregion
+
+        #region IReadOnlyCollection<double>
+
+        public IEnumerator<double> GetEnumerator()
         {
-            return _point.DumpInline();
+            return new GenericEnumerator<double>(_point.GetEnumerator());
         }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _point.GetEnumerator();
+        }
+
+        int IReadOnlyCollection<double>.Count => Dimension;
+
+        #endregion
     }
 }
