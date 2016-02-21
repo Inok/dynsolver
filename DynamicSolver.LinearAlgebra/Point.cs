@@ -68,9 +68,9 @@ namespace DynamicSolver.LinearAlgebra
             return true;
         }
 
-        public bool Equals(Point other, double epsilon)
+        public bool Equals(Point other, double accuracy)
         {
-            if (epsilon < 0) throw new ArgumentOutOfRangeException(nameof(epsilon));
+            if (accuracy < 0) throw new ArgumentOutOfRangeException(nameof(accuracy));
 
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -79,11 +79,12 @@ namespace DynamicSolver.LinearAlgebra
             var difference = 0D;
             for (var i = 0; i < _point.Length; i++)
             {
-                difference += _point[i] - other[i];                    
+                var diff = _point[i] - other[i];
+                difference += diff * diff;
             }
             difference = Math.Sqrt(difference);
 
-            return Math.Abs(difference) < epsilon;
+            return difference <= accuracy;
         }
 
         #endregion

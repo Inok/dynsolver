@@ -44,7 +44,7 @@ namespace DynamicSolver.LinearAlgebra.Tests
             {
                 Assert.That(point[i], Is.EqualTo(expected[i]));
             }
-            
+
             Assert.That(() => point[-1], Throws.TypeOf<IndexOutOfRangeException>());
             Assert.That(() => point[expected.Length], Throws.TypeOf<IndexOutOfRangeException>());
         }
@@ -96,7 +96,7 @@ namespace DynamicSolver.LinearAlgebra.Tests
             Assert.That(first.Equals(new Point(new double[] { 1, 2, 4, 0, 6 })), Is.False);
             Assert.That(first.Equals(new Point(new double[] { 1, 3, 4, 0, 3 })), Is.False);
             Assert.That(first.Equals(new Point(new double[] { 1, 3, 4, 3 })), Is.False);
-            
+
             Assert.That(first.Equals((object)null), Is.False);
             Assert.That(first.Equals((Point)null), Is.False);
             Assert.That(first.Equals(new object()), Is.False);
@@ -107,13 +107,48 @@ namespace DynamicSolver.LinearAlgebra.Tests
             Assert.That(second.Equals(new Point(new double[] { 0, 2, 4, 0, 3 })), Is.False);
             Assert.That(second.Equals(new Point(new double[] { 1, 2, 4, 0, 6 })), Is.False);
             Assert.That(second.Equals(new Point(new double[] { 1, 3, 4, 0, 3 })), Is.False);
-            Assert.That(first.Equals(new Point(new double[] { 1, 3, 4, 3 })), Is.False);
+            Assert.That(second.Equals(new Point(new double[] { 1, 3, 4, 3 })), Is.False);
 
             Assert.That(second.Equals((object)null), Is.False);
             Assert.That(second.Equals((Point)null), Is.False);
             Assert.That(second.Equals(new object()), Is.False);
             Assert.That(second.Equals(new double[] { 1, 2, 4, 0, 3 }), Is.False);
 
+        }
+
+        [Test]
+        public void Equals_WithAccuracy_WhenEqual_ReturnsTrue()
+        {
+            var first = new Point(new double[] { 10, 20, -1, -5 });
+            var second = new Point(new double[] { 11, 19, -2, -4 });
+
+            Assert.That(first.Equals(first, 0));
+            Assert.That(first.Equals(first, 10e-5));
+            Assert.That(first.Equals((Point)first.Clone(), 0));
+            Assert.That(first.Equals((Point)first.Clone(), 10e-5));
+            Assert.That(first.Equals(second, 2.001));
+            Assert.That(first.Equals(second, 2));
+            Assert.That(first.Equals(second, double.MaxValue));
+            Assert.That(second.Equals(first, 2));
+        }
+
+        [Test]
+        public void Equals_WithAccuracy_WhenNotEqual_ReturnsFalse()
+        {
+            var first = new Point(new double[] { 10, 20, -1, -5 });
+            var second = new Point(new double[] { 11, 19, -2, -4 });
+
+
+            Assert.That(() => first.Equals(first, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => first.Equals(second, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => first.Equals(null, -1), Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            Assert.That(first.Equals(null, 0), Is.False);
+            Assert.That(first.Equals(null, 10e-5), Is.False);
+            Assert.That(first.Equals(second, 0), Is.False);
+            Assert.That(first.Equals(second, 10e-5), Is.False);
+            Assert.That(first.Equals(second, 1.999), Is.False);
+            Assert.That(second.Equals(first, 1.999), Is.False);
         }
 
         [Test]
