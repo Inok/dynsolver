@@ -21,8 +21,8 @@ build:
   verbosity: minimal
 
 artifacts:
-- path: artifacts/Release
-  name: artifacts
+- path: artifacts/gui_app/Release
+  name: gui_app
   
 pull_requests:
   do_not_increment_build_number: true
