@@ -12,16 +12,17 @@ namespace DynamicSolver.LinearAlgebra
 
         public int Dimension => _vector.Length;
 
-        public double Length => Math.Sqrt(_vector.Sum(d => d * d));
+        public double Length => Math.Sqrt(_vector.Sum(d => d*d));
 
         public double this[int i] => _vector[i];
-        
+
         public Vector([NotNull] params double[] vector)
         {
             if (vector == null) throw new ArgumentNullException(nameof(vector));
             if (vector.Length == 0) throw new ArgumentException("Argument is an empty collection", nameof(vector));
 
-            _vector = vector;
+            _vector = new double[vector.Length];
+            Array.Copy(vector, _vector, vector.Length);            
         }
 
         public Vector([NotNull] Point to)
@@ -37,8 +38,9 @@ namespace DynamicSolver.LinearAlgebra
         {
             if (from == null) throw new ArgumentNullException(nameof(from));
             if (to == null) throw new ArgumentNullException(nameof(to));
+            if (ReferenceEquals(from, to)) throw new ArgumentException("Points is the same object.");
             if (from.Dimension != to.Dimension || from.Dimension == 0) throw new ArgumentException("Points has different dimensions.");
-
+            
             _vector = new double[from.Dimension];
             for (var i = 0; i < _vector.Length; i++)
                 _vector[i] = to[i] - from[i];
@@ -48,12 +50,17 @@ namespace DynamicSolver.LinearAlgebra
         {
             var length = Length;
             // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (length == 0)
+            {
+                throw new InvalidOperationException("Cannot normalize zero-length vector."); 
+            }
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
             if (length == 1)
             {
                 return Clone();
             }
 
-            return this * (1/length);
+            return this*(1.0/length);
         }
 
         public override string ToString()
@@ -92,7 +99,7 @@ namespace DynamicSolver.LinearAlgebra
                 throw new ArgumentException($"Dimension mismatch: {left.Dimension} != {right.Dimension}");
             double result = 0;
             for (var i = 0; i < left.Dimension; i++)
-                result += left[i] * right[i];
+                result += left[i]*right[i];
             return result;
         }
 
@@ -100,13 +107,13 @@ namespace DynamicSolver.LinearAlgebra
         {
             var result = new double[left.Dimension];
             for (var i = 0; i < left.Dimension; i++)
-                result[i] *= left[i] * right;
+                result[i] = left[i]*right;
             return new Vector(result);
         }
 
         public static Vector operator *(double left, Vector right)
         {
-            return right * left;
+            return right*left;
         }
 
         #region ICloneable

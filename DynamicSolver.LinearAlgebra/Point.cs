@@ -87,6 +87,16 @@ namespace DynamicSolver.LinearAlgebra
             return difference <= accuracy;
         }
 
+        public static bool operator ==(Point left, Point right)
+        {
+            return ReferenceEquals(null, left) ? ReferenceEquals(null, right) : left.Equals(right);
+        }
+
+        public static bool operator !=(Point left, Point right)
+        {
+            return !(left == right);
+        }
+
         #endregion
 
         #region IReadOnlyCollection<double>

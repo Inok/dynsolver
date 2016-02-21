@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -87,6 +87,7 @@ namespace DynamicSolver.LinearAlgebra.Tests
             Assert.That(((IEquatable<Point>)first).Equals(first));
         }
 
+
         [Test]
         public void Equals_WhenNotEqual_ReturnsFalse()
         {
@@ -114,6 +115,18 @@ namespace DynamicSolver.LinearAlgebra.Tests
             Assert.That(second.Equals(new object()), Is.False);
             Assert.That(second.Equals(new double[] { 1, 2, 4, 0, 3 }), Is.False);
 
+        }
+
+        [Test]
+        public void EqualsOperator_SpecialCases_ReturnsTrue()
+        {
+            Assert.That((Point)null == (Point)null);
+            Assert.That((Point)null == new Point(new []{1.0}), Is.False);
+            Assert.That(new Point(new []{1.0}) == (Point)null, Is.False);
+
+            Assert.That((Point)null != (Point)null, Is.False);
+            Assert.That((Point)null != new Point(new []{1.0}));
+            Assert.That(new Point(new []{1.0}) != (Point)null);
         }
 
         [Test]
@@ -149,6 +162,7 @@ namespace DynamicSolver.LinearAlgebra.Tests
             Assert.That(first.Equals(second, 10e-5), Is.False);
             Assert.That(first.Equals(second, 1.999), Is.False);
             Assert.That(second.Equals(first, 1.999), Is.False);
+            Assert.That(new Point(new[] {1d, 2d}).Equals(new Point(new[] { 1d, 2d, 3d })), Is.False);
         }
 
         [Test]
