@@ -20,6 +20,16 @@ namespace DynamicSolver.ExpressionParser.Parser
             Input = Input.Trim();
         }
 
+        public void Advance()
+        {
+            if (IsEmpty)
+            {
+                return;
+            }
+
+            Input = Input.Substring(1);
+        }
+
         public bool AdvanceToken(char token, bool skipLeadingWhitespaces = true)
         {
             if(skipLeadingWhitespaces)
@@ -39,16 +49,6 @@ namespace DynamicSolver.ExpressionParser.Parser
             }
 
             return false;
-        }
-
-        private void Advance()
-        {
-            if (IsEmpty)
-            {
-                return;
-            }
-
-            Input = Input.Substring(1);
         }
 
         public NumericPrimitive ReadNumeric()

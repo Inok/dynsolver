@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using DynamicSolver.Abstractions;
 using NUnit.Framework;
 
 namespace DynamicSolver.ExpressionCompiler.Tests

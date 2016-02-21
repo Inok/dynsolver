@@ -56,8 +56,6 @@
     <Compile Include="Expression\Constant.cs" />
     <Compile Include="Expression\ConstantPrimitive.cs" />
     <Compile Include="Expression\DivideBinaryOperator.cs" />
-    <Compile Include="Expression\EqualityBinaryOperator.cs" />
-    <Compile Include="Expression\Equation.cs" />
     <Compile Include="Expression\ExpressionFormatter.cs" />
     <Compile Include="Expression\FunctionCall.cs" />
     <Compile Include="Expression\MultiplyBinaryOperator.cs" />
