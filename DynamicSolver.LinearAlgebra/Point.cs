@@ -15,7 +15,7 @@ namespace DynamicSolver.LinearAlgebra
 
         public double this[int i] => _point[i];
 
-        public Point([NotNull] double[] point)
+        public Point([NotNull] params double[] point)
         {
             if (point == null) throw new ArgumentNullException(nameof(point));
             if (point.Length == 0) throw new ArgumentException("Argument is an empty collection", nameof(point));

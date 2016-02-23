@@ -47,8 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMinimizationIntervalSearchStrategy.cs" />
+    <Compile Include="IOneDimensionalSearchStrategy.cs" />
     <Compile Include="MinimizationIntervalSearchSettings.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethod.cs" />
+    <Compile Include="OneDimensionalSearchSettings.cs" />
+    <Compile Include="OneDimensionalSearch\GoldenRatioMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
