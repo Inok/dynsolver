@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MinimizationInterval\DerivativeSwannMethodTests.cs" />
+    <Compile Include="MultiDimensionalSearch\GoldenRatioMethodTests.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
