@@ -49,9 +49,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MinimizationInterval\DerivativeSwannMethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">
+      <Project>{74375775-643E-4016-A7E2-F2B477A3175A}</Project>
+      <Name>DynamicSolver.Abstractions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicSolver.LinearAlgebra\DynamicSolver.LinearAlgebra.csproj">
+      <Project>{7091A9CF-91FE-440D-AF2D-B37345067114}</Project>
+      <Name>DynamicSolver.LinearAlgebra</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.Minimizer\DynamicSolver.Minimizer.csproj">
       <Project>{04b2b8b5-88ef-4484-9767-fcfde69372da}</Project>
       <Name>DynamicSolver.Minimizer</Name>
