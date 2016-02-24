@@ -34,9 +34,11 @@ namespace DynamicSolver.Minimizer.OneDimensionalSearch
             var lambda = a + Tau2 * Math.Abs(b - a);
             var mu = a + Tau1 * Math.Abs(b - a);
 
-            var iteration = 0;
+            var limiter = new IterationLimiter(_settings);
             do
             {
+                limiter.NextIteration();
+
                 if (function.Execute(interval.First.Move(direction, lambda).ToArray()) < function.Execute(interval.First.Move(direction, mu).ToArray()))
                 {
                     b = mu;
@@ -50,14 +52,11 @@ namespace DynamicSolver.Minimizer.OneDimensionalSearch
                     mu = a + Tau1 * Math.Abs(b - a);
                 }
 
-                if(Math.Abs(b - a) <= _settings.Accuracy)
+                if (Math.Abs(b - a) <= _settings.Accuracy || limiter.ShouldInterrupt)
                     return new Interval(interval.First.Move(direction, a), interval.First.Move(direction, b));
 
-                iteration++;
             }
-            while (iteration < _settings.MaxStepCount);
-
-            throw new InvalidOperationException($"Search was interrupted because iteration limit has been reached: {iteration}.");
+            while (true);            
         }
     }
 }

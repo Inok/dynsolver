@@ -3,21 +3,23 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.Minimizer
 {
-    public class MultiDimensionalSearchSettings
+    public class MultiDimensionalSearchSettings : IIterationLimitSettings
     {
         [NotNull]
-        public static readonly MultiDimensionalSearchSettings Default = new MultiDimensionalSearchSettings(100, 10e-8);
+        public static readonly MultiDimensionalSearchSettings Default = new MultiDimensionalSearchSettings(10e-8, 100, true);
 
         public double Accuracy { get; }
-        public int MaxStepCount { get; }
+        public int MaxIterationCount { get; }
+        public bool AbortSearchOnIterationLimit { get; }
 
-        public MultiDimensionalSearchSettings(int maxStepCount, double accuracy)
+        public MultiDimensionalSearchSettings(double accuracy, int maxIterationCount, bool abortSearchOnIterationLimit)
         {
-            if (maxStepCount <= 0) throw new ArgumentOutOfRangeException(nameof(maxStepCount));
+            if (maxIterationCount <= 0) throw new ArgumentOutOfRangeException(nameof(maxIterationCount));
             if (accuracy <= 0) throw new ArgumentOutOfRangeException(nameof(accuracy));
 
-            MaxStepCount = maxStepCount;
+            MaxIterationCount = maxIterationCount;
             Accuracy = accuracy;
+            AbortSearchOnIterationLimit = abortSearchOnIterationLimit;
         }
     }
 }

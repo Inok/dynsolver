@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IterationLimiterTests.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\GoldenRatioMethodTests.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethodTests.cs" />

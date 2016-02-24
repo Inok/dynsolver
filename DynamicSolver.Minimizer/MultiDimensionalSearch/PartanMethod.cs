@@ -4,7 +4,6 @@ using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using DynamicSolver.LinearAlgebra.Derivative;
 using JetBrains.Annotations;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace DynamicSolver.Minimizer.MultiDimensionalSearch
 {
@@ -33,9 +32,11 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             var x1 = startPoint;
             var x2 = _directedSearchStrategy.SearchInterval(function, x1, _derivativeCalculator.Derivative(function, startPoint)).Center;
 
-            int iteration = 0;
+            var limiter = new IterationLimiter(_settings);
             do
             {
+                limiter.NextIteration();
+
                 var x3 = _directedSearchStrategy.SearchInterval(function, x2, _derivativeCalculator.Derivative(function, x2)).Center;
                 var x4 = _directedSearchStrategy.SearchInterval(function, x3, new Vector(x1, x3)).Center;
 
@@ -44,19 +45,15 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
                     return x1;
                 }
 
-                if (new Vector(x1, x4).Length < _settings.Accuracy)
+                if (new Vector(x1, x4).Length < _settings.Accuracy || limiter.ShouldInterrupt)
                 {
                     return x4;
                 }
 
                 x1 = x2;
                 x2 = x4;
-
-                iteration++;
             }
-            while (iteration < _settings.MaxStepCount);
-
-            throw new InvalidOperationException($"Search was interrupted because iteration limit has been reached: {iteration}.");
+            while (true);
         }
     }
 }

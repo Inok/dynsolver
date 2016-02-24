@@ -46,8 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IIterationLimitSettings.cs" />
     <Compile Include="IMultiDimensionalSearchStrategy.cs" />
     <Compile Include="IDirectedSearchStrategy.cs" />
+    <Compile Include="IterationLimiter.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethodSettings.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethod.cs" />
     <Compile Include="MultiDimensionalSearchSettings.cs" />
