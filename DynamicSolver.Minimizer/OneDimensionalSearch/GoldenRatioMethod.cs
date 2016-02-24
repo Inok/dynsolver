@@ -6,26 +6,26 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.Minimizer.OneDimensionalSearch
 {
-    public class GoldenRatioMethod : IOneDimensionalSearchStrategy
+    public class GoldenRatioMethod : IDirectedSearchStrategy
     {
         private static readonly double Tau1 = (Math.Sqrt(5) - 1) / 2;
         private static readonly double Tau2 = 1 - Tau1;
 
-        private readonly OneDimensionalSearchSettings _settings;
-        private readonly IMinimizationIntervalSearchStrategy _minimizationIntervalSearchStrategy;
+        private readonly DirectedSearchSettings _settings;
+        private readonly IDirectedSearchStrategy _intervalSearchStrategy;
 
-        public GoldenRatioMethod([NotNull] OneDimensionalSearchSettings settings, [NotNull] IMinimizationIntervalSearchStrategy minimizationIntervalSearchStrategy)
+        public GoldenRatioMethod([NotNull] IDirectedSearchStrategy intervalSearchStrategy, [NotNull] DirectedSearchSettings settings)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
-            if (minimizationIntervalSearchStrategy == null) throw new ArgumentNullException(nameof(minimizationIntervalSearchStrategy));
+            if (intervalSearchStrategy == null) throw new ArgumentNullException(nameof(intervalSearchStrategy));
 
             _settings = settings;
-            _minimizationIntervalSearchStrategy = minimizationIntervalSearchStrategy;
+            _intervalSearchStrategy = intervalSearchStrategy;
         }
 
         public Interval SearchInterval(IExecutableFunction function, Point startPoint, Vector direction)
         {
-            var interval = _minimizationIntervalSearchStrategy.SearchInterval(function, startPoint, direction);
+            var interval = _intervalSearchStrategy.SearchInterval(function, startPoint, direction);
             direction = interval.Direction;
 
             double a = 0;

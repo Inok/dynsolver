@@ -14,7 +14,7 @@ namespace DynamicSolver.Minimizer.Tests.MinimizationInterval
     {
         private const double ACCURACY = 10e-6;
 
-        private readonly IMinimizationIntervalSearchStrategy _strategy = new DerivativeSwannMethod(new MinimizationIntervalSearchSettings(0.5, 100, 10e-8), new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default));
+        private readonly IDirectedSearchStrategy _strategy = new DerivativeSwannMethod(new DerivativeSwannMethodSettings(0.5, 100, 10e-8), new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default));
 
         [TestCase(1, -0.5, -2.5)]
         [TestCase(2, 0.5, -1.5)]

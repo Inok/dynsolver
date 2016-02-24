@@ -6,12 +6,12 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.Minimizer.MinimizationInterval
 {
-    public class DerivativeSwannMethod : IMinimizationIntervalSearchStrategy
+    public class DerivativeSwannMethod : IDirectedSearchStrategy
     {
-        private readonly MinimizationIntervalSearchSettings _settings;
+        private readonly DerivativeSwannMethodSettings _settings;
         private readonly IDerivativeCalculationStrategy _derivativeStrategy;
 
-        public DerivativeSwannMethod([NotNull] MinimizationIntervalSearchSettings settings, IDerivativeCalculationStrategy derivativeStrategy)
+        public DerivativeSwannMethod([NotNull] DerivativeSwannMethodSettings settings, IDerivativeCalculationStrategy derivativeStrategy)
         {
             if (settings == null) throw new ArgumentNullException(nameof(settings));
             _settings = settings;

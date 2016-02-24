@@ -17,7 +17,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
         private static readonly MultiDimensionalSearchSettings Settings = MultiDimensionalSearchSettings.Default;
         private static readonly NumericalDerivativeCalculator NumericalDerivativeCalculator = new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default);
 
-        private readonly IMultiDimensionalSearchStrategy _strategy = new PartanMethod(new GoldenRatioMethod(OneDimensionalSearchSettings.Default, new DerivativeSwannMethod(MinimizationIntervalSearchSettings.Default, NumericalDerivativeCalculator)), NumericalDerivativeCalculator, Settings);
+        private readonly IMultiDimensionalSearchStrategy _strategy = new PartanMethod(new GoldenRatioMethod(new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, NumericalDerivativeCalculator), DirectedSearchSettings.Default), NumericalDerivativeCalculator, Settings);
 
         [Test]
         public void Search_FoundsCorrectly()

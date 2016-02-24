@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.Minimizer
 {
-    public interface IOneDimensionalSearchStrategy
+    public interface IDirectedSearchStrategy
     {
         Interval SearchInterval([NotNull] IExecutableFunction function, [NotNull] Point startPoint, [NotNull] Vector direction);
     }

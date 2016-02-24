@@ -10,20 +10,20 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
 {
     public class PartanMethod : IMultiDimensionalSearchStrategy
     {
-        private readonly IOneDimensionalSearchStrategy _oneDimensionalSearchStrategy;
+        private readonly IDirectedSearchStrategy _directedSearchStrategy;
         private readonly IDerivativeCalculationStrategy _derivativeCalculator;
         private readonly MultiDimensionalSearchSettings _settings;
 
         public PartanMethod(
-            [NotNull] IOneDimensionalSearchStrategy oneDimensionalSearchStrategy, 
+            [NotNull] IDirectedSearchStrategy directedSearchStrategy, 
             [NotNull] IDerivativeCalculationStrategy derivativeCalculator,
             [NotNull] MultiDimensionalSearchSettings settings)
         {
-            if (oneDimensionalSearchStrategy == null) throw new ArgumentNullException(nameof(oneDimensionalSearchStrategy));
+            if (directedSearchStrategy == null) throw new ArgumentNullException(nameof(directedSearchStrategy));
             if (derivativeCalculator == null) throw new ArgumentNullException(nameof(derivativeCalculator));
             if (settings == null) throw new ArgumentNullException(nameof(settings));
 
-            _oneDimensionalSearchStrategy = oneDimensionalSearchStrategy;
+            _directedSearchStrategy = directedSearchStrategy;
             _derivativeCalculator = derivativeCalculator;
             _settings = settings;
         }
@@ -31,13 +31,13 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
         public Point Search(IExecutableFunction function, Point startPoint)
         {
             var x1 = startPoint;
-            var x2 = _oneDimensionalSearchStrategy.SearchInterval(function, x1, _derivativeCalculator.Derivative(function, startPoint)).Center;
+            var x2 = _directedSearchStrategy.SearchInterval(function, x1, _derivativeCalculator.Derivative(function, startPoint)).Center;
 
             int iteration = 0;
             do
             {
-                var x3 = _oneDimensionalSearchStrategy.SearchInterval(function, x2, _derivativeCalculator.Derivative(function, x2)).Center;
-                var x4 = _oneDimensionalSearchStrategy.SearchInterval(function, x3, new Vector(x1, x3)).Center;
+                var x3 = _directedSearchStrategy.SearchInterval(function, x2, _derivativeCalculator.Derivative(function, x2)).Center;
+                var x4 = _directedSearchStrategy.SearchInterval(function, x3, new Vector(x1, x3)).Center;
 
                 if (x4.Any(d => double.IsNaN(d) || double.IsInfinity(d)))
                 {

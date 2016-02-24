@@ -46,14 +46,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMinimizationIntervalSearchStrategy.cs" />
     <Compile Include="IMultiDimensionalSearchStrategy.cs" />
-    <Compile Include="IOneDimensionalSearchStrategy.cs" />
-    <Compile Include="MinimizationIntervalSearchSettings.cs" />
+    <Compile Include="IDirectedSearchStrategy.cs" />
+    <Compile Include="MinimizationInterval\DerivativeSwannMethodSettings.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethod.cs" />
     <Compile Include="MultiDimensionalSearchSettings.cs" />
     <Compile Include="MultiDimensionalSearch\PartanMethod.cs" />
-    <Compile Include="OneDimensionalSearchSettings.cs" />
+    <Compile Include="DirectedSearchSettings.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -13,8 +13,8 @@ namespace DynamicSolver.Minimizer.Tests.OneDimensionalSearch
     [TestFixture]
     public class GoldenRatioMethodTests
     {
-        private static readonly OneDimensionalSearchSettings Settings = OneDimensionalSearchSettings.Default;
-        private readonly IOneDimensionalSearchStrategy _strategy = new GoldenRatioMethod(Settings, new DerivativeSwannMethod(MinimizationIntervalSearchSettings.Default, new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default)));
+        private static readonly DirectedSearchSettings Settings = DirectedSearchSettings.Default;
+        private readonly IDirectedSearchStrategy _strategy = new GoldenRatioMethod(new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default)), Settings);
 
         [Test]
         public void SearchInterval_FoundsCorrectly()
