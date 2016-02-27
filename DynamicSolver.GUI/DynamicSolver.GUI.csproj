@@ -91,6 +91,9 @@
     <Compile Include="Minimization\ExpressionInputView.xaml.cs">
       <DependentUpon>ExpressionInputView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Minimization\ExpressionMinimizerView.xaml.cs">
+      <DependentUpon>ExpressionMinimizerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +108,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Minimization\ExpressionInputView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Minimization\ExpressionMinimizerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

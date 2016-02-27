@@ -78,7 +78,10 @@ namespace DynamicSolver.ViewModel.Minimization
         private ParseResultViewModel GetParsingResult(string expression)
         {
             if(string.IsNullOrEmpty(expression))
+            {
                 return new ParseResultViewModel(null, true, null);
+            }
+
             try
             {
                 return new ParseResultViewModel(_parser.Parse(expression), true, null);

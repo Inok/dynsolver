@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 using DynamicSolver.ViewModel.Minimization;
 
 namespace DynamicSolver.GUI.Minimization
@@ -8,11 +9,16 @@ namespace DynamicSolver.GUI.Minimization
     /// </summary>
     public partial class ExpressionInputView : UserControl
     {
-        public ExpressionInputViewModel ViewModel { get; }
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(ExpressionInputViewModel), typeof(ExpressionInputView), new PropertyMetadata(default(ExpressionInputViewModel)));
+
+        public ExpressionInputViewModel ViewModel
+        {
+            get { return (ExpressionInputViewModel) GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
 
         public ExpressionInputView()
         {
-            ViewModel = new ExpressionInputViewModel(new ExpressionParser.Parser.ExpressionParser());
             InitializeComponent();
         }
     }

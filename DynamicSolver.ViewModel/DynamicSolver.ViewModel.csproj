@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Minimization\ExpressionInputViewModel.cs" />
+    <Compile Include="Minimization\ExpressionMinimizerViewModel.cs" />
     <Compile Include="Minimization\ParseResultViewModel.cs" />
     <Compile Include="Minimization\VariableViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />

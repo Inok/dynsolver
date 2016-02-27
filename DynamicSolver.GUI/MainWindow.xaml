@@ -14,7 +14,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <StackPanel>
-            <minimization:ExpressionInputView/>
+            <minimization:ExpressionMinimizerView/>
         </StackPanel>
     </Grid>
 </Window>
