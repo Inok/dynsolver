@@ -63,6 +63,10 @@
       <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
       <Name>DynamicSolver.Abstractions</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
+      <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
+      <Name>DynamicSolver.ExpressionParser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.LinearAlgebra\DynamicSolver.LinearAlgebra.csproj">
       <Project>{7091a9cf-91fe-440d-af2d-b37345067114}</Project>
       <Name>DynamicSolver.LinearAlgebra</Name>
