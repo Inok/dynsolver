@@ -2,17 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Abstractions.Expression;
-using DynamicSolver.ViewModel.Annotations;
+using JetBrains.Annotations;
 
-namespace DynamicSolver.ViewModel.Minimization
+namespace DynamicSolver.Minimizer
 {
     public class MinimizationTaskInput
     {
         public IStatement Statement { get; }
 
-        public IReadOnlyCollection<VariableViewModel> Variables { get; }
+        public IReadOnlyCollection<VariableValue> Variables { get; }
 
-        public MinimizationTaskInput([NotNull] IStatement statement, [NotNull] IEnumerable<VariableViewModel> variables)
+        public MinimizationTaskInput([NotNull] IStatement statement, [NotNull] IEnumerable<VariableValue> variables)
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
             if (variables == null) throw new ArgumentNullException(nameof(variables));
@@ -20,12 +20,12 @@ namespace DynamicSolver.ViewModel.Minimization
             Statement = statement;
             Variables = variables.ToList();
 
-            if(!Statement.Analyzer.GetVariablesSet().SetEquals(Variables.Select(v => v.VariableName)))
+            if (!Statement.Analyzer.GetVariablesSet().SetEquals(Variables.Select(v => v.VariableName)))
             {
                 throw new ArgumentException("Variables set incompatible with statement.");
             }
 
-            if(Variables.Any(v => !v.Value.HasValue))
+            if (Variables.Any(v => !v.Value.HasValue))
             {
                 throw new ArgumentException("Any variables has no value.");
             }

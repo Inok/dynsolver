@@ -52,11 +52,13 @@
     <Compile Include="IterationLimiter.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethodSettings.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethod.cs" />
+    <Compile Include="MinimizationTaskInput.cs" />
     <Compile Include="MultiDimensionalSearchSettings.cs" />
     <Compile Include="MultiDimensionalSearch\PartanMethod.cs" />
     <Compile Include="DirectedSearchSettings.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VariableValue.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">

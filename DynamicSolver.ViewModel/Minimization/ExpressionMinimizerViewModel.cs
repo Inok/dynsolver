@@ -2,6 +2,7 @@
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DynamicSolver.Minimizer;
 using DynamicSolver.ViewModel.Annotations;
 using ReactiveUI;
 

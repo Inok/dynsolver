@@ -74,8 +74,6 @@
     <Compile Include="Minimization\ExpressionInputViewModel.cs" />
     <Compile Include="Minimization\ExpressionMinimizerViewModel.cs" />
     <Compile Include="Minimization\MinimizationResultViewModel.cs" />
-    <Compile Include="Minimization\MinimizationTaskInput.cs" />
-    <Compile Include="Minimization\VariableViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

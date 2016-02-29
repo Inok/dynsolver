@@ -6,6 +6,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicSolver.Abstractions.Expression;
 using DynamicSolver.ExpressionParser.Parser;
+using DynamicSolver.Minimizer;
 using DynamicSolver.ViewModel.Annotations;
 using ReactiveUI;
 
@@ -30,7 +31,7 @@ namespace DynamicSolver.ViewModel.Minimization
         private string _expression;
         private readonly ObservableAsPropertyHelper<IStatement> _statement;
         private readonly ObservableAsPropertyHelper<string> _errorMessage;
-        private readonly ObservableAsPropertyHelper<IReactiveList<VariableViewModel>> _variables;
+        private readonly ObservableAsPropertyHelper<IReactiveList<VariableValue>> _variables;
         private readonly ObservableAsPropertyHelper<MinimizationTaskInput> _taskInput;
 
         public string Expression
@@ -41,7 +42,7 @@ namespace DynamicSolver.ViewModel.Minimization
 
         public IStatement Statement => _statement.Value;
         public string ErrorMessage => _errorMessage.Value;
-        public IReactiveList<VariableViewModel> Variables => _variables.Value;
+        public IReactiveList<VariableValue> Variables => _variables.Value;
         public MinimizationTaskInput MinimizationInput  => _taskInput.Value;
 
 
@@ -60,7 +61,7 @@ namespace DynamicSolver.ViewModel.Minimization
                 .Where(m => m.ErrorMessage == null)
                 .Throttle(TimeSpan.FromSeconds(0.5), DispatcherScheduler.Current)
                 .Select(m => CreateVariables(m.Statement))
-                .ToProperty(this, m => m.Variables, new ReactiveList<VariableViewModel>());
+                .ToProperty(this, m => m.Variables, new ReactiveList<VariableValue>());
 
             _taskInput = Observable.Merge(
                 parseResult.Select(_ => Unit.Default),
@@ -70,29 +71,29 @@ namespace DynamicSolver.ViewModel.Minimization
                 .ToProperty(this, m => m.MinimizationInput);
         }
 
-        private IReactiveList<VariableViewModel> CreateVariables(IStatement statement)
+        private IReactiveList<VariableValue> CreateVariables(IStatement statement)
         {
             if (statement == null)
             {
-                return new ReactiveList<VariableViewModel>();
+                return new ReactiveList<VariableValue>();
             }
 
             var expressionVariables = statement.Analyzer.Variables;
 
-            var comparer = Comparer<VariableViewModel>.Create((v1, v2) => string.Compare(v1.VariableName, v2.VariableName, StringComparison.Ordinal));
-            var newVariables = new SortedSet<VariableViewModel>(comparer);
+            var comparer = Comparer<VariableValue>.Create((v1, v2) => string.Compare(v1.VariableName, v2.VariableName, StringComparison.Ordinal));
+            var newVariables = new SortedSet<VariableValue>(comparer);
 
             foreach (var model in Variables.Where(v => expressionVariables.Contains(v.VariableName)))
             {
-                newVariables.Add(new VariableViewModel(model.VariableName) {Value = model.Value});
+                newVariables.Add(new VariableValue(model.VariableName) {Value = model.Value});
             }
 
-            foreach (var variable in expressionVariables.Select(s => new VariableViewModel(s)))
+            foreach (var variable in expressionVariables.Select(s => new VariableValue(s)))
             {
                 newVariables.Add(variable);
             }
 
-            return new ReactiveList<VariableViewModel>(newVariables) { ChangeTrackingEnabled = true };
+            return new ReactiveList<VariableValue>(newVariables) { ChangeTrackingEnabled = true };
         }
 
         private MinimizationTaskInput GetTaskInput()
