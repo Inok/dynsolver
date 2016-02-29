@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework" />
     <Reference Include="ReactiveUI, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.6.5.0\lib\Net45\ReactiveUI.dll</HintPath>
       <Private>True</Private>
@@ -72,6 +73,8 @@
   <ItemGroup>
     <Compile Include="Minimization\ExpressionInputViewModel.cs" />
     <Compile Include="Minimization\ExpressionMinimizerViewModel.cs" />
+    <Compile Include="Minimization\MinimizationResultViewModel.cs" />
+    <Compile Include="Minimization\MinimizationTaskInput.cs" />
     <Compile Include="Minimization\ParseResultViewModel.cs" />
     <Compile Include="Minimization\VariableViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicSolver.Abstractions.Expression;
 using DynamicSolver.ExpressionParser.Parser;
-using DynamicSolver.ExpressionParser.Tools;
 using DynamicSolver.ViewModel.Annotations;
 using ReactiveUI;
 
@@ -22,12 +22,16 @@ namespace DynamicSolver.ViewModel.Minimization
             set { this.RaiseAndSetIfChanged(ref _expression, value); }
         }
 
-        private readonly ReactiveList<VariableViewModel> _variables = new ReactiveList<VariableViewModel>();
-        public IReadOnlyReactiveList<VariableViewModel> Variables => _variables;
+        private readonly ObservableAsPropertyHelper<IReactiveList<VariableViewModel>> _variables;
+        public IReactiveList<VariableViewModel> Variables => _variables.Value;
 
 
         private readonly ObservableAsPropertyHelper<ParseResultViewModel> _parseResult;
         public ParseResultViewModel ParseResult => _parseResult.Value;
+
+        private readonly ObservableAsPropertyHelper<MinimizationTaskInput> _taskInput;
+        public MinimizationTaskInput MinimizationInput  => _taskInput.Value;
+
 
         public ExpressionInputViewModel([NotNull] IExpressionParser parser)
         {
@@ -39,40 +43,63 @@ namespace DynamicSolver.ViewModel.Minimization
                 .Select(GetParsingResult)
                 .ToProperty(this, m => m.ParseResult, new ParseResultViewModel(null, true, null));
 
-            this.WhenAnyValue(m => m.ParseResult)
+            _variables = this.WhenAnyValue(m => m.ParseResult)
                 .Throttle(TimeSpan.FromSeconds(0.5), DispatcherScheduler.Current)
                 .Where(m => m.Valid)
-                .Select(m => m.Statement?.Expression)
-                .Subscribe(UpdateVariables);
+                .Select(m => m.Statement)
+                .Select(CreateVariables).ToProperty(this, m => m.Variables, new ReactiveList<VariableViewModel>());
+
+            _taskInput = Observable.Merge(
+                this.WhenAnyValue(m => m.ParseResult).Select(_ => Unit.Default),
+                this.WhenAnyValue(m => m.Variables).Select(_ => Unit.Default),
+                this.WhenAnyObservable(m => m.Variables.ItemChanged).Select(_ => Unit.Default))
+                .Select(_ => GetTaskInput())
+                .ToProperty(this, m => m.MinimizationInput);
         }
 
-        private void UpdateVariables(IExpression expr)
+        private MinimizationTaskInput GetTaskInput()
         {
-            if (expr == null)
+            if (ParseResult.Statement == null)
             {
-                _variables.Clear();
-                return;
+                return null;
             }
 
-            var set = new HashSet<string>();
-
-            var visitor = new ExpressionVisitor(expr);
-            visitor.VisitVariablePrimitive += (_, v) => set.Add(v.Name);
-            visitor.Visit();
-
-            _variables.RemoveAll(_variables.Where(v => !set.Contains(v.VariableName)).ToList());
-
-            foreach (var variable in _variables)
+            if (Variables.Any(v => !v.Value.HasValue))
             {
-                set.Remove(variable.VariableName);
+                return null;
             }
 
-            foreach (var variable in set.Select(s => new VariableViewModel(s)))
+            if (!ParseResult.Statement.Analyzer.GetVariablesSet().SetEquals(Variables.Select(v => v.VariableName)))
             {
-                _variables.Add(variable);
+                return null;
             }
 
-            _variables.Sort((v1, v2) => string.Compare(v1.VariableName, v2.VariableName, StringComparison.Ordinal));
+            return new MinimizationTaskInput(ParseResult.Statement, Variables);
+        }
+
+        private IReactiveList<VariableViewModel> CreateVariables(IStatement statement)
+        {
+            if (statement == null)
+            {
+                return new ReactiveList<VariableViewModel>();
+            }
+
+            var expressionVariables = statement.Analyzer.Variables;
+
+            var comparer = Comparer<VariableViewModel>.Create((v1, v2) => string.Compare(v1.VariableName, v2.VariableName, StringComparison.Ordinal));
+            var newVariables = new SortedSet<VariableViewModel>(comparer);
+
+            foreach (var model in Variables.Where(v => expressionVariables.Contains(v.VariableName)))
+            {
+                newVariables.Add(new VariableViewModel(model.VariableName) {Value = model.Value});
+            }
+
+            foreach (var variable in expressionVariables.Select(s => new VariableViewModel(s)))
+            {
+                newVariables.Add(variable);
+            }
+
+            return new ReactiveList<VariableViewModel>(newVariables) { ChangeTrackingEnabled = true };
         }
 
         private ParseResultViewModel GetParsingResult(string expression)

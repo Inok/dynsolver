@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IExpressionAnalyzer.cs" />
     <Compile Include="Tools\DumpExtension.cs" />
     <Compile Include="Expression\IBinaryOperator.cs" />
     <Compile Include="Expression\IExpression.cs" />
