@@ -8,18 +8,7 @@
     <StackPanel DataContext="{Binding ViewModel,  ElementName=UserControl}">
         <Label>Expression:</Label>
         <TextBox Text="{Binding Expression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Text="{Binding ParseResult.ErrorMessage}" Foreground="Red">
-            <TextBlock.Style>
-                <Style TargetType="TextBlock">
-                    <Setter Property="Visibility" Value="Hidden" />
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ParseResult.Valid}" Value="False">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red"/>
         <ListBox ItemsSource="{Binding Variables}">
             <ListBox.Style>
                 <Style TargetType="ListBox">

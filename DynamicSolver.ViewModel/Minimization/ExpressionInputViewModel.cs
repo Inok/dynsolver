@@ -13,23 +13,35 @@ namespace DynamicSolver.ViewModel.Minimization
 {
     public class ExpressionInputViewModel : ReactiveObject
     {
+        private class ParseResult
+        {
+            public IStatement Statement { get; }
+            public string ErrorMessage { get; }
+
+            public ParseResult(IStatement statement, string errorMessage)
+            {
+                Statement = statement;
+                ErrorMessage = errorMessage;
+            }
+        }
+
         private readonly IExpressionParser _parser;
 
         private string _expression;
+        private readonly ObservableAsPropertyHelper<IStatement> _statement;
+        private readonly ObservableAsPropertyHelper<string> _errorMessage;
+        private readonly ObservableAsPropertyHelper<IReactiveList<VariableViewModel>> _variables;
+        private readonly ObservableAsPropertyHelper<MinimizationTaskInput> _taskInput;
+
         public string Expression
         {
             get { return _expression; }
             set { this.RaiseAndSetIfChanged(ref _expression, value); }
         }
 
-        private readonly ObservableAsPropertyHelper<IReactiveList<VariableViewModel>> _variables;
+        public IStatement Statement => _statement.Value;
+        public string ErrorMessage => _errorMessage.Value;
         public IReactiveList<VariableViewModel> Variables => _variables.Value;
-
-
-        private readonly ObservableAsPropertyHelper<ParseResultViewModel> _parseResult;
-        public ParseResultViewModel ParseResult => _parseResult.Value;
-
-        private readonly ObservableAsPropertyHelper<MinimizationTaskInput> _taskInput;
         public MinimizationTaskInput MinimizationInput  => _taskInput.Value;
 
 
@@ -39,42 +51,23 @@ namespace DynamicSolver.ViewModel.Minimization
 
             _parser = parser;
 
-            _parseResult = this.WhenAnyValue(m => m.Expression)
-                .Select(GetParsingResult)
-                .ToProperty(this, m => m.ParseResult, new ParseResultViewModel(null, true, null));
+            var parseResult = this.WhenAnyValue(m => m.Expression).Select(GetParsingResult);
 
-            _variables = this.WhenAnyValue(m => m.ParseResult)
+            _statement = parseResult.Select(m => m.Statement).ToProperty(this, m => m.Statement);
+            _errorMessage = parseResult.Select(p => p.ErrorMessage).ToProperty(this, m => m.ErrorMessage);
+
+            _variables = parseResult
+                .Where(m => m.ErrorMessage == null)
                 .Throttle(TimeSpan.FromSeconds(0.5), DispatcherScheduler.Current)
-                .Where(m => m.Valid)
-                .Select(m => m.Statement)
-                .Select(CreateVariables).ToProperty(this, m => m.Variables, new ReactiveList<VariableViewModel>());
+                .Select(m => CreateVariables(m.Statement))
+                .ToProperty(this, m => m.Variables, new ReactiveList<VariableViewModel>());
 
             _taskInput = Observable.Merge(
-                this.WhenAnyValue(m => m.ParseResult).Select(_ => Unit.Default),
+                parseResult.Select(_ => Unit.Default),
                 this.WhenAnyValue(m => m.Variables).Select(_ => Unit.Default),
                 this.WhenAnyObservable(m => m.Variables.ItemChanged).Select(_ => Unit.Default))
                 .Select(_ => GetTaskInput())
                 .ToProperty(this, m => m.MinimizationInput);
-        }
-
-        private MinimizationTaskInput GetTaskInput()
-        {
-            if (ParseResult.Statement == null)
-            {
-                return null;
-            }
-
-            if (Variables.Any(v => !v.Value.HasValue))
-            {
-                return null;
-            }
-
-            if (!ParseResult.Statement.Analyzer.GetVariablesSet().SetEquals(Variables.Select(v => v.VariableName)))
-            {
-                return null;
-            }
-
-            return new MinimizationTaskInput(ParseResult.Statement, Variables);
         }
 
         private IReactiveList<VariableViewModel> CreateVariables(IStatement statement)
@@ -102,20 +95,40 @@ namespace DynamicSolver.ViewModel.Minimization
             return new ReactiveList<VariableViewModel>(newVariables) { ChangeTrackingEnabled = true };
         }
 
-        private ParseResultViewModel GetParsingResult(string expression)
+        private MinimizationTaskInput GetTaskInput()
+        {
+            if (Statement == null)
+            {
+                return null;
+            }
+
+            if (Variables.Any(v => !v.Value.HasValue))
+            {
+                return null;
+            }
+
+            if (!Statement.Analyzer.GetVariablesSet().SetEquals(Variables.Select(v => v.VariableName)))
+            {
+                return null;
+            }
+
+            return new MinimizationTaskInput(Statement, Variables);
+        }
+
+        private ParseResult GetParsingResult(string expression)
         {
             if(string.IsNullOrEmpty(expression))
             {
-                return new ParseResultViewModel(null, true, null);
+                return new ParseResult(null, null);
             }
 
             try
             {
-                return new ParseResultViewModel(_parser.Parse(expression), true, null);
+                return new ParseResult(_parser.Parse(expression), null);
             }
             catch (FormatException e)
             {
-                return new ParseResultViewModel(null, false, e.Message);
+                return new ParseResult(null, e.Message);
             }
         }
     }
