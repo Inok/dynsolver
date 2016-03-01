@@ -35,6 +35,8 @@ namespace DynamicSolver.LinearAlgebra
                 return new Point(_point);
             }
 
+            direction = direction.Normalize();
+
             var movedPoint = new double[Dimension];
             for (var i = 0; i < movedPoint.Length; i++)
             {
