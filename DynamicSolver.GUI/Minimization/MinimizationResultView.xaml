@@ -38,7 +38,7 @@
                                     <ColumnDefinition Width="Auto" MinWidth="100" />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="{Binding VariableName}" />
-                                <Label Grid.Column="1" Content="{Binding Value}" />
+                                <Label ContentStringFormat="0.0##" Grid.Column="1" Content="{Binding Value}" />
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

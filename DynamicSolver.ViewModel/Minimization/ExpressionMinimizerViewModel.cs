@@ -12,6 +12,7 @@ using DynamicSolver.Minimizer.MinimizationInterval;
 using DynamicSolver.Minimizer.MultiDimensionalSearch;
 using DynamicSolver.Minimizer.OneDimensionalSearch;
 using DynamicSolver.ViewModel.Annotations;
+using DynamicSolver.ViewModel.Properties;
 using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.Minimization
@@ -22,6 +23,8 @@ namespace DynamicSolver.ViewModel.Minimization
 
         public MinimizationResultViewModel ResultViewModel { get; }
 
+        public bool ShowCalculateButton => !Settings.Default.Minimization_Features_AutoCalculation;
+
         public IReactiveCommand Calculate { get; }
 
         public ExpressionMinimizerViewModel()
@@ -31,7 +34,11 @@ namespace DynamicSolver.ViewModel.Minimization
 
             var inputObservable = this.WhenAnyValue(m => m.InputViewModel.MinimizationInput);
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input != null), CalculateAsync);
-            inputObservable.InvokeCommand(this, m => m.Calculate);
+
+            if(Settings.Default.Minimization_Features_AutoCalculation)
+            {
+                inputObservable.InvokeCommand(this, m => m.Calculate);
+            }
         }
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
