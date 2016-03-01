@@ -30,7 +30,10 @@ namespace DynamicSolver.LinearAlgebra
             if (direction == null) throw new ArgumentNullException(nameof(direction));
             if (direction.Dimension != Dimension) throw new ArgumentException("Point and direction has different dimensions.");
 
-            direction = direction.Normalize();
+            if (direction.Length == 0)
+            {
+                return new Point(_point);
+            }
 
             var movedPoint = new double[Dimension];
             for (var i = 0; i < movedPoint.Length; i++)

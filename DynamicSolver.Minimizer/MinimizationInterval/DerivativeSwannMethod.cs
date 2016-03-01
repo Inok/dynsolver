@@ -27,7 +27,7 @@ namespace DynamicSolver.Minimizer.MinimizationInterval
                 throw new ArgumentException($"Function has {function.OrderedArguments.Count} arguments, but start point has dimension of {startPoint.Dimension}");
             if (function.OrderedArguments.Count != direction.Dimension)
                 throw new ArgumentException($"Function has {function.OrderedArguments.Count} arguments, but direction has dimension of {direction.Dimension}");
-
+            
             double step = _settings.InitialStepLength;
 
             if (_derivativeStrategy.DerivativeByDirection(function, startPoint, direction) > 0)

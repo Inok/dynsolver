@@ -51,7 +51,7 @@
   <ItemGroup>
     <Compile Include="IterationLimiterTests.cs" />
     <Compile Include="MinimizationInterval\DerivativeSwannMethodTests.cs" />
-    <Compile Include="MultiDimensionalSearch\GoldenRatioMethodTests.cs" />
+    <Compile Include="MultiDimensionalSearch\PartanMethodTests.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

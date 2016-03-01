@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:DynamicSolver.GUI.Minimization"
              DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}"
              mc:Ignorable="d">
-    <Grid>
+    <StackPanel>
         <local:ExpressionInputView ViewModel="{Binding InputViewModel}"></local:ExpressionInputView>
-    </Grid>
+        <local:MinimizationResultView ViewModel="{Binding ResultViewModel}"></local:MinimizationResultView>
+    </StackPanel>
 </UserControl>

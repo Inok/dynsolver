@@ -1,8 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DynamicSolver.ExpressionCompiler.Interpreter;
+using DynamicSolver.LinearAlgebra;
+using DynamicSolver.LinearAlgebra.Derivative;
 using DynamicSolver.Minimizer;
+using DynamicSolver.Minimizer.MinimizationInterval;
+using DynamicSolver.Minimizer.MultiDimensionalSearch;
+using DynamicSolver.Minimizer.OneDimensionalSearch;
 using DynamicSolver.ViewModel.Annotations;
 using ReactiveUI;
 
@@ -28,24 +36,41 @@ namespace DynamicSolver.ViewModel.Minimization
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
         {
-            await Task.Run(() => ProcessCalculations(InputViewModel.MinimizationInput, token), token);
+            ResultViewModel.Clear();
+
+            var input = InputViewModel.MinimizationInput;
+            if (input == null) return;
+
+            ResultViewModel.StartProgress();
+            try
+            {
+                var result = await Task.Run(() => ProcessCalculations(input, token), token);
+                ResultViewModel.ApplyResult(result);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ResultViewModel.ApplyFail(ex.Message);
+            }
         }
 
-        private double ProcessCalculations([NotNull] MinimizationTaskInput input, CancellationToken token)
+        private ICollection<VariableValue> ProcessCalculations([NotNull] MinimizationTaskInput input, CancellationToken token)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
-            // emulate calculations
-            for (int i = 0; i < 10; i++)
-            {
-                if(token.IsCancellationRequested)
-                {
-                    token.ThrowIfCancellationRequested();
-                }
-                Thread.Sleep(500);
-            }
+            IMultiDimensionalSearchStrategy strategy = new PartanMethod(
+                new GoldenRatioMethod(
+                    new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default)),
+                    DirectedSearchSettings.Default),
+                new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default),
+                MultiDimensionalSearchSettings.Default);
 
-            return 0;
+
+            var function = new InterpretedFunction(input.Statement.Expression);
+            var args = function.OrderedArguments;
+
+            var result = strategy.Search(function, new Point(args.Select(s => input.Variables.First(v => v.VariableName == s).Value.Value).ToArray()));
+
+            return result.Zip(args, (d, s) => new VariableValue(s) { Value = d }).ToList();
         }
     }
 }
