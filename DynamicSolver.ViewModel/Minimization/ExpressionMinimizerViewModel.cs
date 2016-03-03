@@ -64,14 +64,8 @@ namespace DynamicSolver.ViewModel.Minimization
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
-            IMultiDimensionalSearchStrategy strategy = new PartanMethod(
-                new GoldenRatioMethod(
-                    new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default)),
-                    DirectedSearchSettings.Default),
-                new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default),
-                MultiDimensionalSearchSettings.Default);
-
-
+            IMultiDimensionalSearchStrategy strategy = new HookeJeevesMethod(HookeJeevesSearchSettings.Default);
+            
             var function = new InterpretedFunction(input.Statement.Expression);
             var args = function.OrderedArguments;
 
