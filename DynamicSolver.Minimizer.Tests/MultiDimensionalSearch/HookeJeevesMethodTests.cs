@@ -2,10 +2,7 @@ using System;
 using System.Linq;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
-using DynamicSolver.LinearAlgebra.Derivative;
-using DynamicSolver.Minimizer.MinimizationInterval;
 using DynamicSolver.Minimizer.MultiDimensionalSearch;
-using DynamicSolver.Minimizer.OneDimensionalSearch;
 using Moq;
 using NUnit.Framework;
 
@@ -15,9 +12,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
     public class HookeJeevesMethodTests
     {
         private static readonly HookeJeevesSearchSettings Settings = HookeJeevesSearchSettings.Default;
-        private static readonly NumericalDerivativeCalculator NumericalDerivativeCalculator = new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default);
-
-        private readonly IMultiDimensionalSearchStrategy _strategy = new HookeJeevesMethod(new GoldenRatioMethod(new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, NumericalDerivativeCalculator), DirectedSearchSettings.Default), NumericalDerivativeCalculator, Settings);
+        private readonly IMultiDimensionalSearchStrategy _strategy = new HookeJeevesMethod(Settings);
 
         [Test]
         public void Search_FoundsCorrectly()
