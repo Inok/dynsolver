@@ -13,7 +13,7 @@ namespace DynamicSolver.Minimizer
         
         public IterationLimiter(IIterationLimitSettings settings)
         {
-            if(settings.MaxIterationCount <=0)
+            if(settings.MaxIterationCount <= 0)
                 throw new ArgumentException("Settings has negative iteration limit.");
             _settings = settings;
         }

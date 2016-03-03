@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HookeJeevesSearchSettings.cs" />
     <Compile Include="IIterationLimitSettings.cs" />
     <Compile Include="IMultiDimensionalSearchStrategy.cs" />
     <Compile Include="IDirectedSearchStrategy.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="MinimizationInterval\DerivativeSwannMethod.cs" />
     <Compile Include="MinimizationTaskInput.cs" />
     <Compile Include="MultiDimensionalSearchSettings.cs" />
+    <Compile Include="MultiDimensionalSearch\HookeJeevesMethod.cs" />
     <Compile Include="MultiDimensionalSearch\PartanMethod.cs" />
     <Compile Include="DirectedSearchSettings.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethod.cs" />

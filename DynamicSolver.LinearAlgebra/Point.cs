@@ -45,6 +45,24 @@ namespace DynamicSolver.LinearAlgebra
             return new Point(movedPoint);
         }
 
+        public Point Move([NotNull] Vector direction)
+        {
+            if (direction == null) throw new ArgumentNullException(nameof(direction));
+            if (direction.Dimension != Dimension) throw new ArgumentException("Point and direction has different dimensions.");
+
+            if (direction.Length == 0)
+            {
+                return new Point(_point);
+            }
+
+            var movedPoint = new double[Dimension];
+            for (var i = 0; i < movedPoint.Length; i++)
+            {
+                movedPoint[i] = _point[i] + direction[i];
+            }
+            return new Point(movedPoint);
+        }
+
         public override string ToString()
         {
             return _point.DumpInline();

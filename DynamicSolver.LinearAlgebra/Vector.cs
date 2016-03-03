@@ -145,5 +145,16 @@ namespace DynamicSolver.LinearAlgebra
         int IReadOnlyCollection<double>.Count => Dimension;
 
         #endregion
+
+
+        public static Vector GetCoordinateDirection(int dimension, int coordinate)
+        {
+            if (dimension <= 0) throw new ArgumentOutOfRangeException(nameof(dimension));
+            if (coordinate < 0 || coordinate >= dimension) throw new ArgumentOutOfRangeException(nameof(coordinate));
+
+            var vector = new double[dimension];
+            vector[coordinate] = 1;
+            return new Vector(vector);
+        }
     }
 }

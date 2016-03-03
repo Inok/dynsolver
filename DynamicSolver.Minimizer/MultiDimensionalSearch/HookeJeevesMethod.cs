@@ -1,0 +1,121 @@
+using System;
+using System.Linq;
+using DynamicSolver.Abstractions;
+using DynamicSolver.LinearAlgebra;
+using DynamicSolver.LinearAlgebra.Derivative;
+using JetBrains.Annotations;
+
+namespace DynamicSolver.Minimizer.MultiDimensionalSearch
+{
+    public class HookeJeevesMethod : IMultiDimensionalSearchStrategy
+    {
+        private readonly IDirectedSearchStrategy _directedSearchStrategy;
+        private readonly IDerivativeCalculationStrategy _derivativeCalculator;
+        private readonly HookeJeevesSearchSettings _settings;
+
+        public HookeJeevesMethod(
+            [NotNull] IDirectedSearchStrategy directedSearchStrategy, 
+            [NotNull] IDerivativeCalculationStrategy derivativeCalculator,
+            [NotNull] HookeJeevesSearchSettings settings)
+        {
+            if (directedSearchStrategy == null) throw new ArgumentNullException(nameof(directedSearchStrategy));
+            if (derivativeCalculator == null) throw new ArgumentNullException(nameof(derivativeCalculator));
+            if (settings == null) throw new ArgumentNullException(nameof(settings));
+
+            _directedSearchStrategy = directedSearchStrategy;
+            _derivativeCalculator = derivativeCalculator;
+            _settings = settings;
+        }
+
+
+        public Point Search(IExecutableFunction function, Point startPoint)
+        {
+            var x1 = startPoint;
+            var increment = _settings.InitialIncrement;
+
+            var limiter = new IterationLimiter(_settings);
+            do
+            {
+                limiter.NextIteration();
+
+                Point x2;
+                do
+                {
+                    x2 = GetGreaterByCoordinateDirections(function, x1, increment);
+
+                    if (x2 != x1 && function.Execute(x2.ToArray()) < function.Execute(x1.ToArray()))
+                    {
+                        break;
+                    }
+
+                    increment *= _settings.StepReductionFactor;
+
+                    if (increment < _settings.Accuracy)
+                    {
+                        return x1;
+                    }
+                    
+                } while (true);
+
+
+                var x3 = x1;
+                var x4 = x2;
+                do
+                {
+                    var tmp = GetGreaterByCoordinateDirections(function, x4.Move(new Vector(x3, x4)), increment);
+
+                    if (function.Execute(tmp.ToArray()) >= function.Execute(x4.ToArray()))
+                    {
+                        break;
+                    }
+
+                    x3 = x4;
+                    x4 = tmp;
+                } while (true);
+
+                var iterationChangeInterval = new Interval(x1, x4);
+                if (iterationChangeInterval.Length < _settings.Accuracy || limiter.ShouldInterrupt)
+                {
+                    return x4;
+                }
+
+                increment *= _settings.StepReductionFactor;
+
+                if (increment < _settings.Accuracy)
+                {
+                    return x4;
+                }
+
+                x1 = x4;
+            }
+            while (true);
+        }
+
+        [NotNull]
+        private static Point GetGreaterByCoordinateDirections(IExecutableFunction function, Point current, double increment)
+        {
+            for (int i = 0; i < current.Dimension; i++)
+            {
+                var originalValue = function.Execute(current.ToArray());
+
+                var positiveShiftedPoint = current.Move(Vector.GetCoordinateDirection(current.Dimension, i), increment);
+                var negativeShiftedPoint = current.Move(Vector.GetCoordinateDirection(current.Dimension, i), -increment);
+
+                var positiveShiftedValue = function.Execute(positiveShiftedPoint.ToArray());
+                var negativeShiftedValue = function.Execute(negativeShiftedPoint.ToArray());
+
+                if (positiveShiftedValue < originalValue)
+                {
+                    current = positiveShiftedPoint;
+                    originalValue = positiveShiftedValue;
+                }
+
+                if (negativeShiftedValue < originalValue)
+                {
+                    current = negativeShiftedPoint;
+                }
+            }
+            return current;
+        }
+    }
+}
