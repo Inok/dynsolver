@@ -2,31 +2,19 @@ using System;
 using System.Linq;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
-using DynamicSolver.LinearAlgebra.Derivative;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Minimizer.MultiDimensionalSearch
 {
     public class HookeJeevesMethod : IMultiDimensionalSearchStrategy
     {
-        private readonly IDirectedSearchStrategy _directedSearchStrategy;
-        private readonly IDerivativeCalculationStrategy _derivativeCalculator;
         private readonly HookeJeevesSearchSettings _settings;
 
-        public HookeJeevesMethod(
-            [NotNull] IDirectedSearchStrategy directedSearchStrategy, 
-            [NotNull] IDerivativeCalculationStrategy derivativeCalculator,
-            [NotNull] HookeJeevesSearchSettings settings)
+        public HookeJeevesMethod([NotNull] HookeJeevesSearchSettings settings)
         {
-            if (directedSearchStrategy == null) throw new ArgumentNullException(nameof(directedSearchStrategy));
-            if (derivativeCalculator == null) throw new ArgumentNullException(nameof(derivativeCalculator));
             if (settings == null) throw new ArgumentNullException(nameof(settings));
-
-            _directedSearchStrategy = directedSearchStrategy;
-            _derivativeCalculator = derivativeCalculator;
             _settings = settings;
         }
-
 
         public Point Search(IExecutableFunction function, Point startPoint)
         {
