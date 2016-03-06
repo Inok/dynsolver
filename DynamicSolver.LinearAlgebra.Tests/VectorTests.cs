@@ -50,9 +50,6 @@ namespace DynamicSolver.LinearAlgebra.Tests
 
             Assert.That(() => new Vector(), Throws.ArgumentException);
             Assert.That(() => new Vector(new Point(new[] {1.0, 2.0, 3.0}), new Point(new[] {1.0, 2.0})), Throws.ArgumentException);
-
-            var point = new Point(new[] {1.0, 2.0});
-            Assert.That(() => new Vector(point, point), Throws.ArgumentException);
         }
 
         [TestCase(new double[] {0, 0, 0}, 0)]

@@ -38,7 +38,6 @@ namespace DynamicSolver.LinearAlgebra
         {
             if (from == null) throw new ArgumentNullException(nameof(from));
             if (to == null) throw new ArgumentNullException(nameof(to));
-            if (ReferenceEquals(from, to)) throw new ArgumentException("Points is the same object.");
             if (from.Dimension != to.Dimension || from.Dimension == 0) throw new ArgumentException("Points has different dimensions.");
             
             _vector = new double[from.Dimension];
