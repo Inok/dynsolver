@@ -1,4 +1,5 @@
-﻿using DynamicSolver.Abstractions;
+﻿using System.Threading;
+using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using JetBrains.Annotations;
 
@@ -6,6 +7,6 @@ namespace DynamicSolver.Minimizer
 {
     public interface IDirectedSearchStrategy
     {
-        Interval SearchInterval([NotNull] IExecutableFunction function, [NotNull] Point startPoint, [NotNull] Vector direction);
+        Interval SearchInterval([NotNull] IExecutableFunction function, [NotNull] Point startPoint, [NotNull] Vector direction, CancellationToken token = default(CancellationToken));
     }
 }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using DynamicSolver.LinearAlgebra.Derivative;
+using DynamicSolver.Minimizer.DirectedSearch;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Minimizer.MinimizationInterval
@@ -18,7 +20,7 @@ namespace DynamicSolver.Minimizer.MinimizationInterval
             _derivativeStrategy = derivativeStrategy;
         }
 
-        public Interval SearchInterval(IExecutableFunction function, Point startPoint, Vector direction)
+        public Interval SearchInterval(IExecutableFunction function, Point startPoint, Vector direction, CancellationToken token = default(CancellationToken))
         {
             if (function == null) throw new ArgumentNullException(nameof(function));
             if (startPoint == null) throw new ArgumentNullException(nameof(startPoint));
@@ -37,6 +39,8 @@ namespace DynamicSolver.Minimizer.MinimizationInterval
             var iteration = 0;
             do
             {
+                token.ThrowIfCancellationRequested();
+
                 var first = startPoint.Move(direction, shift);
                 var second = startPoint.Move(direction, shift + step);
 
