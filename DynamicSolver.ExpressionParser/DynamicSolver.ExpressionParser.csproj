@@ -32,8 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DumpExtension.cs" />
     <Compile Include="Expression\AddBinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparer.cs" />
@@ -69,6 +68,8 @@
     <Compile Include="Parser\IExpressionParser.cs" />
     <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\ExpressionAnalyzer.cs" />
+    <Compile Include="Tools\ExpressionVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">

@@ -1,5 +1,7 @@
 ﻿using System;
+using DynamicSolver.Abstractions;
 using DynamicSolver.Abstractions.Expression;
+using DynamicSolver.ExpressionParser.Tools;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
@@ -10,6 +12,10 @@ namespace DynamicSolver.ExpressionParser.Expression
         private static readonly ExpressionFormatter Formatter = new ExpressionFormatter();
 
         public IExpression Expression { get; }
+
+
+        private IExpressionAnalyzer _analyzer;
+        public IExpressionAnalyzer Analyzer => _analyzer ?? (_analyzer = new ExpressionAnalyzer(Expression));
 
         public Statement([NotNull] IExpression expression)
         {

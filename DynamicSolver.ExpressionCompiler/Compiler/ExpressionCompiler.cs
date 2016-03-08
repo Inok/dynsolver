@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using DynamicSolver.Abstractions;
+using JetBrains.Annotations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace DynamicSolver.ExpressionCompiler
+namespace DynamicSolver.ExpressionCompiler.Compiler
 {
     public class ExpressionCompiler : IExpressionCompiler
     {
@@ -25,11 +24,14 @@ namespace DynamicSolver.ExpressionCompiler
             {"pow", "double pow(double arg, double pow) => Math.Pow(arg, pow);"}
         };
         
-        public IFunction Compile(string expression, string[] allowedArguments)
+        public IExecutableFunction Compile([NotNull] string expression, [NotNull] string[] allowedArguments)
         {
             if (string.IsNullOrWhiteSpace(expression))
                 throw new ArgumentException("Expression is null or empty.");
 
+            if (allowedArguments == null)
+                throw new ArgumentNullException(nameof(allowedArguments));
+            
             if (allowedArguments.Any(string.IsNullOrWhiteSpace))
                 throw new ArgumentException("Array has arguments with null or whitespace value.");
 
@@ -39,16 +41,20 @@ namespace DynamicSolver.ExpressionCompiler
             if(allowedArguments.Any(arg => SystemFunctions.ContainsKey(arg)))
                 throw new ArgumentException("Argument has name equal to system function.");
 
-            var functions = string.Join(Environment.NewLine, SystemFunctions.Values);
-            var arguments = string.Join(Environment.NewLine, allowedArguments.Select((arg, i) => $@"double {arg} = args[{i}];"));
-
             var sourceSyntaxTree = CSharpSyntaxTree.ParseText(
 $@"using System;
+using System.Collections.Generic;
 namespace DynamicSolver.DynamicFunctionCompilation {{
-public class FunctionContainer : {typeof (IFunction).FullName} {{
-{functions}
+public class FunctionContainer : {typeof (IExecutableFunction).FullName} {{
+{string.Join(Environment.NewLine, SystemFunctions.Values)}
+
+public IReadOnlyCollection<string> OrderedArguments => new string[]{{ {string.Join(", ", allowedArguments.Select(a => "\"" + a + "\""))} }};
 public double Execute(double[] args) {{
-{arguments}
+{string.Join(Environment.NewLine, allowedArguments.Select((arg, i) => $@"double {arg} = args[{i}];"))}
+return {expression};
+}}
+public double Execute(IReadOnlyDictionary<string,double> args) {{
+{string.Join(Environment.NewLine, allowedArguments.Select((arg) => $@"double {arg} = args[""{arg}""];"))}
 return {expression};
 }}
 }}
@@ -57,7 +63,7 @@ return {expression};
             var references = new MetadataReference[]
             {
                 MetadataReference.CreateFromFile(typeof (object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof (IFunction).Assembly.Location)
+                MetadataReference.CreateFromFile(typeof (IExecutableFunction).Assembly.Location)
             };
 
             var compilation = CSharpCompilation.Create(
@@ -88,7 +94,7 @@ return {expression};
                 ms.Seek(0, SeekOrigin.Begin);
                 var assembly = Assembly.Load(ms.ToArray());
 
-                var obj = (IFunction) Activator.CreateInstance(assembly.GetType("DynamicSolver.DynamicFunctionCompilation.FunctionContainer"));
+                var obj = (IExecutableFunction) Activator.CreateInstance(assembly.GetType("DynamicSolver.DynamicFunctionCompilation.FunctionContainer"));
                 
                 return obj;
             }

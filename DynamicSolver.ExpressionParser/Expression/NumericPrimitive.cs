@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using DynamicSolver.Abstractions.Expression;
+using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
@@ -8,10 +9,11 @@ namespace DynamicSolver.ExpressionParser.Expression
     {
         private static readonly IFormatProvider DoubleFormat = new NumberFormatInfo() { NumberDecimalSeparator = "." };
 
+        [NotNull]
         public string Token { get; }
         public double Value { get; }
 
-        public NumericPrimitive(string token)
+        public NumericPrimitive([NotNull] string token)
         {
             if (string.IsNullOrEmpty(token)) throw new ArgumentException("Argument is null or empty", nameof(token));
 
