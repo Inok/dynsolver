@@ -29,6 +29,7 @@ namespace DynamicSolver.ExpressionParser.Tools
 
             if (TryRaise(VisitBinaryOperator, expression as IBinaryOperator))
             {
+                TryRaise(VisitEqualBinaryOperator, expression as EqualBinaryOperator);
                 TryRaise(VisitAddBinaryOperator, expression as AddBinaryOperator);
                 TryRaise(VisitSubtractBinaryOperator, expression as SubtractBinaryOperator);
                 TryRaise(VisitMultiplyBinaryOperator, expression as MultiplyBinaryOperator);
@@ -80,6 +81,7 @@ namespace DynamicSolver.ExpressionParser.Tools
         public event EventHandler<IExpression> VisitAnyNode;
 
         public event EventHandler<IBinaryOperator> VisitBinaryOperator;
+        public event EventHandler<EqualBinaryOperator> VisitEqualBinaryOperator;
         public event EventHandler<AddBinaryOperator> VisitAddBinaryOperator;
         public event EventHandler<SubtractBinaryOperator> VisitSubtractBinaryOperator;
         public event EventHandler<MultiplyBinaryOperator> VisitMultiplyBinaryOperator;

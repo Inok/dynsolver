@@ -8,6 +8,9 @@ namespace DynamicSolver.ExpressionParser.Expression
     {
         private int GetPriority(IBinaryOperator op)
         {
+            if (op is EqualBinaryOperator)
+                return 0;
+
             if (op is AddBinaryOperator || op  is SubtractBinaryOperator)
                 return 1;
 

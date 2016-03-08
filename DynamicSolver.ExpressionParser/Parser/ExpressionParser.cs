@@ -11,7 +11,7 @@ namespace DynamicSolver.ExpressionParser.Parser
             if (string.IsNullOrWhiteSpace(inputExpression)) throw new ArgumentException("Argument is null or empty", nameof(inputExpression));
 
             var lexer = new Lexer(inputExpression);
-            var expression = ParseExpr(lexer);
+            var expression = ParseEquality(lexer);
 
             lexer.SkipLeadingWhitespaces();
             if (!lexer.IsEmpty)
@@ -22,7 +22,20 @@ namespace DynamicSolver.ExpressionParser.Parser
             return new Statement(expression);
         }
 
-        private static IExpression ParseExpr(Lexer lexer)
+        private static IExpression ParseEquality(Lexer lexer)
+        {
+            var expr = ParseAddSubtract(lexer);
+
+            while (lexer.AdvanceToken('='))
+            {
+                var right = ParseAddSubtract(lexer);
+                expr = new EqualBinaryOperator(expr, right);
+            }
+
+            return expr;
+        }
+
+        private static IExpression ParseAddSubtract(Lexer lexer)
         {
             var expr = ParseMulDiv(lexer);
 
@@ -97,7 +110,7 @@ namespace DynamicSolver.ExpressionParser.Parser
             {
                 lexer.SkipLeadingWhitespaces();
 
-                var expr = ParseExpr(lexer);
+                var expr = ParseAddSubtract(lexer);
 
                 lexer.SkipLeadingWhitespaces();
                 if (!lexer.AdvanceToken(')'))
@@ -172,7 +185,7 @@ namespace DynamicSolver.ExpressionParser.Parser
 
             if (lexer.AdvanceToken('(', false))
             {
-                var childExpr = ParseExpr(lexer);
+                var childExpr = ParseAddSubtract(lexer);
 
                 lexer.SkipLeadingWhitespaces();
                 if (!lexer.AdvanceToken(')'))
