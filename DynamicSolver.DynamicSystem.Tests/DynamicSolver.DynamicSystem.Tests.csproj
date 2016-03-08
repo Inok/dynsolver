@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{014C42F7-A7DF-4E9E-9853-2A6D02393B99}</ProjectGuid>
+    <ProjectGuid>{F55727B9-6C39-4D63-A926-F2591707C0C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DynamicSolver.DynamicSystem</RootNamespace>
-    <AssemblyName>DynamicSolver.DynamicSystem</AssemblyName>
+    <RootNamespace>DynamicSolver.DynamicSystem.Tests</RootNamespace>
+    <AssemblyName>DynamicSolver.DynamicSystem.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.0\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,21 +51,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">
-      <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
-      <Name>DynamicSolver.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.ExpressionCompiler\DynamicSolver.ExpressionCompiler.csproj">
-      <Project>{9239d3bf-592b-4532-bd62-0a94b4d296e2}</Project>
-      <Name>DynamicSolver.ExpressionCompiler</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
-      <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
-      <Name>DynamicSolver.ExpressionParser</Name>
+    <ProjectReference Include="..\DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj">
+      <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
+      <Name>DynamicSolver.DynamicSystem</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
