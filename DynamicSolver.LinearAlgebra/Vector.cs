@@ -38,7 +38,6 @@ namespace DynamicSolver.LinearAlgebra
         {
             if (from == null) throw new ArgumentNullException(nameof(from));
             if (to == null) throw new ArgumentNullException(nameof(to));
-            if (ReferenceEquals(from, to)) throw new ArgumentException("Points is the same object.");
             if (from.Dimension != to.Dimension || from.Dimension == 0) throw new ArgumentException("Points has different dimensions.");
             
             _vector = new double[from.Dimension];
@@ -145,5 +144,16 @@ namespace DynamicSolver.LinearAlgebra
         int IReadOnlyCollection<double>.Count => Dimension;
 
         #endregion
+
+
+        public static Vector GetCoordinateDirection(int dimension, int coordinate)
+        {
+            if (dimension <= 0) throw new ArgumentOutOfRangeException(nameof(dimension));
+            if (coordinate < 0 || coordinate >= dimension) throw new ArgumentOutOfRangeException(nameof(coordinate));
+
+            var vector = new double[dimension];
+            vector[coordinate] = 1;
+            return new Vector(vector);
+        }
     }
 }
