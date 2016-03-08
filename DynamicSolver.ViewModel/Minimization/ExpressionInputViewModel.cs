@@ -113,6 +113,11 @@ namespace DynamicSolver.ViewModel.Minimization
                 return null;
             }
 
+            if (!Statement.Analyzer.IsComputable)
+            {
+                return null;
+            }
+
             return new MinimizationTaskInput(Statement, Variables);
         }
 
@@ -125,7 +130,11 @@ namespace DynamicSolver.ViewModel.Minimization
 
             try
             {
-                return new ParseResult(_parser.Parse(expression), null);
+                var statement = _parser.Parse(expression);
+
+                return statement.Analyzer.IsComputable
+                    ? new ParseResult(statement, null)
+                    : new ParseResult(null, "Provided statement isn't computable.");
             }
             catch (FormatException e)
             {

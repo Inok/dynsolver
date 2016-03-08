@@ -3,11 +3,11 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public sealed class EqualBinaryOperator : BinaryOperator
+    public sealed class AssignmentBinaryOperator : BinaryOperator
     {
         public override string OperatorToken { get; } = "=";
 
-        public EqualBinaryOperator([NotNull] IExpression leftOperand, [NotNull] IExpression rightOperand) : base(leftOperand, rightOperand)
+        public AssignmentBinaryOperator([NotNull] IExpression leftOperand, [NotNull] IExpression rightOperand) : base(leftOperand, rightOperand)
         {
         }
     }

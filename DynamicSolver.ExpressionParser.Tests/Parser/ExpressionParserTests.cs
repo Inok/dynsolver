@@ -209,7 +209,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             Assert.That(constant.Constant, Is.EqualTo(Constant.Pi));
         }
 
-        [TestCase("=", typeof(EqualBinaryOperator))]
+        [TestCase("=", typeof(AssignmentBinaryOperator))]
         [TestCase("+", typeof(AddBinaryOperator))]
         [TestCase("-", typeof(SubtractBinaryOperator))]
         [TestCase("*", typeof(MultiplyBinaryOperator))]
@@ -231,7 +231,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             Assert.That(((FunctionCall)multiply.RightOperand).Argument, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("t"));
         }
 
-        [TestCase("=", typeof(EqualBinaryOperator))]
+        [TestCase("=", typeof(AssignmentBinaryOperator))]
         [TestCase("+", typeof(AddBinaryOperator))]
         [TestCase("-", typeof(SubtractBinaryOperator))]
         [TestCase("*", typeof(MultiplyBinaryOperator))]
@@ -248,7 +248,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             Assert.That(pow.RightOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("2"));            
         }
 
-        [TestCase("=", typeof(EqualBinaryOperator))]
+        [TestCase("=", typeof(AssignmentBinaryOperator))]
         [TestCase("+", typeof(AddBinaryOperator))]
         [TestCase("-", typeof(SubtractBinaryOperator))]
         [TestCase("*", typeof(MultiplyBinaryOperator))]
@@ -265,7 +265,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             Assert.That(pow.RightOperand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("y"));
         }
 
-        [TestCase("=", typeof(EqualBinaryOperator))]
+        [TestCase("=", typeof(AssignmentBinaryOperator))]
         [TestCase("+", typeof(AddBinaryOperator))]
         [TestCase("-", typeof(SubtractBinaryOperator))]
         [TestCase("*", typeof(MultiplyBinaryOperator))]
@@ -284,6 +284,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         }
 
         // ReSharper disable once UnusedMethodReturnValue.Local
+
         private static IEnumerable<object[]> InvalidBinaryCases()
         {
             var samples = new[] {"5#", "4# ", "#3", " #2", "1##0"};
@@ -310,7 +311,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         public void ParseComplexExpression_ReturnsCorrectStatement()
         {
             IStatement expected = new Statement(
-                new EqualBinaryOperator(
+                new AssignmentBinaryOperator(
                     new VariablePrimitive("y"),
                     new DivideBinaryOperator(
                         new FunctionCall("cos",

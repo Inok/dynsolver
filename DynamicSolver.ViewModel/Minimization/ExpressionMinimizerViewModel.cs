@@ -66,7 +66,7 @@ namespace DynamicSolver.ViewModel.Minimization
 
             IMultiDimensionalSearchStrategy strategy = new HookeJeevesMethod(HookeJeevesSearchSettings.Default);
             
-            var function = new InterpretedFunction(input.Statement.Expression);
+            var function = new InterpretedFunction(input.Statement);
             var args = function.OrderedArguments;
 
             var result = strategy.Search(function, new Point(args.Select(s => input.Variables.First(v => v.VariableName == s).Value.Value).ToArray()));

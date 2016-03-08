@@ -8,6 +8,6 @@ namespace DynamicSolver.Abstractions.Expression
         IExpression Expression { get; }
 
         [NotNull]
-        IExpressionAnalyzer Analyzer { get; }
+        IExpressionAnalyzer Analyzer { get; }                
     }
 }

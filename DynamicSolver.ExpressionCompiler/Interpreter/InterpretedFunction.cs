@@ -28,11 +28,12 @@ namespace DynamicSolver.ExpressionCompiler.Interpreter
 
         public IReadOnlyCollection<string> OrderedArguments { get; private set; }
 
-        public InterpretedFunction([NotNull] IExpression expression)
+        public InterpretedFunction([NotNull] IStatement statement)
         {
-            if (expression == null) throw new ArgumentNullException(nameof(expression));
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            if (!statement.Analyzer.IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
 
-            _expression = expression;
+            _expression = statement.Expression;
 
             var list = new List<string>();
 

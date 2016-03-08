@@ -15,6 +15,7 @@ namespace DynamicSolver.Minimizer
         public MinimizationTaskInput([NotNull] IStatement statement, [NotNull] IEnumerable<VariableValue> variables)
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
+            if (!statement.Analyzer.IsComputable) throw new ArgumentException("Statement should be computable, but it's not.", nameof(statement));
             if (variables == null) throw new ArgumentNullException(nameof(variables));
 
             Statement = statement;

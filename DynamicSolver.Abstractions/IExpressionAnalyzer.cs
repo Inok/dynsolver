@@ -6,5 +6,8 @@ namespace DynamicSolver.Abstractions
     {
         IReadOnlyCollection<string> Variables { get; }
         ISet<string> GetVariablesSet();
+
+        bool IsSimpleAssignment { get; }
+        bool IsComputable { get; }
     }
 }

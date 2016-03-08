@@ -12,7 +12,7 @@ namespace DynamicSolver.ExpressionParser.Tests.Expression
         public void ComplexStatement_ToString()
         {
             IStatement statement = new Statement(
-                new EqualBinaryOperator(
+                new AssignmentBinaryOperator(
                     new VariablePrimitive("y"),
                     new DivideBinaryOperator(
                         new FunctionCall("cos",
@@ -30,35 +30,35 @@ namespace DynamicSolver.ExpressionParser.Tests.Expression
             Assert.That(statement.ToString(), Is.EqualTo("y = cos(-x * pi) / -((-1.5 - ln(x)) ^ 2)"));
         }
 
-        [TestCase( typeof(EqualBinaryOperator),    typeof(AddBinaryOperator),       false)]
+        [TestCase( typeof(AssignmentBinaryOperator),    typeof(AddBinaryOperator),       false)]
         [TestCase( typeof(AddBinaryOperator),      typeof(AddBinaryOperator),       false)]
         [TestCase( typeof(SubtractBinaryOperator), typeof(AddBinaryOperator),       false)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(AddBinaryOperator),       true )]
         [TestCase( typeof(DivideBinaryOperator),   typeof(AddBinaryOperator),       true )]
         [TestCase( typeof(PowBinaryOperator),      typeof(AddBinaryOperator),       true )]
                    
-        [TestCase( typeof(EqualBinaryOperator),    typeof(SubtractBinaryOperator),  false)]
+        [TestCase( typeof(AssignmentBinaryOperator),    typeof(SubtractBinaryOperator),  false)]
         [TestCase( typeof(AddBinaryOperator),      typeof(SubtractBinaryOperator),  false)]
         [TestCase( typeof(SubtractBinaryOperator), typeof(SubtractBinaryOperator),  false)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(SubtractBinaryOperator),  true )]
         [TestCase( typeof(DivideBinaryOperator),   typeof(SubtractBinaryOperator),  true )]
         [TestCase( typeof(PowBinaryOperator),      typeof(SubtractBinaryOperator),  true )]
                    
-        [TestCase( typeof(EqualBinaryOperator),    typeof(MultiplyBinaryOperator),  false)]
+        [TestCase( typeof(AssignmentBinaryOperator),    typeof(MultiplyBinaryOperator),  false)]
         [TestCase( typeof(AddBinaryOperator),      typeof(MultiplyBinaryOperator),  false)]
         [TestCase( typeof(SubtractBinaryOperator), typeof(MultiplyBinaryOperator),  false)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(MultiplyBinaryOperator),  false)]
         [TestCase( typeof(DivideBinaryOperator),   typeof(MultiplyBinaryOperator),  true )]
         [TestCase( typeof(PowBinaryOperator),      typeof(MultiplyBinaryOperator),  true )]
                    
-        [TestCase( typeof(EqualBinaryOperator),    typeof(DivideBinaryOperator),    false)]
+        [TestCase( typeof(AssignmentBinaryOperator),    typeof(DivideBinaryOperator),    false)]
         [TestCase( typeof(AddBinaryOperator),      typeof(DivideBinaryOperator),    false)]
         [TestCase( typeof(SubtractBinaryOperator), typeof(DivideBinaryOperator),    false)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(DivideBinaryOperator),    true )]
         [TestCase( typeof(DivideBinaryOperator),   typeof(DivideBinaryOperator),    true )]
         [TestCase( typeof(PowBinaryOperator),      typeof(DivideBinaryOperator),    true )]
                    
-        [TestCase( typeof(EqualBinaryOperator),    typeof(PowBinaryOperator),       true)]
+        [TestCase( typeof(AssignmentBinaryOperator),    typeof(PowBinaryOperator),       true)]
         [TestCase( typeof(AddBinaryOperator),      typeof(PowBinaryOperator),       true)]
         [TestCase( typeof(SubtractBinaryOperator), typeof(PowBinaryOperator),       true)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(PowBinaryOperator),       true )]
