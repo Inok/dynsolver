@@ -1,6 +1,6 @@
-# dynsolver
+# DynamicSolver
 
-_dynsolver_ is a math system with two general features: modelling dynamic systems and minimizing functions.
+_DynamicSolver_ is a math system with two general features: modelling dynamic systems and minimizing functions.
 
 ### Project state
 
