@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using JetBrains.Annotations;
@@ -16,7 +17,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             _settings = settings;
         }
 
-        public Point Search(IExecutableFunction function, Point startPoint)
+        public Point Search(IExecutableFunction function, Point startPoint, CancellationToken token = default(CancellationToken))
         {
             var x1 = startPoint;
             var increment = _settings.InitialIncrement;
@@ -24,11 +25,14 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             var limiter = new IterationLimiter(_settings);
             do
             {
+                token.ThrowIfCancellationRequested();
                 limiter.NextIteration();
 
                 Point x2;
                 do
                 {
+                    token.ThrowIfCancellationRequested();
+
                     x2 = GetGreaterByCoordinateDirections(function, x1, increment);
 
                     if (x2 != x1 && function.Execute(x2.ToArray()) < function.Execute(x1.ToArray()))
@@ -50,6 +54,8 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
                 var x4 = x2;
                 do
                 {
+                    token.ThrowIfCancellationRequested();
+
                     var tmp = GetGreaterByCoordinateDirections(function, x4.Move(new Vector(x3, x4)), increment);
 
                     if (function.Execute(tmp.ToArray()) >= function.Execute(x4.ToArray()))

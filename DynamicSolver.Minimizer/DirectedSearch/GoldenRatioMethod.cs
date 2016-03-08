@@ -4,7 +4,7 @@ using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Minimizer.OneDimensionalSearch
+namespace DynamicSolver.Minimizer.DirectedSearch
 {
     public class GoldenRatioMethod : IDirectedSearchStrategy
     {

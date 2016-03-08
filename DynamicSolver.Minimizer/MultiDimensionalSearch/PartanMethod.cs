@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using DynamicSolver.LinearAlgebra.Derivative;
@@ -27,7 +28,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             _settings = settings;
         }
 
-        public Point Search(IExecutableFunction function, Point startPoint)
+        public Point Search(IExecutableFunction function, Point startPoint, CancellationToken token = default(CancellationToken))
         {
             var x1 = startPoint;
             var x2 = _directedSearchStrategy.SearchInterval(function, x1, _derivativeCalculator.Derivative(function, startPoint)).Center;
@@ -35,6 +36,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             var limiter = new IterationLimiter(_settings);
             do
             {
+                token.ThrowIfCancellationRequested();
                 limiter.NextIteration();
 
                 var x3 = _directedSearchStrategy.SearchInterval(function, x2, _derivativeCalculator.Derivative(function, x2)).Center;

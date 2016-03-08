@@ -1,7 +1,7 @@
 using DynamicSolver.LinearAlgebra.Derivative;
+using DynamicSolver.Minimizer.DirectedSearch;
 using DynamicSolver.Minimizer.MinimizationInterval;
 using DynamicSolver.Minimizer.MultiDimensionalSearch;
-using DynamicSolver.Minimizer.OneDimensionalSearch;
 using NUnit.Framework;
 
 namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch

@@ -10,7 +10,6 @@ using DynamicSolver.LinearAlgebra.Derivative;
 using DynamicSolver.Minimizer;
 using DynamicSolver.Minimizer.MinimizationInterval;
 using DynamicSolver.Minimizer.MultiDimensionalSearch;
-using DynamicSolver.Minimizer.OneDimensionalSearch;
 using DynamicSolver.ViewModel.Annotations;
 using DynamicSolver.ViewModel.Properties;
 using ReactiveUI;
