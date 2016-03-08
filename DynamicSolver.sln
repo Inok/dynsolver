@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.Minimizer.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.ViewModel", "DynamicSolver.ViewModel\DynamicSolver.ViewModel.csproj", "{3DA1C621-033E-4CFA-AEDE-2932CDB35BED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.DynamicSystem", "DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj", "{014C42F7-A7DF-4E9E-9853-2A6D02393B99}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,10 @@ Global
 		{3DA1C621-033E-4CFA-AEDE-2932CDB35BED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DA1C621-033E-4CFA-AEDE-2932CDB35BED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DA1C621-033E-4CFA-AEDE-2932CDB35BED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{014C42F7-A7DF-4E9E-9853-2A6D02393B99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{014C42F7-A7DF-4E9E-9853-2A6D02393B99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{014C42F7-A7DF-4E9E-9853-2A6D02393B99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{014C42F7-A7DF-4E9E-9853-2A6D02393B99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +114,6 @@ Global
 		{04B2B8B5-88EF-4484-9767-FCFDE69372DA} = {2E695FA3-D4C9-440B-A17E-319B73AF7B41}
 		{6E145CB5-B513-4C7D-93B6-187260E136C5} = {E8601327-AA42-48D8-BCB1-9590F214EF48}
 		{3DA1C621-033E-4CFA-AEDE-2932CDB35BED} = {3803E1DB-7ECA-45E5-BEE1-8C2308AFBA2D}
+		{014C42F7-A7DF-4E9E-9853-2A6D02393B99} = {2E695FA3-D4C9-440B-A17E-319B73AF7B41}
 	EndGlobalSection
 EndGlobal
