@@ -68,7 +68,7 @@ namespace DynamicSolver.ViewModel.Minimization
             var function = new InterpretedFunction(input.Statement.Expression);
             var args = function.OrderedArguments;
 
-            var result = strategy.Search(function, new Point(args.Select(s => input.Variables.First(v => v.VariableName == s).Value.Value).ToArray()));
+            var result = strategy.Search(function, new Point(args.Select(s => input.Variables.First(v => v.VariableName == s).Value.Value).ToArray()), token);
 
             return result.Zip(args, (d, s) => new VariableValue(s) { Value = d }).ToList();
         }
