@@ -13,4 +13,4 @@ _DynamicSolver_ is a math system with two general features: modelling dynamic sy
 #### Tasks
 | Tasks | Ready | In Progress |
 |-------|-------|-------------|
-| Tasks | [![Stories in Ready](https://badge.waffle.io/Inok/dynsolver.svg?label=ready&title=Ready)](http://waffle.io/Inok/dynsolver) | [![Stories in Progress](https://badge.waffle.io/Inok/dynsolver.svg?label=inprogress&title=In Progress)](http://waffle.io/Inok/dynsolver) |
+| Tasks | [![Stories in Ready](https://badge.waffle.io/Inok/dynsolver.svg?label=ready&title=Ready)](http://waffle.io/Inok/dynsolver) | [![Stories in Progress](https://badge.waffle.io/Inok/dynsolver.svg?label=in%20progress&title=In Progress)](http://waffle.io/Inok/dynsolver) |
