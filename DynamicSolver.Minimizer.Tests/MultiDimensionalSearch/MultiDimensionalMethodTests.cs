@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -72,13 +72,23 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
                 StartPoint = new Point(0, 2),
                 ExpectedResultPoint = new Point(2, 1)
             });
+
+            TestCases.Add(new SearchMethodTestCase
+            {
+                Function = new MockFunction(x => Math.Pow(1 - x[0], 2) + 100 * Math.Pow(x[1] - x[0] * x[0], 2), new[] {"x1", "x2"}),
+                StartPoint = new Point(0, 0),
+                ExpectedResultPoint = new Point(1, 1)
+            });
         }
         
         [TestCaseSource(nameof(TestCases))]
         public void Search_FoundsMinimumWithinAccuracy(SearchMethodTestCase testCase)
         {
             var actual = SearchStrategy.Search(testCase.Function, testCase.StartPoint);
-            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(Accuracy));
+
+            // Допустимая точность повышается на два порядка по причине того, что часть методов производят оценку точности 
+            // по производным или очередному шагу, и требуемая точность фактически может быть так и не достигнута.
+            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(Accuracy * 100));
         }
 
         [TestCaseSource(nameof(TestCases))]

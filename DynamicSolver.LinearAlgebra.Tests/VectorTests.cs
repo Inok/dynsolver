@@ -218,7 +218,7 @@ namespace DynamicSolver.LinearAlgebra.Tests
         {
             var values = new double[] {1, 2.5, 4.0, 0.474, 3};
             var vector = new Vector(values);
-            Assert.That(vector.ToString(), Is.EqualTo($"({string.Join(",", values)})"));
+            Assert.That(vector.ToString(), Is.EqualTo($"({string.Join(";", values)})"));
         }
     }
 }

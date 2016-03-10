@@ -64,7 +64,12 @@ namespace DynamicSolver.LinearAlgebra
 
         public override string ToString()
         {
-            return $"({string.Join(",", _vector)})";
+            return $"({string.Join(";", _vector)})";
+        }
+
+        public string ToString(string doubleFormatString)
+        {
+            return $"({string.Join(";", _vector.Select(d => d.ToString(doubleFormatString)))})";
         }
 
         public static Vector operator +(Vector left, Vector right)
