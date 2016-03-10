@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -40,7 +40,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
         protected static ICollection<SearchMethodTestCase> TestCases { get; } = new List<SearchMethodTestCase>();
 
         protected IMultiDimensionalSearchStrategy SearchStrategy { get; set; }
-        protected double Accuracy { get; set; }
+        protected double ExpectedAccuracy { get; set; }
 
         [SetUp]
         public abstract void Setup();
@@ -74,20 +74,27 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
                 StartPoint = new Point(0, 2),
                 ExpectedResultPoint = new Point(2, 1)
             });
+
+            TestCases.Add(new SearchMethodTestCase
+            {
+                Function = new MockFunction(x => Math.Pow(1 - x[0], 2) + 100 * Math.Pow(x[1] - x[0] * x[0], 2), new[] {"x1", "x2"}),
+                StartPoint = new Point(0, 0),
+                ExpectedResultPoint = new Point(1, 1)
+            });
         }
         
         [TestCaseSource(nameof(TestCases))]
         public void Search_FoundsMinimumWithinAccuracy(SearchMethodTestCase testCase)
         {
             var actual = SearchStrategy.Search(testCase.Function, testCase.StartPoint);
-            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(Accuracy));
+            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(ExpectedAccuracy));
         }
 
         [TestCaseSource(nameof(TestCases))]
         public void Search_WhenStartsExactlyFromMinimumPoint_FoundsMinimumWithinAccuracy(SearchMethodTestCase testCase)
         {
             var actual = SearchStrategy.Search(testCase.Function, testCase.ExpectedResultPoint);
-            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(Accuracy));
+            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(ExpectedAccuracy));
         }
 
         [TestCaseSource(nameof(TestCases))]

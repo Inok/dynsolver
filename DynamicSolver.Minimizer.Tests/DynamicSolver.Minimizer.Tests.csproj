@@ -54,7 +54,9 @@
     <Compile Include="MinimizationMethodExecutorTests.cs" />
     <Compile Include="MultiDimensionalSearch\HookeJeevesMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\MultiDimensionalMethodTests.cs" />
+    <Compile Include="MultiDimensionalSearch\NelderMeadMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\PartanMethodTests.cs" />
+    <Compile Include="MultiDimensionalSearch\RosenbrockMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\SearchMethodTestCase.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethodTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
