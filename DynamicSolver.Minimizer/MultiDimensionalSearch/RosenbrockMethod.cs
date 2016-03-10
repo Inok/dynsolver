@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using JetBrains.Annotations;
@@ -20,7 +21,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             _settings = settings;
         }
 
-        public Point Search(IExecutableFunction function, Point startPoint)
+        public Point Search(IExecutableFunction function, Point startPoint, CancellationToken token = default(CancellationToken))
         {
             var x1 = startPoint;
             var limiter = new IterationLimiter(_settings);
@@ -36,6 +37,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
 
             do
             {
+                token.ThrowIfCancellationRequested();
                 limiter.NextIteration();
 
                 var x2 = x1;
