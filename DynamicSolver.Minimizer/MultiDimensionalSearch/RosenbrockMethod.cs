@@ -43,7 +43,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
                 var x2 = x1;
                 for (var i = 0; i < directions.Length; i++)
                 {
-                    var tmp = _directedSearchStrategy.SearchInterval(function, x2, directions[i]).Center;
+                    var tmp = _directedSearchStrategy.SearchInterval(function, x2, directions[i], token).Center;
                     if (function.Execute(tmp.ToArray()) < function.Execute(x2.ToArray()))
                     {
                         shifts[i] = new Interval(x2, tmp).Length;
