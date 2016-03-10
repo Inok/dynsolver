@@ -53,6 +53,7 @@
     <Compile Include="MinimizationInterval\DerivativeSwannMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\HookeJeevesMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\MultiDimensionalMethodTests.cs" />
+    <Compile Include="MultiDimensionalSearch\NelderMeadMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\PartanMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\RosenbrockMethodTests.cs" />
     <Compile Include="MultiDimensionalSearch\SearchMethodTestCase.cs" />

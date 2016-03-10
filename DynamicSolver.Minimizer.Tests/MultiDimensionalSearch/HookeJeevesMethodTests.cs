@@ -10,7 +10,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
         {
             var settings = HookeJeevesSearchSettings.Default;
             SearchStrategy = new HookeJeevesMethod(settings);
-            Accuracy = settings.Accuracy;
+            ExpectedAccuracy = settings.Accuracy;
         }
     }
 }

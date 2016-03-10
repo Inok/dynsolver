@@ -20,7 +20,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
                     DirectedSearchSettings.Default),
                 numericalDerivativeCalculator,
                 settings);
-            Accuracy = settings.Accuracy;
+            ExpectedAccuracy = settings.Accuracy * 100;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
                     new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, numericalDerivativeCalculator),
                     DirectedSearchSettings.Default),
                 settings);
-            Accuracy = settings.Accuracy;
+            ExpectedAccuracy = settings.Accuracy * 100;
         }
     }
 }

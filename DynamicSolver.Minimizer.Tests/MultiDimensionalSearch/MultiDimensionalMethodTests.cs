@@ -38,7 +38,7 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
         protected static ICollection<SearchMethodTestCase> TestCases { get; } = new List<SearchMethodTestCase>();
 
         protected IMultiDimensionalSearchStrategy SearchStrategy { get; set; }
-        protected double Accuracy { get; set; }
+        protected double ExpectedAccuracy { get; set; }
 
         [SetUp]
         public abstract void Setup();
@@ -85,17 +85,14 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
         public void Search_FoundsMinimumWithinAccuracy(SearchMethodTestCase testCase)
         {
             var actual = SearchStrategy.Search(testCase.Function, testCase.StartPoint);
-
-            // Допустимая точность повышается на два порядка по причине того, что часть методов производят оценку точности 
-            // по производным или очередному шагу, и требуемая точность фактически может быть так и не достигнута.
-            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(Accuracy * 100));
+            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(ExpectedAccuracy));
         }
 
         [TestCaseSource(nameof(TestCases))]
         public void Search_WhenStartsExactlyFromMinimumPoint_FoundsMinimumWithinAccuracy(SearchMethodTestCase testCase)
         {
             var actual = SearchStrategy.Search(testCase.Function, testCase.ExpectedResultPoint);
-            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(Accuracy));
+            Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(ExpectedAccuracy));
         }
     }
 }

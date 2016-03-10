@@ -58,7 +58,9 @@
     <Compile Include="MultiDimensionalSearch\HookeJeevesMethod.cs" />
     <Compile Include="MultiDimensionalSearch\PartanMethod.cs" />
     <Compile Include="DirectedSearchSettings.cs" />
+    <Compile Include="MultiDimensionalSearch\NelderMeadMethod.cs" />
     <Compile Include="MultiDimensionalSearch\RosenbrockMethod.cs" />
+    <Compile Include="MultiDimensionalSearch\NelderMeadSearchSettings.cs" />
     <Compile Include="OneDimensionalSearch\GoldenRatioMethod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VariableValue.cs" />
