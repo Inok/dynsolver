@@ -128,6 +128,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DynamicSystem\SystemSolverView.xaml.cs">
+      <DependentUpon>SystemSolverView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DynamicSystem\SystemInputView.xaml.cs">
       <DependentUpon>SystemInputView.xaml</DependentUpon>
     </Compile>
@@ -141,6 +144,10 @@
       <DependentUpon>MinimizationResultView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
+    <Page Include="DynamicSystem\SystemSolverView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DynamicSystem\SystemInputView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

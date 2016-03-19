@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.ExpressionParser.Parser;
 using DynamicSolver.Minimizer;
@@ -25,8 +24,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private readonly ObservableAsPropertyHelper<string> _errorMessage;
         private readonly ObservableAsPropertyHelper<IReactiveList<VariableValue>> _variables;
         private readonly ObservableAsPropertyHelper<DynamicSystemSolverInput> _taskInput;
-        private readonly ObservableAsPropertyHelper<string> _taskInputDump;
-
+        
         public string Expression
         {
             get { return _expression; }
@@ -49,8 +47,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         public string ErrorMessage => _errorMessage.Value;
         public IReactiveList<VariableValue> Variables => _variables.Value;
         public DynamicSystemSolverInput TaskInput  => _taskInput.Value;
-        public string TaskInputDump  => _taskInputDump.Value;
-
+        
 
         public SystemInputViewModel([NotNull] IExpressionParser parser)
         {
@@ -77,9 +74,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 this.WhenAnyObservable(m => m.Variables.ItemChanged).Select(_ => Unit.Default))
                 .Throttle(TimeSpan.FromSeconds(0.5), DispatcherScheduler.Current)
                 .Select(_ => GetTaskInput())
-                .ToProperty(this, m => m.TaskInput);
-
-            _taskInputDump = this.WhenAnyValue(m => m.TaskInput).Select(i => i.Dump()).ToProperty(this, m => m.TaskInputDump);
+                .ToProperty(this, m => m.TaskInput);            
         }
 
         private IReactiveList<VariableValue> CreateVariables(ExplicitOrdinaryDifferentialEquationSystem system)

@@ -23,7 +23,7 @@ namespace DynamicSolver.DynamicSystem
             _equationSystem = equationSystem;
         }
 
-        public Dictionary<string, double>[] Solve(Dictionary<string, double> initialConditions, double step, double modellingTime)
+        public Tuple<Dictionary<string, double>[], string> Solve(Dictionary<string, double> initialConditions, double step, double modellingTime)
         {
             if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
             if (modellingTime <= 0) throw new ArgumentOutOfRangeException(nameof(modellingTime));
@@ -82,7 +82,7 @@ namespace DynamicSolver.DynamicSystem
                 i++;
             }
 
-            return results;
+            return new Tuple<Dictionary<string, double>[], string>(results, modellingVariable);
         }
     }
 }

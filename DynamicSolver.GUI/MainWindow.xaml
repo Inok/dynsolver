@@ -15,9 +15,7 @@
             </StackPanel>
         </TabItem>        
         <TabItem Header="Dynamic system solver">
-            <StackPanel>
-                <dynamicSystem:SystemInputView/>
-            </StackPanel>
+            <dynamicSystem:SystemSolverView/>
         </TabItem>
     </TabControl>
 </Window>

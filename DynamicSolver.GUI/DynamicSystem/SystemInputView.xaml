@@ -28,7 +28,7 @@
                                AllowInputSpecialValues="None" FormatString="0.0###"  HorizontalAlignment="Left" MinWidth="100"/>
         </Grid>
 
-        
+
         <ListBox ItemsSource="{Binding Variables}" Margin="0,10,0,0">
             <ListBox.Style>
                 <Style TargetType="ListBox">
@@ -53,6 +53,5 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <TextBlock Text="{Binding TaskInputDump}"></TextBlock>
     </StackPanel>
 </UserControl>

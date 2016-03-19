@@ -4,9 +4,6 @@ using DynamicSolver.ViewModel.DynamicSystem;
 
 namespace DynamicSolver.GUI.DynamicSystem
 {
-    /// <summary>
-    /// Interaction logic for ExpressionInputView.xaml
-    /// </summary>
     public partial class SystemInputView : UserControl
     {
         public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(SystemInputViewModel), typeof(SystemInputView), new PropertyMetadata(default(SystemInputViewModel)));
@@ -19,8 +16,6 @@ namespace DynamicSolver.GUI.DynamicSystem
 
         public SystemInputView()
         {
-            ViewModel = new SystemInputViewModel(new ExpressionParser.Parser.ExpressionParser());
-
             InitializeComponent();
         }
     }
