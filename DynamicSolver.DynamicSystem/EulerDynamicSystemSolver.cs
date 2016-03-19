@@ -67,7 +67,7 @@ namespace DynamicSolver.DynamicSystem
             results[0] = prevVars;
 
             int i = 1;
-            for (var t = 0d + step; t <= modellingTime; t += step)
+            for (var t = step; t <= modellingTime; t = step * i)
             {
                 var vars = prevVars.ToDictionary(v => v.Key, v => v.Value);
                 vars[modellingVariable] = t;
