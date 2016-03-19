@@ -71,14 +71,17 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                     return;
                 }
 
+                int i = 0;
                 foreach (var key in Result[0].Keys.Where(k => k != result.Item2))
                 {
+                    i++;
                     var dataSource = new EnumerableDataSource<Dictionary<string, double>>(Result);
                     dataSource.SetXMapping(d => d[result.Item2]);
                     dataSource.SetYMapping(d => d[key]);
 
-                    var graph = new LineGraph(dataSource) {LinePen = new Pen(Brushes.Blue, 2) };
+                    var graph = new LineGraph(dataSource) {LinePen = new Pen(new SolidColorBrush(new HsbColor((i * 40.0) % 360.0, 1.0, 1.0).ToArgbColor()), 2) };
                     graph.AddToPlotter(Plotter);
+                    
                 }
                 Plotter.FitToView();
             }
