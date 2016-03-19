@@ -42,10 +42,17 @@ namespace DynamicSolver.DynamicSystem
                 }
             }
 
-            var maxOrderVariableDerivatives = functionDerivatives.GroupBy(d => d.Variable, d => d.Order).Select(g => new VariableDerivative(g.Key, g.AsEnumerable().Max()));
+            var maxOrderVariableDerivatives = functionDerivatives.GroupBy(d => d.Variable, d => d.Order)
+                .Select(g => new VariableDerivative(g.Key, g.AsEnumerable().Max()))
+                .ToList();
             if (maxOrderVariableDerivatives.Any(d => leadingDerivatives.Any(ld => ld.Variable.Equals(d.Variable) && ld.Order <= d.Order)))
             {
                 throw new FormatException("Functions has any derivative with order greater then or equal to leading variable derivatives order.");
+            }
+
+            if (maxOrderVariableDerivatives.Any(d => leadingDerivatives.All(ld => !ld.Variable.Equals(d.Variable))))
+            {
+                throw new FormatException("Functions has an derivative of variable that not presented at leading derivatives.");
             }
         }
     }
