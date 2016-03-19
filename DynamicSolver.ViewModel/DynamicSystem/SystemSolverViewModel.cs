@@ -8,6 +8,7 @@ using System.Windows.Media;
 using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.DynamicSystem;
 using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.Charts;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using ReactiveUI;
 
@@ -70,18 +71,16 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                     return;
                 }
 
-                int i = 0;
                 foreach (var key in Result[0].Keys.Where(k => k != result.Item2))
                 {
                     var dataSource = new EnumerableDataSource<Dictionary<string, double>>(Result);
                     dataSource.SetXMapping(d => d[result.Item2]);
                     dataSource.SetYMapping(d => d[key]);
 
-                    var graph = new LineGraph(dataSource) {LinePen = new Pen(Brushes.Blue, 2)};
-                    
-                    Plotter.Children.Add(graph);
-                    i++;
+                    var graph = new LineGraph(dataSource) {LinePen = new Pen(Brushes.Blue, 2) };
+                    graph.AddToPlotter(Plotter);
                 }
+                Plotter.FitToView();
             }
             catch (Exception ex)
             {
