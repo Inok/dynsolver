@@ -42,6 +42,12 @@ namespace DynamicSolver.ExpressionParser.Expression
                 return FormatNode(unaryMinus);
             }
 
+            var derive = expression as DeriveUnaryOperator;
+            if (derive != null)
+            {
+                return FormatNode(derive);
+            }
+
             var functionCall = expression as IFunctionCall;
             if (functionCall != null)
             {
@@ -63,6 +69,7 @@ namespace DynamicSolver.ExpressionParser.Expression
         private static string FormatNode(VariablePrimitive variable) => variable.Name;
 
         private static string FormatNode(UnaryMinusOperator op) => op.Operand is IBinaryOperator ? $"-({InternalFormat(op.Operand)})" : $"-{InternalFormat(op.Operand)}";
+        private static string FormatNode(DeriveUnaryOperator op) => op.Operand is IBinaryOperator ? $"({InternalFormat(op.Operand)})'" : $"{InternalFormat(op.Operand)}'";
         private static string FormatNode(IFunctionCall fun) => $"{fun.FunctionName}({InternalFormat(fun.Argument)})";
 
         private static string FormatNode(IBinaryOperator binary)

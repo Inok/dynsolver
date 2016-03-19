@@ -115,7 +115,7 @@ namespace DynamicSolver.ExpressionParser.Parser
             {
                 identifier += Input[0];
                 Advance();
-            } while (!IsEmpty && Regex.IsMatch(Input.Substring(0, 1), @"[a-zA-Z0-9`_]"));
+            } while (!IsEmpty && Regex.IsMatch(Input.Substring(0, 1), @"[a-zA-Z0-9_]"));
 
             return identifier;
         }

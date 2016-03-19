@@ -152,7 +152,6 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
         [TestCase("x")]
         [TestCase("y2")]
         [TestCase("t_10")]
-        [TestCase("x`")]
         [TestCase(" x")]
         [TestCase("y ")]
         [TestCase(" z ")]
@@ -164,6 +163,25 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
 
             var variable = (VariablePrimitive) actual.Expression;
             Assert.That(variable.Name, Is.EqualTo(input.Trim()));
+        }
+
+        [Test]
+        public void ParseDerive_ReturnsCorrectStatement()
+        {
+            var actual = _parser.Parse("x''");
+
+            Assert.That(actual.Expression, Is.InstanceOf<DeriveUnaryOperator>());
+
+            var derive = (DeriveUnaryOperator)actual.Expression;
+            Assert.That(derive.Operand, Is.InstanceOf<DeriveUnaryOperator>());
+
+            derive = (DeriveUnaryOperator)derive.Operand;
+            Assert.That(derive, Is.InstanceOf<DeriveUnaryOperator>());
+
+            Assert.That(derive.Operand, Is.InstanceOf<VariablePrimitive>());
+
+            var variable = (VariablePrimitive) derive.Operand;
+            Assert.That(variable.Name, Is.EqualTo("x"));
         }
 
         [Test]
@@ -183,6 +201,17 @@ namespace DynamicSolver.ExpressionParser.Tests.Parser
             Assert.That(numeric.Token, Is.EqualTo("-10"));
             Assert.That(numeric.Value, Is.EqualTo(-10));
 
+        }
+
+        [TestCase("'")]
+        [TestCase("x-'")]
+        [TestCase("x'(')")]
+        [TestCase("e'")]
+        [TestCase("pi'")]
+        [TestCase("cos(x)'")]
+        public void ParseDerive_WhenInvalid_ThrowsFormatException(string input)
+        {
+            Assert.That(() => _parser.Parse(input), Throws.TypeOf<FormatException>());
         }
 
         [TestCase("--2")]

@@ -196,7 +196,14 @@ namespace DynamicSolver.ExpressionParser.Parser
                 return new FunctionCall(identifier, childExpr);
             }
 
-            return new VariablePrimitive(identifier);
+            IExpression expr = new VariablePrimitive(identifier);
+
+            while (lexer.AdvanceToken('\'', false))
+            {
+                expr = new DeriveUnaryOperator(expr);
+            }
+
+            return expr;
         }
     }
 }

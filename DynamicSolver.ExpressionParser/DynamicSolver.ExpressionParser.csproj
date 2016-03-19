@@ -54,6 +54,7 @@
     <Compile Include="Expression\BinaryOperatorsPriorityComparer.cs" />
     <Compile Include="Expression\Constant.cs" />
     <Compile Include="Expression\ConstantPrimitive.cs" />
+    <Compile Include="Expression\DeriveUnaryOperator.cs" />
     <Compile Include="Expression\DivideBinaryOperator.cs" />
     <Compile Include="Expression\AssignmentBinaryOperator.cs" />
     <Compile Include="Expression\ExpressionFormatter.cs" />

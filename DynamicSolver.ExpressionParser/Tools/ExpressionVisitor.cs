@@ -45,6 +45,7 @@ namespace DynamicSolver.ExpressionParser.Tools
             if (TryRaise(VisitUnaryOperator, expression as IUnaryOperator))
             {
                 TryRaise(VisitUnaryMinusOperator, expression as UnaryMinusOperator);
+                TryRaise(VisitDeriveUnaryOperator, expression as DeriveUnaryOperator);
 
                 var unary = (IUnaryOperator)expression;
                 Visit(unary.Operand);
@@ -90,6 +91,7 @@ namespace DynamicSolver.ExpressionParser.Tools
         
         public event EventHandler<IUnaryOperator> VisitUnaryOperator;
         public event EventHandler<UnaryMinusOperator> VisitUnaryMinusOperator;
+        public event EventHandler<DeriveUnaryOperator> VisitDeriveUnaryOperator;
 
         public event EventHandler<IPrimitive> VisitPrimitive;
         public event EventHandler<VariablePrimitive> VisitVariablePrimitive;

@@ -51,9 +51,21 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">
+      <Project>{74375775-643E-4016-A7E2-F2B477A3175A}</Project>
+      <Name>DynamicSolver.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj">
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
       <Name>DynamicSolver.DynamicSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicSolver.ExpressionCompiler\DynamicSolver.ExpressionCompiler.csproj">
+      <Project>{9239D3BF-592B-4532-BD62-0A94B4D296E2}</Project>
+      <Name>DynamicSolver.ExpressionCompiler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
+      <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
+      <Name>DynamicSolver.ExpressionParser</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
