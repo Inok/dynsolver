@@ -23,7 +23,7 @@ namespace DynamicSolver.DynamicSystem
 
         private static void ValidateEquationsSystem([NotNull] ICollection<ExplicitOrdinaryDifferentialEquation> equations)
         {
-            if (equations == null) throw new ArgumentNullException(nameof(equations));
+            if(equations == null) throw new ArgumentNullException(nameof(equations));
             if(equations.Count <= 0) throw new ArgumentException("Equations collection is empty.");
 
             var leadingDerivatives = new HashSet<VariableDerivative>(VariableDerivative.Comparer);

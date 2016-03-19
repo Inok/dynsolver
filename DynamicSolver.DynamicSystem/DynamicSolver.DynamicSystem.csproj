@@ -64,10 +64,6 @@
       <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
       <Name>DynamicSolver.ExpressionParser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.ViewModel\DynamicSolver.ViewModel.csproj">
-      <Project>{3DA1C621-033E-4CFA-AEDE-2932CDB35BED}</Project>
-      <Name>DynamicSolver.ViewModel</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
