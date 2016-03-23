@@ -22,7 +22,7 @@ build:
 
 artifacts:
 - path: artifacts/gui_app/Release
-  name: gui_app
+  name: 'gui_app-{branch}-{version}'
   
 pull_requests:
   do_not_increment_build_number: true
