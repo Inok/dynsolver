@@ -68,7 +68,7 @@ namespace DynamicSolver.ExpressionParser.Tools
         }
 
         [ContractAnnotation("arg:null => false; arg:notnull => true")]
-        private bool TryRaise<T>([CanBeNull] EventHandler<T> handler, T arg)
+        private bool TryRaise<T>([CanBeNull] EventHandler<T> handler, T arg) where T: class
         {
             if (arg == null)
             {

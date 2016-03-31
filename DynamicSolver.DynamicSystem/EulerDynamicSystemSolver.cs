@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.Abstractions;
 using DynamicSolver.ExpressionCompiler.Interpreter;
+using DynamicSolver.ExpressionParser.Expression;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem
@@ -23,66 +25,44 @@ namespace DynamicSolver.DynamicSystem
             _equationSystem = equationSystem;
         }
 
-        public Tuple<Dictionary<string, double>[], string> Solve(Dictionary<string, double> initialConditions, double step, double modellingTime)
+        public Dictionary<string, double>[] Solve(Dictionary<string, double> initialConditions, double step, double modellingLimit)
         {
             if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
-            if (modellingTime <= 0) throw new ArgumentOutOfRangeException(nameof(modellingTime));
-            if (step > modellingTime) throw new ArgumentOutOfRangeException();
-
-            var variables = _equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables).Distinct().ToList();
-
-            var modellingVariable = "t";
-            if (!variables.Contains(modellingVariable))
+            if (modellingLimit <= 0) throw new ArgumentOutOfRangeException(nameof(modellingLimit));
+            if (step > modellingLimit) throw new ArgumentOutOfRangeException();
+            if (!new HashSet<string>(_equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables)).SetEquals(initialConditions.Keys))
             {
-                var independentVariables = variables.Except(_equationSystem.Equations.Select(e => e.LeadingDerivative.Variable.Name)).Except(initialConditions.Keys).ToList();
-                if (independentVariables.Count == 1)
-                {
-                    modellingVariable = independentVariables[0];
-                }
-                else
-                {
-                    throw new ArgumentException("Cannot determine modelling variable.");
-                }
+                throw new ArgumentException("Initial values has different set of arguments from equation system.");
             }
 
-            if (initialConditions.ContainsKey(modellingVariable))
+            var results = new Dictionary<string, double>[(int)Math.Round(modellingLimit / step) + 1];
+            
+            results[0] = initialConditions.ToDictionary(v => v.Key, v => v.Value);
+
+            var functions = _equationSystem.Equations
+                .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, new InterpretedFunction(e.Function)))
+                .ToList();
+
+            var lastValues = initialConditions;
+            for(var i = 1; i < results.Length; i++)
             {
-                throw new ArgumentException("Time variable should be not set at initial conditions.");
+                results[i] = lastValues = GetNextValues(functions, lastValues, step);
             }
 
-            foreach (var v in variables)
+            return results;
+        }
+
+        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IReadOnlyDictionary<string, double> variables, double step)
+        {
+            var vars = variables.ToDictionary(v => v.Key, v => v.Value);
+
+            foreach (var function in functions)
             {
-                if (v != modellingVariable && !initialConditions.ContainsKey(v))
-                {
-                    throw new ArgumentException($"Initial value of {v} not found.");
-                }
+                var arguments = function.Item2.OrderedArguments.Select(a => variables[a]).ToArray();
+                vars[function.Item1.Name] = variables[function.Item1.Name] + step*function.Item2.Execute(arguments);
             }
 
-            var functions = _equationSystem.Equations.Select(e => new {variable = e.LeadingDerivative.Variable, func = new InterpretedFunction(e.Function)}).ToList();
-
-            var results = new Dictionary<string, double>[(int)(modellingTime / step) + 1];
-
-            var prevVars = initialConditions.ToDictionary(v => v.Key, v => v.Value);
-            prevVars.Add(modellingVariable, 0);
-            results[0] = prevVars;
-
-            int i = 1;
-            for (var t = step; t <= modellingTime; t = step * i)
-            {
-                var vars = prevVars.ToDictionary(v => v.Key, v => v.Value);
-                vars[modellingVariable] = t;
-
-                foreach (var function in functions)
-                {
-                    var arguments = function.func.OrderedArguments.Select(a => prevVars[a]).ToArray();
-                    vars[function.variable.Name] = prevVars[function.variable.Name] + step * function.func.Execute(arguments);
-                }
-
-                results[i] = prevVars = vars;
-                i++;
-            }
-
-            return new Tuple<Dictionary<string, double>[], string>(results, modellingVariable);
+            return vars;
         }
     }
 }

@@ -50,7 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Expression\IAssignmentStatement.cs" />
-    <Compile Include="Expression\IComputableStatement.cs" />
     <Compile Include="IExpressionAnalyzer.cs" />
     <Compile Include="Tools\DumpExtension.cs" />
     <Compile Include="Expression\IBinaryOperator.cs" />

@@ -61,7 +61,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             try
             {
                 var result = await Task.Run(() => ProcessCalculations(input, token), token);
-                Result = result.Item1;
+                Result = result;
 
                 Plotter.Children.RemoveAllOfType(typeof(LineGraph));
                 Plotter.Children.RemoveAllOfType(typeof(ElementMarkerPointsGraph));
@@ -72,16 +72,17 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 }
 
                 int i = 0;
-                foreach (var key in Result[0].Keys.Where(k => k != result.Item2))
+                double x = 0;
+                foreach (var key in Result[0].Keys)
                 {
                     i++;
-                    var dataSource = new EnumerableDataSource<Dictionary<string, double>>(Result);
-                    dataSource.SetXMapping(d => d[result.Item2]);
-                    dataSource.SetYMapping(d => d[key]);
+                    var dataSource = new EnumerableDataSource<Tuple<Dictionary<string, double>, double>>(Result.Select(d =>  new Tuple<Dictionary<string, double>, double>(d,x)));
+                    dataSource.SetXMapping(d => d.Item2);
+                    dataSource.SetYMapping(d => d.Item1[key]);
 
-                    var graph = new LineGraph(dataSource) {LinePen = new Pen(new SolidColorBrush(new HsbColor((i * 40.0) % 360.0, 1.0, 1.0).ToArgbColor()), 2) };
+                    var graph = new LineGraph(dataSource) {LinePen = new Pen(new SolidColorBrush(new HsbColor((i * 50.0) % 360.0, 1.0, 1.0).ToArgbColor()), 2) };
                     graph.AddToPlotter(Plotter);
-                    
+                    x += input.Step;
                 }
                 Plotter.FitToView();
             }
@@ -91,13 +92,13 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
         }
 
-        private Tuple<Dictionary<string, double>[], string> ProcessCalculations([Annotations.NotNull] DynamicSystemSolverInput input, CancellationToken token)
+        private Dictionary<string, double>[] ProcessCalculations([Annotations.NotNull] DynamicSystemSolverInput input, CancellationToken token)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
             var solver = new EulerDynamicSystemSolver(input.System);
 
-            return solver.Solve(input.Variables.ToDictionary(v => v.VariableName, v => v.Value.Value), input.Step, input.ModellingTime);
+            return solver.Solve(input.Variables.ToDictionary(v => v.VariableName, v => v.Value.Value), input.Step, input.ModellingLimit);
         }
     }
 }

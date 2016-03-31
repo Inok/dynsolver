@@ -88,18 +88,6 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 .Concat(system.Equations.Select(e => e.LeadingDerivative.Variable.Name))
                 .Distinct().ToList();
 
-            var modellingVariable = system.Equations.Select(e => e.LeadingDerivative.Variable.Name).Any(v => v == "t") ? string.Empty : "t";
-            if (!expressionVariables.Contains(modellingVariable))
-            {
-                var independentVariables = expressionVariables.Except(system.Equations.Select(e => e.LeadingDerivative.Variable.Name)).ToList();
-                if (independentVariables.Count == 1)
-                {
-                    modellingVariable = independentVariables[0];
-                }
-            }
-
-            expressionVariables.Remove(modellingVariable);
-
             var comparer = Comparer<VariableValue>.Create((v1, v2) => string.Compare(v1.VariableName, v2.VariableName, StringComparison.Ordinal));
             var newVariables = new SortedSet<VariableValue>(comparer);
 
