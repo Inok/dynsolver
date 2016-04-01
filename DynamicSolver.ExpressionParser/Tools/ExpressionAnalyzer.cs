@@ -69,5 +69,14 @@ namespace DynamicSolver.ExpressionParser.Tools
                 return (_isComputable = assignmentsCount == 0).Value;
             }
         }
+
+        public bool HasOperator<T>() where T : IExpression
+        {
+            var result = false;
+            var visitor = new ExpressionVisitor(_expression);
+            visitor.VisitAnyNode += (_, v) => result = result || v is T;
+            visitor.Visit();
+            return result;
+        }
     }
 }
