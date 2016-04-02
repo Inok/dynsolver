@@ -13,7 +13,6 @@ namespace DynamicSolver.ExpressionParser.Expression
 
         public IExpression Expression { get; }
 
-
         private IExpressionAnalyzer _analyzer;
         public IExpressionAnalyzer Analyzer => _analyzer ?? (_analyzer = new ExpressionAnalyzer(Expression));
 
@@ -27,6 +26,25 @@ namespace DynamicSolver.ExpressionParser.Expression
         public override string ToString()
         {
             return Formatter.Format(Expression);
+        }
+
+        public bool Equals(IStatement other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Expression.Equals(other.Expression);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is Statement && Equals((Statement) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Expression.GetHashCode();
         }
     }
 }

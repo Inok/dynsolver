@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public abstract class BinaryOperator : IBinaryOperator
+    public abstract class BinaryOperator : IBinaryOperator, IEquatable<IBinaryOperator>
     {
         public abstract string OperatorToken { get; }
         
@@ -25,5 +25,29 @@ namespace DynamicSolver.ExpressionParser.Expression
             return $"({LeftOperand}) {OperatorToken} ({RightOperand})";
         }
 
+        public bool Equals(IBinaryOperator other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(OperatorToken, other.OperatorToken, StringComparison.Ordinal)
+                   && LeftOperand.Equals(other.LeftOperand)
+                   && RightOperand.Equals(other.RightOperand);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            var other = obj as IBinaryOperator;
+            return other != null && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (OperatorToken.GetHashCode()*397 ^ LeftOperand.GetHashCode())*397 ^ RightOperand.GetHashCode();
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public class ConstantPrimitive : IPrimitive
+    public class ConstantPrimitive : IPrimitive, IEquatable<ConstantPrimitive>
     {
         [NotNull]
         public Constant Constant { get; }
@@ -18,6 +18,26 @@ namespace DynamicSolver.ExpressionParser.Expression
         public override string ToString()
         {
             return $"{Constant.Name}";
+        }
+
+        public bool Equals(ConstantPrimitive other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Constant.Equals(other.Constant);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ConstantPrimitive) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Constant.GetHashCode();
         }
     }
 }

@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.ExpressionParser.Expression
 {
-    public sealed class FunctionCall : IFunctionCall
+    public sealed class FunctionCall : IFunctionCall, IEquatable<FunctionCall>
     {
         public string FunctionName { get; }
 
@@ -22,6 +22,28 @@ namespace DynamicSolver.ExpressionParser.Expression
         public override string ToString()
         {
             return $"{FunctionName}({Argument})";
+        }
+
+        public bool Equals(FunctionCall other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return string.Equals(FunctionName, other.FunctionName) && Argument.Equals(other.Argument);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is FunctionCall && Equals((FunctionCall) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (FunctionName.GetHashCode()*397) ^ Argument.GetHashCode();
+            }
         }
     }
 }
