@@ -52,6 +52,10 @@
       <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\DynamicDataDisplay.Markers2.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.1.2.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.2-eap\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
       <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\Parser.dll</HintPath>
       <Private>True</Private>
@@ -210,9 +214,9 @@
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
       <Name>DynamicSolver.DynamicSystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
+    <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
       <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
-      <Name>DynamicSolver.ExpressionParser</Name>
+      <Name>DynamicSolver.Expressions</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.Minimizer\DynamicSolver.Minimizer.csproj">
       <Project>{04B2B8B5-88EF-4484-9767-FCFDE69372DA}</Project>

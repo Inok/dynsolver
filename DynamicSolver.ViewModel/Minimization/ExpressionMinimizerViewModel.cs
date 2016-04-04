@@ -4,14 +4,14 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicSolver.ExpressionCompiler.Interpreter;
+using DynamicSolver.Expressions.Execution.Interpreter;
+using DynamicSolver.Expressions.Parser;
 using DynamicSolver.LinearAlgebra;
 using DynamicSolver.LinearAlgebra.Derivative;
 using DynamicSolver.Minimizer;
 using DynamicSolver.Minimizer.MinimizationInterval;
 using DynamicSolver.Minimizer.MultiDimensionalSearch;
 using DynamicSolver.Minimizer.OneDimensionalSearch;
-using DynamicSolver.ViewModel.Annotations;
 using DynamicSolver.ViewModel.Properties;
 using ReactiveUI;
 
@@ -29,7 +29,7 @@ namespace DynamicSolver.ViewModel.Minimization
 
         public ExpressionMinimizerViewModel()
         {
-            InputViewModel = new ExpressionInputViewModel(new ExpressionParser.Parser.ExpressionParser());
+            InputViewModel = new ExpressionInputViewModel(new ExpressionParser());
             ResultViewModel = new MinimizationResultViewModel();
 
             var inputObservable = this.WhenAnyValue(m => m.InputViewModel.MinimizationInput);

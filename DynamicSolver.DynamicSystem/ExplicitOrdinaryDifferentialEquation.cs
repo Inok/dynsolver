@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using DynamicSolver.Abstractions.Expression;
-using DynamicSolver.ExpressionParser.Expression;
+using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem

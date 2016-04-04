@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Abstractions;
-using DynamicSolver.ExpressionCompiler.Interpreter;
-using DynamicSolver.ExpressionParser.Expression;
+using DynamicSolver.Expressions.Execution.Interpreter;
+using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem

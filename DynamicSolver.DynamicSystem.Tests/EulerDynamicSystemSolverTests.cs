@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests
@@ -9,7 +10,7 @@ namespace DynamicSolver.DynamicSystem.Tests
         [Test]
         public void CheckCalculatesCorrectly()
         {
-            var parser = new ExpressionParser.Parser.ExpressionParser();
+            var parser = new ExpressionParser();
 
             var solver = new EulerDynamicSystemSolver(new ExplicitOrdinaryDifferentialEquationSystem(new[]
             {

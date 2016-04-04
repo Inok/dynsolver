@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Minimizer;
-using DynamicSolver.ViewModel.Annotations;
+using DynamicSolver.ViewModel.Properties;
 using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.Minimization

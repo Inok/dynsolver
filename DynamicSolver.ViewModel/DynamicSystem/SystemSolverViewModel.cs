@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.DynamicSystem;
+using DynamicSolver.Expressions.Parser;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.Charts;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
@@ -42,7 +43,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         public SystemSolverViewModel()
         {
-            InputViewModel = new SystemInputViewModel(new ExpressionParser.Parser.ExpressionParser());
+            InputViewModel = new SystemInputViewModel(new ExpressionParser());
 
             var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput);
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input != null), CalculateAsync);
@@ -92,7 +93,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
         }
 
-        private Dictionary<string, double>[] ProcessCalculations([Annotations.NotNull] DynamicSystemSolverInput input, CancellationToken token)
+        private Dictionary<string, double>[] ProcessCalculations([Properties.NotNull] DynamicSystemSolverInput input, CancellationToken token)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 

@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=10.1.2.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.2-eap\lib\net20\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
@@ -70,9 +70,9 @@
       <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
       <Name>DynamicSolver.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
+    <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
       <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
-      <Name>DynamicSolver.ExpressionParser</Name>
+      <Name>DynamicSolver.Expressions</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.LinearAlgebra\DynamicSolver.LinearAlgebra.csproj">
       <Project>{7091a9cf-91fe-440d-af2d-b37345067114}</Project>

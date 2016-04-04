@@ -5,9 +5,9 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicSolver.DynamicSystem;
-using DynamicSolver.ExpressionParser.Parser;
+using DynamicSolver.Expressions.Parser;
 using DynamicSolver.Minimizer;
-using DynamicSolver.ViewModel.Annotations;
+using DynamicSolver.ViewModel.Properties;
 using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
