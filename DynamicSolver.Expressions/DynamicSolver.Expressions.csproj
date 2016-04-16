@@ -65,9 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Execution\Compiler\ExpressionCompiler.cs" />
-    <Compile Include="Execution\Compiler\IExpressionCompiler.cs" />
     <Compile Include="Derivation\SymbolicDerivationService.cs" />
+    <Compile Include="Execution\Compiler\CompiledFunction.cs" />
     <Compile Include="Expression\AddBinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparer.cs" />

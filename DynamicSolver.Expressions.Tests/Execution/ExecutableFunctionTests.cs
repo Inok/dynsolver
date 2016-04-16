@@ -2,32 +2,48 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using DynamicSolver.Abstractions;
+using DynamicSolver.Abstractions.Expression;
 using DynamicSolver.Abstractions.Tools;
+using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Parser;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
-namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
+namespace DynamicSolver.Expressions.Tests.Execution
 {
-    [TestFixture]
-    public class InterpretedFunctionTests
+    [TestFixture(typeof(InterpretedFunction))]
+    [TestFixture(typeof(CompiledFunction))]
+    public class ExecutableFunctionTests<T> where T: IExecutableFunction
     {
         [NotNull] private readonly ExpressionParser _parser = new ExpressionParser();
 
-
-        [Test]
-        public void Consttructor_InvalidArguments_Throws()
+        private static IExecutableFunction CreateFunction(IStatement statement)
         {
-            // ReSharper disable once AssignNullToNotNullAttribute
-            Assert.That(() => new InterpretedFunction(null), Throws.ArgumentNullException);
+            try
+            {
+                return (IExecutableFunction) Activator.CreateInstance(typeof(T), statement);
+            }
+            catch (TargetInvocationException ex) when(ex.InnerException != null)
+            {
+                throw ex.InnerException;
+            }            
         }
 
         [Test]
-        public void Consttructor_UnknownFunctionCall_Throws()
+        public void Constructor_InvalidArguments_Throws()
         {
-            Assert.That(() => new InterpretedFunction(new Statement(new UnaryMinusOperator(new FunctionCall("foo", new NumericPrimitive("0"))))), Throws.ArgumentException);
+            // ReSharper disable once AssignNullToNotNullAttribute
+            Assert.That(() => CreateFunction(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void Constructor_UnknownFunctionCall_Throws()
+        {
+            Assert.That(() => CreateFunction(new Statement(new UnaryMinusOperator(new FunctionCall("foo", new NumericPrimitive("0"))))), Throws.ArgumentException);
         }
 
 
@@ -38,7 +54,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
         public void OrderedArguments_HasValidItems(string expression, string[] expectedArguments)
         {
             var statement = _parser.Parse(expression);
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             Assert.That(function.OrderedArguments, Is.Ordered.And.Unique.And.EqualTo(expectedArguments));
         }
@@ -47,7 +63,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
         public void Execute_WithDictionary_NullArguments_Throws()
         {
             var statement = _parser.Parse("1 + 1");
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             // ReSharper disable once AssignNullToNotNullAttribute
             Assert.That(() => function.Execute((IReadOnlyDictionary<string, double>)null), Throws.ArgumentNullException);
@@ -65,7 +81,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
             Console.WriteLine(args.Dump());
 
             var statement = _parser.Parse(expression);
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             Assert.That(() => function.Execute(args), Throws.ArgumentException);
         }
@@ -93,7 +109,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
             Console.WriteLine(args.Dump());
 
             var statement = _parser.Parse(expression);
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             Assert.That(function.Execute(args), Is.EqualTo(expected).Within(Math.Max(Math.Abs(expected * 1e-5), 1e-10)));
         }
@@ -102,7 +118,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
         public void Execute_WithArray_NullArguments_Throws()
         {
             var statement = _parser.Parse("1 + 1");
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             // ReSharper disable once AssignNullToNotNullAttribute
             Assert.That(() => function.Execute((double[])null), Throws.ArgumentNullException);
@@ -115,7 +131,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
         public void Execute_WithArray_InvalidArguments_Throws(string expression, params double[] args)
         {
             var statement = _parser.Parse(expression);
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             Assert.That(() => function.Execute(args), Throws.ArgumentException);
         }
@@ -141,7 +157,7 @@ namespace DynamicSolver.Expressions.Tests.Execution.Interpreter
         public void Execute_WithArray_CalculatesAExpected(string expression, double expected, double[] args)
         {
             var statement = _parser.Parse(expression);
-            var function = new InterpretedFunction(statement);
+            var function = CreateFunction(statement);
 
             Assert.That(function.Execute(args), Is.EqualTo(expected).Within(Math.Max(Math.Abs(expected * 1e-5), 1e-10)));
         }

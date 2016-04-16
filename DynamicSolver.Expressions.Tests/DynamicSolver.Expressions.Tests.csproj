@@ -53,10 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Derivation\SymbolicDerivationServiceTests.cs" />
-    <Compile Include="Execution\Compiler\ExpressionCompilerTests.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparerTests.cs" />
     <Compile Include="Expression\ExpressionPrintingTests.cs" />
-    <Compile Include="Execution\Interpreter\InterpretedFunctionTests.cs" />
+    <Compile Include="Execution\ExecutableFunctionTests.cs" />
     <Compile Include="Parser\ExpressionParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

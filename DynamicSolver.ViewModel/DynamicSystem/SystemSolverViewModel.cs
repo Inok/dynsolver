@@ -73,17 +73,15 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 }
 
                 int i = 0;
-                double x = 0;
                 foreach (var key in Result[0].Keys)
                 {
                     i++;
-                    var dataSource = new EnumerableDataSource<Tuple<Dictionary<string, double>, double>>(Result.Select(d =>  new Tuple<Dictionary<string, double>, double>(d,x)));
+                    var dataSource = new EnumerableDataSource<Tuple<Dictionary<string, double>, double>>(Result.Select((d, k) =>  new Tuple<Dictionary<string, double>, double>(d, k*input.Step)));
                     dataSource.SetXMapping(d => d.Item2);
                     dataSource.SetYMapping(d => d.Item1[key]);
 
                     var graph = new LineGraph(dataSource) {LinePen = new Pen(new SolidColorBrush(new HsbColor((i * 50.0) % 360.0, 1.0, 1.0).ToArgbColor()), 2) };
-                    graph.AddToPlotter(Plotter);
-                    x += input.Step;
+                    graph.AddToPlotter(Plotter);                    
                 }
                 Plotter.FitToView();
             }
