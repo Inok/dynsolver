@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Abstractions;
+using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
@@ -10,11 +11,14 @@ namespace DynamicSolver.DynamicSystem
 {
     public class EulerDynamicSystemSolver : IDynamicSystemSolver
     {
+        [NotNull] private readonly IExecutableFunctionFactory _functionFactory;
+
         [NotNull]
         private readonly ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
 
-        public EulerDynamicSystemSolver([NotNull] ExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        public EulerDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory, [NotNull] ExplicitOrdinaryDifferentialEquationSystem equationSystem)
         {
+            if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
 
             if(equationSystem.Equations.Any(e => e.LeadingDerivative.Order > 1))
@@ -22,6 +26,7 @@ namespace DynamicSolver.DynamicSystem
                 throw new ArgumentException($"{nameof(EulerDynamicSystemSolver)} supports only equations with order = 1.");
             }
 
+            _functionFactory = functionFactory;
             _equationSystem = equationSystem;
         }
 
@@ -34,7 +39,7 @@ namespace DynamicSolver.DynamicSystem
             }
 
             var functions = _equationSystem.Equations
-                .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, new InterpretedFunction(e.Function)))
+                .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, _functionFactory.Create(e.Function)))
                 .ToList();
 
             var lastValues = initialConditions;

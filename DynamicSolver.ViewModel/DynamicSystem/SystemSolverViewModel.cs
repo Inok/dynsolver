@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.DynamicSystem;
+using DynamicSolver.Expressions.Execution.Compiler;
+using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
@@ -50,8 +52,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             Error = null;
             try
             {
-                var eulerTask = Task.Run(() => ProcessCalculations(input, new EulerDynamicSystemSolver(input.System), token), token);
-                var kdTask = Task.Run(() => ProcessCalculations(input, new KDDynamicSystemSolver(input.System), token), token);
+                var functionFactory = new CompiledFunctionFactory();
+                var eulerTask = Task.Run(() => ProcessCalculations(input, new EulerDynamicSystemSolver(functionFactory, input.System), token), token);
+                var kdTask = Task.Run(() => ProcessCalculations(input, new KDDynamicSystemSolver(functionFactory, input.System), token), token);
 
                 FillPlotterWithResults(FirstPlotter, await eulerTask, input);
                 FillPlotterWithResults(SecondPlotter, await kdTask, input);

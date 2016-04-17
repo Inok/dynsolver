@@ -67,6 +67,9 @@
   <ItemGroup>
     <Compile Include="Derivation\SymbolicDerivationService.cs" />
     <Compile Include="Execution\Compiler\CompiledFunction.cs" />
+    <Compile Include="Execution\Compiler\CompiledFunctionFactory.cs" />
+    <Compile Include="Execution\IExecutableFunctionFactory.cs" />
+    <Compile Include="Execution\Interpreter\InterpretedFunctionFactory.cs" />
     <Compile Include="Expression\AddBinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperator.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparer.cs" />

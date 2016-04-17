@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
 
@@ -13,11 +14,12 @@ namespace DynamicSolver.DynamicSystem.Tests
         {
             var parser = new ExpressionParser();
 
-            var solver = new EulerDynamicSystemSolver(new ExplicitOrdinaryDifferentialEquationSystem(new[]
-            {
-                ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("t'= 1")),
-                ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("x'= -cos(x) + sin(t)")),
-            }));
+            var solver = new EulerDynamicSystemSolver(new InterpretedFunctionFactory(),
+                new ExplicitOrdinaryDifferentialEquationSystem(new[]
+                {
+                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("t'= 1")),
+                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("x'= -cos(x) + sin(t)")),
+                }));
 
             var actual = solver.Solve(new Dictionary<string, double>() {["x"] = 1, ["t"] = 0}, 0.2).Take(5).ToList();
 
