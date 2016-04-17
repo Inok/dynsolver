@@ -9,7 +9,6 @@ using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 using static System.Linq.Expressions.Expression;
-using Constant = DynamicSolver.Expressions.Expression.Constant;
 
 namespace DynamicSolver.Expressions.Execution.Compiler
 {

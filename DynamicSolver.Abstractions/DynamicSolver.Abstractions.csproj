@@ -61,6 +61,7 @@
     <Compile Include="IDynamicSystem.cs" />
     <Compile Include="IExecutableFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\EnumerableExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

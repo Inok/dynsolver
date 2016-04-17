@@ -13,7 +13,8 @@ namespace DynamicSolver.GUI.DynamicSystem
 
             InitializeComponent();
 
-            ViewModel.Plotter = this.Plotter;
+            ViewModel.FirstPlotter = this.FirstPlotter;
+            ViewModel.SecondPlotter = this.SecondPlotter;
         }
     }
 }

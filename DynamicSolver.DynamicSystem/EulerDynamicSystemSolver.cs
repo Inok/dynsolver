@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem
 {
-    public class EulerDynamicSystemSolver
+    public class EulerDynamicSystemSolver : IDynamicSystemSolver
     {
         [NotNull]
         private readonly ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
@@ -25,34 +25,26 @@ namespace DynamicSolver.DynamicSystem
             _equationSystem = equationSystem;
         }
 
-        public Dictionary<string, double>[] Solve(Dictionary<string, double> initialConditions, double step, double modellingLimit)
+        public IEnumerable<IDictionary<string, double>> Solve(IDictionary<string, double> initialConditions, double step)
         {
             if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
-            if (modellingLimit <= 0) throw new ArgumentOutOfRangeException(nameof(modellingLimit));
-            if (step > modellingLimit) throw new ArgumentOutOfRangeException();
             if (!new HashSet<string>(_equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables)).SetEquals(initialConditions.Keys))
             {
                 throw new ArgumentException("Initial values has different set of arguments from equation system.");
             }
-
-            var results = new Dictionary<string, double>[(int)Math.Round(modellingLimit / step) + 1];
-            
-            results[0] = initialConditions.ToDictionary(v => v.Key, v => v.Value);
 
             var functions = _equationSystem.Equations
                 .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, new InterpretedFunction(e.Function)))
                 .ToList();
 
             var lastValues = initialConditions;
-            for(var i = 1; i < results.Length; i++)
+            while(true)
             {
-                results[i] = lastValues = GetNextValues(functions, lastValues, step);
-            }
-
-            return results;
+                yield return lastValues = GetNextValues(functions, lastValues, step);
+            }            
         }
 
-        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IReadOnlyDictionary<string, double> variables, double step)
+        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IDictionary<string, double> variables, double step)
         {
             var vars = variables.ToDictionary(v => v.Key, v => v.Value);
 

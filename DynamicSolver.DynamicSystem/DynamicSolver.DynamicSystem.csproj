@@ -48,6 +48,8 @@
     <Compile Include="EulerDynamicSystemSolver.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
+    <Compile Include="IDynamicSystemSolver.cs" />
+    <Compile Include="KDDynamicSystemSolver.cs" />
     <Compile Include="NextStateVariableValueCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VariableDerivative.cs" />

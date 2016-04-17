@@ -10,12 +10,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto" MinHeight="25"/>
-            <RowDefinition/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <dynamicSystem:SystemInputView ViewModel="{Binding InputViewModel}"></dynamicSystem:SystemInputView>
         <TextBlock Grid.Row="1" Text="{Binding Error, Mode=OneWay}" Foreground="Red"></TextBlock>
-        <d3:ChartPlotter Grid.Row="2" Name="Plotter" VerticalAlignment="Stretch"></d3:ChartPlotter>
+        <d3:ChartPlotter Grid.Row="2" Name="FirstPlotter" VerticalAlignment="Stretch"></d3:ChartPlotter>
+        <d3:ChartPlotter Grid.Row="3" Name="SecondPlotter" VerticalAlignment="Stretch"></d3:ChartPlotter>
     </Grid>
 </UserControl>
 
