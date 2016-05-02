@@ -11,14 +11,28 @@ namespace DynamicSolver.Abstractions.Tools
             if (items == null) throw new ArgumentNullException(nameof(items));
             if (skipItemsCount < 0) throw new ArgumentOutOfRangeException(nameof(skipItemsCount));
 
-            return ThrottleIterator(items, skipItemsCount + 1);
+            return Throttle(items, skipItemsCount, 0);
         }
 
-        private static IEnumerable<T> ThrottleIterator<T>(IEnumerable<T> items, int period)
+        public static IEnumerable<T> Throttle<T>([NotNull] this IEnumerable<T> items, int skipItemsCount, int firstReturnItemOffset)
         {
-            int i = 0;
+            if (items == null) throw new ArgumentNullException(nameof(items));
+            if (skipItemsCount < 0) throw new ArgumentOutOfRangeException(nameof(skipItemsCount));
+            if (firstReturnItemOffset < 0) throw new ArgumentOutOfRangeException(nameof(firstReturnItemOffset));
+                        
+            return ThrottleIterator(items, skipItemsCount + 1, firstReturnItemOffset);
+        }
+
+        private static IEnumerable<T> ThrottleIterator<T>(IEnumerable<T> items, int period, int firstReturnItemOffset)
+        {
+            int i = -firstReturnItemOffset;
             foreach (var item in items)
             {
+                if (i < 0)
+                {
+                    i++;
+                    continue;                    
+                }
                 if (i == 0)
                 {
                     yield return item;
