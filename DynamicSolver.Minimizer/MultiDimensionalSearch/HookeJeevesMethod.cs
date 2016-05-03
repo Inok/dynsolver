@@ -28,10 +28,12 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
                 token.ThrowIfCancellationRequested();
                 limiter.NextIteration();
 
+                var internalLimiter = new IterationLimiter(_settings);
                 Point x2;
                 do
                 {
                     token.ThrowIfCancellationRequested();
+                    internalLimiter.NextIteration();
 
                     x2 = GetGreaterByCoordinateDirections(function, x1, increment);
 
@@ -50,11 +52,13 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
                 } while (true);
 
 
+                internalLimiter = new IterationLimiter(_settings);
                 var x3 = x1;
                 var x4 = x2;
                 do
                 {
                     token.ThrowIfCancellationRequested();
+                    internalLimiter.NextIteration();
 
                     var tmp = GetGreaterByCoordinateDirections(function, x4.Move(new Vector(x3, x4)), increment);
 
