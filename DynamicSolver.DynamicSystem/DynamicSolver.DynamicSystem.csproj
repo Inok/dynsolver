@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=10.1.2.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.10.1.2-eap\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -45,13 +45,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DerivativeAnalyzer.cs" />
-    <Compile Include="EulerDynamicSystemSolver.cs" />
+    <Compile Include="Solver\DynamicSystemSolver.cs" />
+    <Compile Include="Solver\EulerDynamicSystemSolver.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
-    <Compile Include="IDynamicSystemSolver.cs" />
-    <Compile Include="KDDynamicSystemSolver.cs" />
+    <Compile Include="Solver\ExplicitRungeKuttaDynamicSystemSolver.cs" />
+    <Compile Include="Solver\IDynamicSystemSolver.cs" />
+    <Compile Include="Solver\KDDynamicSystemSolver.cs" />
     <Compile Include="NextStateVariableValueCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Solver\RungeKuttaDynamicSystemSolver.cs" />
     <Compile Include="VariableDerivative.cs" />
   </ItemGroup>
   <ItemGroup>

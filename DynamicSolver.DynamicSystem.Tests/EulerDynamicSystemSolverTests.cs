@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;

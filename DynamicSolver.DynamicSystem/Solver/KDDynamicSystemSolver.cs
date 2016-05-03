@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Abstractions;
 using DynamicSolver.Expressions.Execution;
-using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.DynamicSystem
+namespace DynamicSolver.DynamicSystem.Solver
 {
     public class KDDynamicSystemSolver : IDynamicSystemSolver
     {

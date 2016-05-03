@@ -1,22 +1,30 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Abstractions;
 using DynamicSolver.Expressions.Execution;
-using DynamicSolver.Expressions.Execution.Interpreter;
-using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.DynamicSystem
+namespace DynamicSolver.DynamicSystem.Solver
 {
-    public class EulerDynamicSystemSolver : IDynamicSystemSolver
+    public abstract class DynamicSystemSolver : IDynamicSystemSolver
     {
+        protected struct ExecutableFunctionInfo
+        {
+            public string Name { get; }
+            public IExecutableFunction Function { get; }
+
+            public ExecutableFunctionInfo(string name, IExecutableFunction function)
+            {
+                Name = name;
+                Function = function;
+            }
+        }
+
         [NotNull] private readonly IExecutableFunctionFactory _functionFactory;
+        [NotNull] private readonly ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
 
-        [NotNull]
-        private readonly ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
-
-        public EulerDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory, [NotNull] ExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        protected DynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory, [NotNull] ExplicitOrdinaryDifferentialEquationSystem equationSystem)
         {
             if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
@@ -39,7 +47,7 @@ namespace DynamicSolver.DynamicSystem
             }
 
             var functions = _equationSystem.Equations
-                .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, _functionFactory.Create(e.Function)))
+                .Select(e => new ExecutableFunctionInfo(e.LeadingDerivative.Variable.Name, _functionFactory.Create(e.Function)))
                 .ToList();
 
             var lastValues = initialConditions;
@@ -49,17 +57,18 @@ namespace DynamicSolver.DynamicSystem
             }            
         }
 
-        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IDictionary<string, double> variables, double step)
+        private Dictionary<string, double> GetNextValues(IEnumerable<ExecutableFunctionInfo> functions, IDictionary<string, double> variables, double step)
         {
             var vars = variables.ToDictionary(v => v.Key, v => v.Value);
 
-            foreach (var function in functions)
+            foreach (var functionData in functions)
             {
-                var arguments = function.Item2.OrderedArguments.Select(a => variables[a]).ToArray();
-                vars[function.Item1.Name] = variables[function.Item1.Name] + step*function.Item2.Execute(arguments);
+                vars[functionData.Name] = CalculateNextFunctionValue(functionData, variables, step);
             }
 
             return vars;
         }
+
+        protected abstract double CalculateNextFunctionValue(ExecutableFunctionInfo function, IDictionary<string, double> variables, double step);
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DynamicSolver.DynamicSystem
+namespace DynamicSolver.DynamicSystem.Solver
 {
     public interface IDynamicSystemSolver
     {

@@ -26,7 +26,7 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
         
         [NotNull] private readonly IExpression _expression;
 
-        public IReadOnlyCollection<string> OrderedArguments { get; private set; }
+        public IReadOnlyCollection<string> OrderedArguments { get; }
 
         public InterpretedFunction([NotNull] IStatement statement)
         {

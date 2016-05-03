@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using DynamicSolver.Abstractions.Tools;
 using DynamicSolver.DynamicSystem;
+using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
