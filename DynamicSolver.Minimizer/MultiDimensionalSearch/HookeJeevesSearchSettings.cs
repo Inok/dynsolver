@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Minimizer
+namespace DynamicSolver.Minimizer.MultiDimensionalSearch
 {
     public class HookeJeevesSearchSettings : MultiDimensionalSearchSettings
     {

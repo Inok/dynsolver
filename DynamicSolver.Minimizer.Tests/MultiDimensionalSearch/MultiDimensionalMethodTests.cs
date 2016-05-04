@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
+using Moq;
 using NUnit.Framework;
 
 namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
@@ -93,6 +95,26 @@ namespace DynamicSolver.Minimizer.Tests.MultiDimensionalSearch
         {
             var actual = SearchStrategy.Search(testCase.Function, testCase.ExpectedResultPoint);
             Assert.That(new Vector(actual, testCase.ExpectedResultPoint), Has.Property(nameof(Vector.Length)).LessThanOrEqualTo(ExpectedAccuracy));
+        }
+
+        [TestCaseSource(nameof(TestCases))]
+        public void Search_WhenTaskCancelled_ThrowsOperationCancelledException(SearchMethodTestCase testCase)
+        {
+            var tokenSource = new CancellationTokenSource();
+            tokenSource.Cancel();
+            Assert.Throws<OperationCanceledException>(() => SearchStrategy.Search(testCase.Function, testCase.ExpectedResultPoint, tokenSource.Token));
+        }
+
+        [Test, Timeout(5000)]
+        public void Search_WhenTaskCancelledWhenExecuting_ThrowsOperationCancelledException([ValueSource(nameof(TestCases))] SearchMethodTestCase testCase, [Values(0.5, 0.7, 1.0, 2)] double cancelTimeFactor, [Values(0.5, 0.7, 1.0, 2)] double functionExecutionTimeFactor)
+        {
+            var tokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(50 * cancelTimeFactor));
+            
+            var mock = new Mock<IExecutableFunction>();
+            mock.Setup(f => f.Execute(It.IsAny<double[]>())).Callback(() => Thread.Sleep((int) (5 * functionExecutionTimeFactor))).Returns<double[]>(testCase.Function.Execute);
+            mock.SetupGet(f => f.OrderedArguments).Returns(testCase.Function.OrderedArguments);
+
+            Assert.Throws<OperationCanceledException>(() => SearchStrategy.Search(mock.Object, testCase.ExpectedResultPoint, tokenSource.Token));
         }
     }
 }

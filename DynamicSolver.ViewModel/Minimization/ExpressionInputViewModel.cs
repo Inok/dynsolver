@@ -103,7 +103,7 @@ namespace DynamicSolver.ViewModel.Minimization
                 return null;
             }
 
-            if (Variables.Any(v => !v.Value.HasValue))
+            if (Variables.Count == 0 || Variables.Any(v => !v.Value.HasValue))
             {
                 return null;
             }

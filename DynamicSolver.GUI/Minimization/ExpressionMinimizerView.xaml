@@ -13,6 +13,19 @@
         <Button Content="Minimize" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,5,5,0" Padding="5,0" 
                 Command="{Binding Calculate}"
                 Visibility="{Binding ShowCalculateButton, Converter={StaticResource BoolToVisibility}}" />
-        <local:MinimizationResultView ViewModel="{Binding ResultViewModel}"></local:MinimizationResultView>
+        
+        <ListView ItemsSource="{Binding ResultViewModel}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"></StackPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:MinimizationResultView ViewModel="{Binding}"></local:MinimizationResultView>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
     </StackPanel>
 </UserControl>

@@ -3,8 +3,8 @@ using System.Linq;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using DynamicSolver.LinearAlgebra.Derivative;
+using DynamicSolver.Minimizer.DirectedSearch;
 using DynamicSolver.Minimizer.MinimizationInterval;
-using DynamicSolver.Minimizer.OneDimensionalSearch;
 using Moq;
 using NUnit.Framework;
 

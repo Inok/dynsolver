@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Minimizer.OneDimensionalSearch
+namespace DynamicSolver.Minimizer.DirectedSearch
 {
     public class GoldenRatioMethod : IDirectedSearchStrategy
     {
@@ -23,7 +24,7 @@ namespace DynamicSolver.Minimizer.OneDimensionalSearch
             _intervalSearchStrategy = intervalSearchStrategy;
         }
 
-        public Interval SearchInterval(IExecutableFunction function, Point startPoint, Vector direction)
+        public Interval SearchInterval(IExecutableFunction function, Point startPoint, Vector direction, CancellationToken token = default(CancellationToken))
         {
             if (function == null) throw new ArgumentNullException(nameof(function));
             if (startPoint == null) throw new ArgumentNullException(nameof(startPoint));
@@ -45,6 +46,7 @@ namespace DynamicSolver.Minimizer.OneDimensionalSearch
             var limiter = new IterationLimiter(_settings);
             do
             {
+                token.ThrowIfCancellationRequested();
                 limiter.NextIteration();
 
                 if (function.Execute(interval.First.Move(direction, lambda).ToArray()) < function.Execute(interval.First.Move(direction, mu).ToArray()))

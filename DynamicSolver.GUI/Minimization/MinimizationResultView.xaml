@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" x:Name="UserControl">
     <Grid DataContext="{Binding ViewModel,  ElementName=UserControl}">
-        <GroupBox Header="Result">
+        <GroupBox Header="{Binding Method}">
             <StackPanel>
                 <ProgressBar IsIndeterminate="True" Height="20">
                     <ProgressBar.Style>

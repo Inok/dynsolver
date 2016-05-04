@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using DynamicSolver.Abstractions;
 using DynamicSolver.LinearAlgebra;
 using JetBrains.Annotations;
@@ -41,7 +42,7 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             _settings = settings;
         }
 
-        public Point Search(IExecutableFunction function, Point startPoint)
+        public Point Search(IExecutableFunction function, Point startPoint, CancellationToken token = default(CancellationToken))
         {
             if(startPoint.Dimension < 2) throw new ArgumentException("This method supports only dimensions greated then 1.");
 
@@ -50,11 +51,13 @@ namespace DynamicSolver.Minimizer.MultiDimensionalSearch
             var limiter = new IterationLimiter(_settings);
             do
             {
+                token.ThrowIfCancellationRequested();
+                limiter.NextIteration();
+
                 var ph = values.Max();
                 var pg = values.Where(p => p != ph).Max();
                 var pl = values.Min();
 
-                limiter.NextIteration();
 
                 var x0 = (values.Where(p => p != ph).Select(p => new Vector(p.Point)).Aggregate((a, v) => a + v) * (1.0/startPoint.Dimension));
                 

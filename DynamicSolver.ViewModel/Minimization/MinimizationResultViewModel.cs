@@ -11,7 +11,13 @@ namespace DynamicSolver.ViewModel.Minimization
     {
         private IReadOnlyCollection<VariableValue> _variables;
         private bool _isInProgress;
+        private string _method;
         private string _errorMessage;
+
+        public MinimizationResultViewModel(string method)
+        {
+            _method = method;
+        }
 
         public IReadOnlyCollection<VariableValue> Variables
         {
@@ -23,6 +29,12 @@ namespace DynamicSolver.ViewModel.Minimization
         {
             get { return _isInProgress; }
             private set { this.RaiseAndSetIfChanged(ref _isInProgress, value); }
+        }
+
+        public string Method
+        {
+            get { return _method; }
+            private set { this.RaiseAndSetIfChanged(ref _method, value); }
         }
 
         public string ErrorMessage
