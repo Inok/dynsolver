@@ -19,21 +19,59 @@ namespace DynamicSolver.ViewModel.Minimization
 {
     public class ExpressionMinimizerViewModel : ReactiveObject
     {
+        private class MethodInfo
+        {
+            [NotNull] public string Name { get; }
+            [NotNull] public IMultiDimensionalSearchStrategy Strategy { get; }
+            [NotNull] public Predicate<MinimizationTaskInput> AvailablePredicate { get; }
+
+            public MethodInfo([NotNull] IMultiDimensionalSearchStrategy strategy) 
+                : this(strategy, i => true)
+            {
+                
+            }
+
+            public MethodInfo([NotNull] IMultiDimensionalSearchStrategy strategy, [NotNull] Predicate<MinimizationTaskInput> availablePredicate)
+                : this(strategy.GetType().Name, strategy, availablePredicate)
+            {                
+            }
+
+            public MethodInfo(
+                [NotNull] string name, 
+                [NotNull] IMultiDimensionalSearchStrategy strategy) : this(name, strategy, i => true)
+            {
+            }
+
+            public MethodInfo(
+                [NotNull] string name, 
+                [NotNull] IMultiDimensionalSearchStrategy strategy,
+                [NotNull] Predicate<MinimizationTaskInput> availablePredicate)
+            {
+                if (name == null) throw new ArgumentNullException(nameof(name));
+                if (strategy == null) throw new ArgumentNullException(nameof(strategy));
+                if (availablePredicate == null) throw new ArgumentNullException(nameof(availablePredicate));
+
+                Name = name;
+                Strategy = strategy;
+                AvailablePredicate = availablePredicate;
+            }
+        }
+
         private static readonly NumericalDerivativeCalculator NumericalDerivativeCalculator = new NumericalDerivativeCalculator(DerivativeCalculationSettings.Default);
 
         private static readonly GoldenRatioMethod DirectedSearchStrategy = new GoldenRatioMethod(
             new DerivativeSwannMethod(DerivativeSwannMethodSettings.Default, NumericalDerivativeCalculator),
             DirectedSearchSettings.Default);
 
-        private static Dictionary<IMultiDimensionalSearchStrategy, Func<MinimizationTaskInput, bool>> _methods
-            = new Dictionary<IMultiDimensionalSearchStrategy, Func<MinimizationTaskInput, bool>>()
-            {
-                [new HookeJeevesMethod(HookeJeevesSearchSettings.Default)] = (i) => true,
-                [new NelderMeadMethod(NelderMeadSearchSettings.Default)] = (i) => i.Statement.Analyzer.Variables.Count > 1,
-                [new RosenbrockMethod(DirectedSearchStrategy, MultiDimensionalSearchSettings.Default)] = (i) => true,
-                [new PartanMethod(DirectedSearchStrategy, NumericalDerivativeCalculator, MultiDimensionalSearchSettings.Default)] = (i) => true
-            };
-
+        private static readonly IEnumerable<MethodInfo> Methods = new[]
+        {
+            new MethodInfo(new HookeJeevesMethod(HookeJeevesSearchSettings.Default)),
+            new MethodInfo(new NelderMeadMethod(NelderMeadSearchSettings.Default), i => i.Statement.Analyzer.Variables.Count > 1),
+            new MethodInfo(new RosenbrockMethod(DirectedSearchStrategy, MultiDimensionalSearchSettings.Default)),
+            new MethodInfo(new PartanMethod(DirectedSearchStrategy, NumericalDerivativeCalculator, MultiDimensionalSearchSettings.Default)),
+            new MethodInfo("Genetic i100, p50, t3, c0.8, m0.03, i0.03", new GeneticMethod(new GeneticSearchSettings(100, 50, 3, 0.8, 0.03, 0.03))),
+            new MethodInfo("Genetic i100, p100, t2, c0.7, m0.1, i0.05", new GeneticMethod(new GeneticSearchSettings(100, 100, 2, 0.7, 0.1, 0.05)))
+        };
 
         private ICollection<MinimizationResultViewModel> _resultViewModel;
 
@@ -70,9 +108,9 @@ namespace DynamicSolver.ViewModel.Minimization
 
             var tasks = new List<Task>();
             var result = new List<MinimizationResultViewModel>();
-            foreach (var pair in _methods.Where(m => m.Value(input)))
+            foreach (var methodInfo in Methods.Where(m => m.AvailablePredicate(input)))
             {
-                var methodResultViewModel = new MinimizationResultViewModel(pair.Key.GetType().Name);
+                var methodResultViewModel = new MinimizationResultViewModel(methodInfo.Name);
 
                 methodResultViewModel.StartProgress();
                 result.Add(methodResultViewModel);
@@ -81,7 +119,7 @@ namespace DynamicSolver.ViewModel.Minimization
                 {
                     try
                     {
-                        var r = ProcessCalculations(pair.Key, input, token);
+                        var r = ProcessCalculations(methodInfo.Strategy, input, token);
                         methodResultViewModel.ApplyResult(r);
                     }
                     catch (InvalidOperationException ex)
