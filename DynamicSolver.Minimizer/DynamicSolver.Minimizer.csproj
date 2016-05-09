@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DirectedSearch\GoldenRatioMethod.cs" />
+    <Compile Include="IterationLimitSettings.cs" />
     <Compile Include="MinimizationResult.cs" />
+    <Compile Include="MultiDimensionalSearch\GeneticMethod.cs" />
+    <Compile Include="MultiDimensionalSearch\GeneticSearchSettings.cs" />
     <Compile Include="MultiDimensionalSearch\HookeJeevesSearchSettings.cs" />
     <Compile Include="IIterationLimitSettings.cs" />
     <Compile Include="IMultiDimensionalSearchStrategy.cs" />
@@ -84,6 +87,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MultiDimensionalSearch\Genetic\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
