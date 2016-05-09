@@ -13,37 +13,33 @@ namespace DynamicSolver.DynamicSystem.Solver
         [NotNull]
         private readonly IExecutableFunctionFactory _functionFactory;
 
-        [NotNull]
-        private readonly ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
-
-        public KDDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory, [NotNull] ExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        public KDDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory)
         {
-            if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
+            if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));            
+            _functionFactory = functionFactory;
+        }
+
+        public IEnumerable<IDictionary<string, double>> Solve(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IDictionary<string, double> initialConditions, double step)
+        {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
+            if (initialConditions == null) throw new ArgumentNullException(nameof(initialConditions));
+            if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
 
             if (equationSystem.Equations.Any(e => e.LeadingDerivative.Order > 1))
             {
                 throw new ArgumentException($"{nameof(EulerDynamicSystemSolver)} supports only equations with order = 1.");
             }
-
-            _functionFactory = functionFactory;
-            _equationSystem = equationSystem;
-        }
-
-        public IEnumerable<IDictionary<string, double>> Solve(IDictionary<string, double> initialConditions, double step)
-        {
-            if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
-            if (!new HashSet<string>(_equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables)).SetEquals(initialConditions.Keys))
+            if (!new HashSet<string>(equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables)).SetEquals(initialConditions.Keys))
             {
                 throw new ArgumentException("Initial values has different set of arguments from equation system.");
             }
 
-            var functions = _equationSystem.Equations
+            var functions = equationSystem.Equations
                 .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, _functionFactory.Create(e.Function)))
                 .ToList();
 
             var service = new NextStateVariableValueCalculationService();
-            var nextValuesFunctions = service.ExpressNextStateVariableValueExpressions(_equationSystem, "h")
+            var nextValuesFunctions = service.ExpressNextStateVariableValueExpressions(equationSystem, "h")
                 .ToDictionary(p => p.Key, p => _functionFactory.Create(p.Value));
 
             var lastValues = initialConditions;

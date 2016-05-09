@@ -53,11 +53,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DerivativeAnalyzer.cs" />
-    <Compile Include="Solver\DynamicSystemSolver.cs" />
+    <Compile Include="Solver\ButcherTableDynamicSystemSolver.cs" />
+    <Compile Include="Solver\DormanPrinceDynamicSystemSolver.cs" />
     <Compile Include="Solver\EulerDynamicSystemSolver.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
-    <Compile Include="Solver\ExplicitRungeKuttaDynamicSystemSolver.cs" />
     <Compile Include="Solver\IDynamicSystemSolver.cs" />
     <Compile Include="Solver\KDDynamicSystemSolver.cs" />
     <Compile Include="NextStateVariableValueCalculationService.cs" />

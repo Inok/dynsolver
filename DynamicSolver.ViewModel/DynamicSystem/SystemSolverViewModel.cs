@@ -6,10 +6,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using DynamicSolver.Abstractions.Tools;
-using DynamicSolver.DynamicSystem;
 using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Compiler;
-using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
@@ -54,8 +52,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             try
             {
                 var functionFactory = new CompiledFunctionFactory();
-                var eulerTask = Task.Run(() => ProcessCalculations(input, new EulerDynamicSystemSolver(functionFactory, input.System), token), token);
-                var kdTask = Task.Run(() => ProcessCalculations(input, new KDDynamicSystemSolver(functionFactory, input.System), token), token);
+                var eulerTask = Task.Run(() => ProcessCalculations(input, new EulerDynamicSystemSolver(functionFactory), token), token);
+                var kdTask = Task.Run(() => ProcessCalculations(input, new KDDynamicSystemSolver(functionFactory), token), token);
 
                 FillPlotterWithResults(FirstPlotter, await eulerTask, input);
                 FillPlotterWithResults(SecondPlotter, await kdTask, input);
@@ -76,7 +74,6 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 return;
             }
             
-
             int i = 0;
             foreach (var key in result[0].Keys)
             {
@@ -103,7 +100,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             var itemsCount = (int) (input.ModellingLimit/input.Step);
             int throttlingSkipCount = itemsCount > 1000 ? itemsCount / 1000 : 0;
-            return solver.Solve(input.Variables.ToDictionary(v => v.VariableName, v => v.Value.Value), input.Step)
+            return solver.Solve(input.System, input.Variables.ToDictionary(v => v.VariableName, v => v.Value.Value), input.Step)
                 .Take(itemsCount)
                 .Throttle(throttlingSkipCount)
                 .ToArray();

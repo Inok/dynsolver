@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem.Solver
 {
-    public class RungeKuttaDynamicSystemSolver : ButcherTableDynamicSystemSolver
+    public class DormanPrinceDynamicSystemSolver : ButcherTableDynamicSystemSolver
     {
         private static readonly double[,] ACoefficients = {
             {0, 0, 0, 0},
@@ -17,7 +17,7 @@ namespace DynamicSolver.DynamicSystem.Solver
         protected override double[,] A => ACoefficients;
         protected override double[] B => BCoefficients;
 
-        public RungeKuttaDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
+        public DormanPrinceDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
         {
         }
     }
