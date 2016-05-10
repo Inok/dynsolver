@@ -53,7 +53,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             {
                 var functionFactory = new CompiledFunctionFactory();
                 var eulerTask = Task.Run(() => ProcessCalculations(input, new EulerDynamicSystemSolver(functionFactory), token), token);
-                var kdTask = Task.Run(() => ProcessCalculations(input, new KDDynamicSystemSolver(functionFactory), token), token);
+                var kdTask = Task.Run(() => ProcessCalculations(input, new RungeKuttaDynamicSystemSolver(functionFactory), token), token);
 
                 FillPlotterWithResults(FirstPlotter, await eulerTask, input);
                 FillPlotterWithResults(SecondPlotter, await kdTask, input);
