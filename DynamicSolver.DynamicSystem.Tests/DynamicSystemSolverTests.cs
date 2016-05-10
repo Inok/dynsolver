@@ -10,7 +10,7 @@ namespace DynamicSolver.DynamicSystem.Tests
 {
     [TestFixture(typeof(EulerDynamicSystemSolver), 1)]
     [TestFixture(typeof(RungeKuttaDynamicSystemSolver), 4)]
-    [TestFixture(typeof(DormanPrinceDynamicSystemSolver), 8)]
+    //[TestFixture(typeof(DormanPrinceDynamicSystemSolver), 8)]
     public class DynamicSystemSolverTests<TSolver> where TSolver : IDynamicSystemSolver
     {
         private const double STEP = 0.01;
