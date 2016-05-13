@@ -6,7 +6,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.Expressions.Parser;
-using DynamicSolver.Minimizer;
 using DynamicSolver.ViewModel.Properties;
 using ReactiveUI;
 

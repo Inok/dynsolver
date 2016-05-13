@@ -3,19 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:minimization="clr-namespace:DynamicSolver.GUI.Minimization"
         xmlns:dynamicSystem="clr-namespace:DynamicSolver.GUI.DynamicSystem"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <TabControl>
-        <TabItem Header="Minimizer">
-            <StackPanel>
-                <minimization:ExpressionMinimizerView/>
-            </StackPanel>
-        </TabItem>        
-        <TabItem Header="Dynamic system solver">
-            <dynamicSystem:SystemSolverView/>
-        </TabItem>
-    </TabControl>
+    <dynamicSystem:SystemSolverView/>
 </Window>

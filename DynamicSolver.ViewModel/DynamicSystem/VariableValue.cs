@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Minimizer
+namespace DynamicSolver.ViewModel.DynamicSystem
 {
     public class VariableValue : INotifyPropertyChanged
     {
         public string VariableName { get; }
-
+ 
         private double? _value;
         public double? Value
         {
@@ -20,16 +20,16 @@ namespace DynamicSolver.Minimizer
                 OnPropertyChanged();
             }
         }
-
+ 
         public VariableValue([NotNull] string variableName)
         {
             if (variableName == null) throw new ArgumentNullException(nameof(variableName));
-
+ 
             VariableName = variableName;
         }
-
+ 
         public event PropertyChangedEventHandler PropertyChanged;
-
+ 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

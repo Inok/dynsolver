@@ -100,9 +100,7 @@
     <Compile Include="DynamicSystem\DynamicSystemSolverInput.cs" />
     <Compile Include="DynamicSystem\SystemInputViewModel.cs" />
     <Compile Include="DynamicSystem\SystemSolverViewModel.cs" />
-    <Compile Include="Minimization\ExpressionInputViewModel.cs" />
-    <Compile Include="Minimization\ExpressionMinimizerViewModel.cs" />
-    <Compile Include="Minimization\MinimizationResultViewModel.cs" />
+    <Compile Include="DynamicSystem\VariableValue.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -135,10 +133,6 @@
     <ProjectReference Include="..\DynamicSolver.LinearAlgebra\DynamicSolver.LinearAlgebra.csproj">
       <Project>{7091a9cf-91fe-440d-af2d-b37345067114}</Project>
       <Name>DynamicSolver.LinearAlgebra</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.Minimizer\DynamicSolver.Minimizer.csproj">
-      <Project>{04b2b8b5-88ef-4484-9767-fcfde69372da}</Project>
-      <Name>DynamicSolver.Minimizer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.DynamicSystem;
-using DynamicSolver.Minimizer;
 using DynamicSolver.ViewModel.Properties;
 
 namespace DynamicSolver.ViewModel.DynamicSystem

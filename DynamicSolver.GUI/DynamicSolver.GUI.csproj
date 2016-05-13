@@ -134,15 +134,6 @@
     <Compile Include="DynamicSystem\SystemInputView.xaml.cs">
       <DependentUpon>SystemInputView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Minimization\ExpressionInputView.xaml.cs">
-      <DependentUpon>ExpressionInputView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Minimization\ExpressionMinimizerView.xaml.cs">
-      <DependentUpon>ExpressionMinimizerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Minimization\MinimizationResultView.xaml.cs">
-      <DependentUpon>MinimizationResultView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.cs" />
     <Page Include="DynamicSystem\SystemSolverView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -164,18 +155,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Minimization\ExpressionInputView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Minimization\ExpressionMinimizerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Minimization\MinimizationResultView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -213,10 +192,6 @@
     <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
       <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
       <Name>DynamicSolver.Expressions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.Minimizer\DynamicSolver.Minimizer.csproj">
-      <Project>{04B2B8B5-88EF-4484-9767-FCFDE69372DA}</Project>
-      <Name>DynamicSolver.Minimizer</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.ViewModel\DynamicSolver.ViewModel.csproj">
       <Project>{3da1c621-033e-4cfa-aede-2932cdb35bed}</Project>
