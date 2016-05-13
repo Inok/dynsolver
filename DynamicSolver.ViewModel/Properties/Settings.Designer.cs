@@ -22,17 +22,5 @@ namespace DynamicSolver.ViewModel.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Minimization_Features_AutoCalculation {
-            get {
-                return ((bool)(this["Minimization_Features_AutoCalculation"]));
-            }
-            set {
-                this["Minimization_Features_AutoCalculation"] = value;
-            }
-        }
     }
 }
