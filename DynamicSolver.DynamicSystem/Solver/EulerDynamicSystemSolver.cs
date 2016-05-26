@@ -19,7 +19,7 @@ namespace DynamicSolver.DynamicSystem.Solver
             _functionFactory = functionFactory;            
         }
 
-        public IEnumerable<IDictionary<string, double>> Solve(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IDictionary<string, double> initialConditions, double step)
+        public IEnumerable<IReadOnlyDictionary<string, double>> Solve(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IReadOnlyDictionary<string, double> initialConditions, double step)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
             if (initialConditions == null) throw new ArgumentNullException(nameof(initialConditions));
@@ -45,7 +45,7 @@ namespace DynamicSolver.DynamicSystem.Solver
             }            
         }
 
-        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IDictionary<string, double> variables, double step)
+        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IReadOnlyDictionary<string, double> variables, double step)
         {
             var vars = variables.ToDictionary(v => v.Key, v => v.Value);
 

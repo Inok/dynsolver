@@ -54,7 +54,9 @@
   <ItemGroup>
     <Compile Include="DerivativeAnalyzer.cs" />
     <Compile Include="Solver\ButcherTableDynamicSystemSolver.cs" />
-    <Compile Include="Solver\DormanPrinceDynamicSystemSolver.cs" />
+    <Compile Include="Solver\DormandPrince8DynamicSystemSolver.cs" />
+    <Compile Include="Solver\DormandPrince5DynamicSystemSolver.cs" />
+    <Compile Include="Solver\DormandPrince7DynamicSystemSolver.cs" />
     <Compile Include="Solver\EulerDynamicSystemSolver.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />

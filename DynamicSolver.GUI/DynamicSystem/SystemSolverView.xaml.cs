@@ -11,10 +11,7 @@ namespace DynamicSolver.GUI.DynamicSystem
         {
             ViewModel = new SystemSolverViewModel();
 
-            InitializeComponent();
-
-            ViewModel.FirstPlotter = this.FirstPlotter;
-            ViewModel.SecondPlotter = this.SecondPlotter;
+            InitializeComponent();            
         }
     }
 }

@@ -32,7 +32,7 @@ namespace DynamicSolver.DynamicSystem.Solver
             _functionFactory = functionFactory;            
         }
 
-        public IEnumerable<IDictionary<string, double>> Solve(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IDictionary<string, double> initialConditions, double step)
+        public IEnumerable<IReadOnlyDictionary<string, double>> Solve(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IReadOnlyDictionary<string, double> initialConditions, double step)
         {
             if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
 
@@ -58,41 +58,39 @@ namespace DynamicSolver.DynamicSystem.Solver
             }            
         }
 
-        private Dictionary<string, double> GetNextValues(ExecutableFunctionInfo[] functions, Dictionary<string, int> nameToIndex, IDictionary<string, double> variables, double step)
+        private IReadOnlyDictionary<string, double> GetNextValues(ExecutableFunctionInfo[] functions, Dictionary<string, int> nameToIndex, IReadOnlyDictionary<string, double> variables, double step)
         {
-            var vars = variables.ToDictionary(v => v.Key, v => v.Value);
-            
             var k = new double[B.Length, functions.Length];
+            var arguments = new double[functions.Length];
 
             for (int s = 0; s < B.Length; s++)
             {
-                for (var i = 0; i < functions.Length; i++)
+                for (var f = 0; f < functions.Length; f++)
                 {
-                    Func<int, double> getIncrement = fi =>
+                    var name = functions[f].Name;
+                    double sum = 0.0;
+                    for (int b = 0; b < s; b++)
                     {
-                        double increment = 0;
-                        for (int b = 0; b < s; b++)
-                        {
-                            increment += A[s, b]*k[b, fi];
-                        }
-                        return increment;
-                    };
+                        sum += A[s, b]*k[b, f];
+                    }
 
-                    var function = functions[i];
-                    var args = function.Function.OrderedArguments.Select(a => variables[a] + getIncrement(nameToIndex[a])*step).ToArray();
-                    k[s,i] = function.Function.Execute(args);
+                    arguments[f] = variables[name] + step*sum;
+                }
+
+                for (var f = 0; f < functions.Length; f++)
+                {
+                    var function = functions[f].Function;
+                    var args = function.OrderedArguments.Select(a => arguments[nameToIndex[a]]).ToArray();
+                    k[s,f] = function.Execute(args);
                 }
             }
 
-            for (var i = 0; i < functions.Length; i++)
+            var vars = new Dictionary<string, double>();
+
+            for (var f = 0; f < functions.Length; f++)
             {
-                double stepMultiplier = 0;
-                for (int s = 0; s < B.Length; s++)
-                {
-                    stepMultiplier += k[s, i]*B[s];
-                }
-                var function = functions[i];
-                vars[function.Name] = variables[function.Name] + step*stepMultiplier;
+                var function = functions[f];
+                vars[function.Name] = variables[function.Name] + step* B.Select((b, i) => k[i, f] * b).Sum();
             }
 
             return vars;

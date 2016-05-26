@@ -6,6 +6,11 @@ namespace DynamicSolver.Abstractions.Tools
 {
     public static class EnumerableExtensions
     {
+        public static IEnumerable<T> Yield<T>([NotNull] this T item)
+        {
+            yield return item;
+        }
+
         public static IEnumerable<T> Throttle<T>([NotNull] this IEnumerable<T> items, int skipItemsCount)
         {
             if (items == null) throw new ArgumentNullException(nameof(items));
