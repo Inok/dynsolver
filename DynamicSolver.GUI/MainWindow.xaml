@@ -3,16 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dynamicSystem="clr-namespace:DynamicSolver.GUI.DynamicSystem"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <StackPanel>
-            
-        </StackPanel>
-    </Grid>
+    <dynamicSystem:SystemSolverView/>
 </Window>

@@ -40,6 +40,18 @@
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.1.0.0-unstable2100\lib\net45\OxyPlot.Wpf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OxyPlot.Xps, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OxyPlot.Wpf.1.0.0-unstable2100\lib\net45\OxyPlot.Xps.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ReactiveUI, Version=6.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.6.5.0\lib\Net45\ReactiveUI.dll</HintPath>
       <Private>True</Private>
@@ -108,7 +120,21 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DynamicSystem\SystemSolverView.xaml.cs">
+      <DependentUpon>SystemSolverView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DynamicSystem\SystemInputView.xaml.cs">
+      <DependentUpon>SystemInputView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.cs" />
+    <Page Include="DynamicSystem\SystemSolverView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="DynamicSystem\SystemInputView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -151,15 +177,20 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.ExpressionParser\DynamicSolver.ExpressionParser.csproj">
+    <ProjectReference Include="..\DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj">
+      <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
+      <Name>DynamicSolver.DynamicSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
       <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
-      <Name>DynamicSolver.ExpressionParser</Name>
+      <Name>DynamicSolver.Expressions</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.ViewModel\DynamicSolver.ViewModel.csproj">
       <Project>{3da1c621-033e-4cfa-aede-2932cdb35bed}</Project>
       <Name>DynamicSolver.ViewModel</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
