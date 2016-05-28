@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DynamicSolver.Abstractions.Expression;
+using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
 
@@ -41,7 +41,7 @@ namespace DynamicSolver.DynamicSystem.Tests
         }
 
         [Test]
-        public void Express_LoopbackTest_ThrowsArgumentNullException()
+        public void Express_LoopbackTest_CalculatesCorrectExpressions()
         {
             var equations = new []
             {

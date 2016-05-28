@@ -68,9 +68,9 @@
     <Compile Include="VariableDerivative.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">
+    <ProjectReference Include="..\DynamicSolver.Common\DynamicSolver.Common.csproj">
       <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
-      <Name>DynamicSolver.Abstractions</Name>
+      <Name>DynamicSolver.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
       <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>

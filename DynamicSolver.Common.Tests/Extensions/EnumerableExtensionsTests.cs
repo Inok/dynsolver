@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DynamicSolver.Abstractions.Tools;
+using DynamicSolver.Common.Extensions;
 using NUnit.Framework;
 
-namespace DynamicSolver.Abstractions.Tests.Tools
+namespace DynamicSolver.Common.Tests.Extensions
 {
     [TestFixture]
     public class EnumerableExtensionsTests

@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DynamicSolver.Abstractions;
-using DynamicSolver.Abstractions.Expression;
-using DynamicSolver.Abstractions.Tools;
+using DynamicSolver.Common.Extensions;
 using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Tools;
 using JetBrains.Annotations;

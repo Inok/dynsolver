@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Abstractions.Tools
+namespace DynamicSolver.Common.Extensions
 {
     public static class EnumerableExtensions
     {

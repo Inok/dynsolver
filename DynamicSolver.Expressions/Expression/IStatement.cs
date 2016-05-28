@@ -1,7 +1,8 @@
 ﻿using System;
+using DynamicSolver.Expressions.Execution;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Abstractions.Expression
+namespace DynamicSolver.Expressions.Expression
 {
     public interface IStatement : IEquatable<IStatement>
     {

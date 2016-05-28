@@ -1,6 +1,5 @@
 ﻿using System;
-using DynamicSolver.Abstractions;
-using DynamicSolver.Abstractions.Expression;
+using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Tools;
 using JetBrains.Annotations;
 

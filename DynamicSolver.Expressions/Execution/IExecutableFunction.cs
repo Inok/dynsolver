@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Abstractions
+namespace DynamicSolver.Expressions.Execution
 {
     public interface IExecutableFunction
     {

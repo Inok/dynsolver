@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DynamicSolver.Abstractions.Expression;
+using DynamicSolver.Expressions.Expression;
 
-namespace DynamicSolver.Abstractions
+namespace DynamicSolver.Expressions.Execution
 {
     public interface IExpressionAnalyzer
     {

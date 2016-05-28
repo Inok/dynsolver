@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.Abstractions;
 using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;

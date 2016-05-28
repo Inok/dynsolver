@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace DynamicSolver.Abstractions.Expression
+namespace DynamicSolver.Expressions.Expression
 {
     public interface IFunctionCall : IExpression
     {

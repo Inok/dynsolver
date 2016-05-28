@@ -1,4 +1,4 @@
-﻿namespace DynamicSolver.Abstractions.Expression
+﻿namespace DynamicSolver.Expressions.Expression
 {
     public interface IAssignmentStatement : IStatement
     {

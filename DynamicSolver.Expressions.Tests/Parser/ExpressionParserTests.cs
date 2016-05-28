@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DynamicSolver.Abstractions.Expression;
-using DynamicSolver.Abstractions.Tools;
+using DynamicSolver.Common.Extensions;
 using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
