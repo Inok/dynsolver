@@ -11,34 +11,7 @@ namespace DynamicSolver.Expressions.Tests.Parser
     [TestFixture]
     public class ExpressionParserTests
     {
-        private class ParserLoggingWrapper : IExpressionParser
-        {
-            private readonly IExpressionParser _wrappedParser;
-
-            public ParserLoggingWrapper(IExpressionParser parser)
-            {
-                _wrappedParser = parser;
-            }
-
-            public IStatement Parse(string inputExpression)
-            {
-                Console.WriteLine($"Try to parse expression: <{inputExpression}>");
-
-                try
-                {
-                    var result = _wrappedParser.Parse(inputExpression);
-
-                    Console.WriteLine("Result: " + result.Dump());
-                    return result;
-                }
-                catch (Exception e) when(new Func<bool>(() => { Console.WriteLine(e); return false; })())
-                {
-                    throw;
-                }
-            }
-        }
-
-        private readonly IExpressionParser _parser = new ParserLoggingWrapper( new Expressions.Parser.ExpressionParser());
+        private readonly IExpressionParser _parser = new ExpressionParser();
 
         [TestCase((string)null)]
         [TestCase(" ")]

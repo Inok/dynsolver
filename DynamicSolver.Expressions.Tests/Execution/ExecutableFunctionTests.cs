@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using DynamicSolver.Common.Extensions;
 using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Execution.Interpreter;
@@ -77,8 +76,7 @@ namespace DynamicSolver.Expressions.Tests.Execution
         public void Execute_WithDictionary_InvalidArguments_Throws(string expression, string arguments)
         {
             var args = arguments.Split(';').Where(s => !string.IsNullOrEmpty(s)).Select(arg => arg.Split('=')).ToDictionary(arg => arg[0], arg => double.Parse(arg[1]));
-            Console.WriteLine(args.Dump());
-
+            
             var statement = _parser.Parse(expression);
             var function = CreateFunction(statement);
 
@@ -105,8 +103,7 @@ namespace DynamicSolver.Expressions.Tests.Execution
         public void Execute_WithDictionary_CalculatesAExpected(string expression, double expected, string variables)
         {
             var args = variables.Split(';').Where(s => !string.IsNullOrEmpty(s)).Select(arg => arg.Split('=')).ToDictionary(arg => arg[0], arg => double.Parse(arg[1], new NumberFormatInfo() {NumberDecimalSeparator = "."}));
-            Console.WriteLine(args.Dump());
-
+            
             var statement = _parser.Parse(expression);
             var function = CreateFunction(statement);
 

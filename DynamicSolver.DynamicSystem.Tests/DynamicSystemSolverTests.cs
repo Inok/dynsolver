@@ -2,21 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.DynamicSystem.Solver;
-using DynamicSolver.Expressions.Execution.Interpreter;
+using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests
 {
     [TestFixture(typeof(EulerDynamicSystemSolver), 1)]
-    [TestFixture(typeof(RungeKuttaDynamicSystemSolver), 4)]
+    [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince8DynamicSystemSolver), 8)]
     [TestFixture(typeof(DormandPrince7DynamicSystemSolver), 7)]
     public class DynamicSystemSolverTests<TSolver> where TSolver : IDynamicSystemSolver
     {
         private const double STEP = 0.1;
-        private const int STEP_COUNT = (int)(10d/STEP);
+        private const int STEP_COUNT = (int)(100d/STEP);
         private readonly int _methodAccuracy;
         
         private readonly TSolver _solver;
@@ -28,7 +28,7 @@ namespace DynamicSolver.DynamicSystem.Tests
 
         public DynamicSystemSolverTests(int methodAccuracy)
         {
-            _solver = (TSolver) Activator.CreateInstance(typeof(TSolver), new InterpretedFunctionFactory());
+            _solver = (TSolver) Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory());
             _methodAccuracy = methodAccuracy;
         }
 

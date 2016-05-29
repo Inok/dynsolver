@@ -72,10 +72,7 @@ namespace DynamicSolver.Expressions.Tests.Expression
 
             var expected = string.Format(addParentheses ? "(1 {0} 2) {1} 3" : "1 {0} 2 {1} 3", child.OperatorToken, parent.OperatorToken);
 
-            Assert.That(statement.ToString(), Is.EqualTo(expected));
-            
-            //trace
-            Console.WriteLine("Expected: " + expected);
+            Assert.That(statement.ToString(), Is.EqualTo(expected));            
         }
     }
 }
