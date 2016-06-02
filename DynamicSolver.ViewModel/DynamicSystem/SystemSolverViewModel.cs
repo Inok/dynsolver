@@ -22,6 +22,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private string _error;
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
+        private SystemSolverSelectItemViewModel _selectedSolver;
 
         public SystemInputViewModel InputViewModel { get; }
 
@@ -32,6 +33,14 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         }
 
         public IReactiveCommand Calculate { get; }
+
+        public IReadOnlyCollection<SystemSolverSelectItemViewModel> SolverSelectItems { get; private set; }
+
+        public SystemSolverSelectItemViewModel SelectedSolver
+        {
+            get { return _selectedSolver; }
+            set { this.RaiseAndSetIfChanged(ref _selectedSolver, value); }
+        }
 
         public bool IsBusy
         {
@@ -55,11 +64,23 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         {
             InputViewModel = new SystemInputViewModel(new ExpressionParser());
 
-            var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput);
-            Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input != null), CalculateAsync);
+            var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput, m => m.SelectedSolver);
+            Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
-        }
 
+            var functionFactory = new CompiledFunctionFactory();
+            SolverSelectItems = new List<SystemSolverSelectItemViewModel>()
+            {
+                new SystemSolverSelectItemViewModel("Euler", new EulerDynamicSystemSolver(functionFactory)),
+                new SystemSolverSelectItemViewModel("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory)),
+                new SystemSolverSelectItemViewModel("KD", new KDDynamicSystemSolver(functionFactory)),
+                new SystemSolverSelectItemViewModel("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory)),
+                new SystemSolverSelectItemViewModel("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory)),
+                new SystemSolverSelectItemViewModel("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory))
+            };
+
+            SelectedSolver = SolverSelectItems.FirstOrDefault();
+        }
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
         {
@@ -69,10 +90,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             Error = null;
             try
             {
-                var functionFactory = new CompiledFunctionFactory();
-
-                var solver = new RungeKutta4DynamicSystemSolver(functionFactory);
-                var baselineSolver = new DormandPrince8DynamicSystemSolver(functionFactory);
+                var solver = SelectedSolver.Solver;
+                var baselineSolver = new DormandPrince8DynamicSystemSolver(new CompiledFunctionFactory());
 
                 IsBusy = true;
 

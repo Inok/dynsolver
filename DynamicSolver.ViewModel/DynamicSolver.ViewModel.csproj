@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="DynamicSystem\DynamicSystemSolverInput.cs" />
     <Compile Include="DynamicSystem\SystemInputViewModel.cs" />
+    <Compile Include="DynamicSystem\SystemSolverSelectItemViewModel.cs" />
     <Compile Include="DynamicSystem\SystemSolverViewModel.cs" />
     <Compile Include="DynamicSystem\VariableValue.cs" />
     <Compile Include="Properties\Annotations.cs" />
