@@ -72,6 +72,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             SolverSelectItems = new List<SystemSolverSelectItemViewModel>()
             {
                 new SystemSolverSelectItemViewModel("Euler", new EulerDynamicSystemSolver(functionFactory)),
+                new SystemSolverSelectItemViewModel("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3)),
+                new SystemSolverSelectItemViewModel("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4)),
                 new SystemSolverSelectItemViewModel("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory)),
                 new SystemSolverSelectItemViewModel("KD", new KDDynamicSystemSolver(functionFactory)),
                 new SystemSolverSelectItemViewModel("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory)),

@@ -57,9 +57,13 @@
     <Compile Include="Solver\DormandPrince8DynamicSystemSolver.cs" />
     <Compile Include="Solver\DormandPrince5DynamicSystemSolver.cs" />
     <Compile Include="Solver\DormandPrince7DynamicSystemSolver.cs" />
+    <Compile Include="Solver\DynamicSystemSolver.cs" />
     <Compile Include="Solver\EulerDynamicSystemSolver.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
+    <Compile Include="Solver\ExecutableFunctionInfo.cs" />
+    <Compile Include="Solver\ExtrapolationEulerDynamicSystemSolver.cs" />
+    <Compile Include="Solver\Extrapolator.cs" />
     <Compile Include="Solver\IDynamicSystemSolver.cs" />
     <Compile Include="Solver\KDDynamicSystemSolver.cs" />
     <Compile Include="NextStateVariableValueCalculationService.cs" />

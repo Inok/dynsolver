@@ -9,6 +9,8 @@ using NUnit.Framework;
 namespace DynamicSolver.DynamicSystem.Tests
 {
     [TestFixture(typeof(EulerDynamicSystemSolver), 1)]
+    [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 3, 3)]
+    [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 4, 4)]
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince8DynamicSystemSolver), 8)]
@@ -29,6 +31,12 @@ namespace DynamicSolver.DynamicSystem.Tests
         public DynamicSystemSolverTests(int methodAccuracy)
         {
             _solver = (TSolver) Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory());
+            _methodAccuracy = methodAccuracy;
+        }
+
+        public DynamicSystemSolverTests(int methodAccuracy, int extrapolationSolverStageCountArgument)
+        {
+            _solver = (TSolver) Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory(), extrapolationSolverStageCountArgument);
             _methodAccuracy = methodAccuracy;
         }
 

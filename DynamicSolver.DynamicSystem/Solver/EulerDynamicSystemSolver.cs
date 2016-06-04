@@ -1,57 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Expressions.Execution;
-using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem.Solver
 {
-    public class EulerDynamicSystemSolver : IDynamicSystemSolver
+    public class EulerDynamicSystemSolver : DynamicSystemSolver<object>
     {
-        [NotNull] private readonly IExecutableFunctionFactory _functionFactory;
-
-        public EulerDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory)
+        public EulerDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
         {
-            if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
             
-            _functionFactory = functionFactory;            
         }
 
-        public IEnumerable<IReadOnlyDictionary<string, double>> Solve(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IReadOnlyDictionary<string, double> initialConditions, double step)
-        {
-            if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
-            if (initialConditions == null) throw new ArgumentNullException(nameof(initialConditions));
-            if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
-
-            if (equationSystem.Equations.Any(e => e.LeadingDerivative.Order > 1))
-            {
-                throw new ArgumentException($"{nameof(EulerDynamicSystemSolver)} supports only equations with order = 1.");
-            }
-            if (!new HashSet<string>(equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables)).SetEquals(initialConditions.Keys))
-            {
-                throw new ArgumentException("Initial values has different set of arguments from equation system.");
-            }
-
-            var functions = equationSystem.Equations
-                .Select(e => new Tuple<VariablePrimitive, IExecutableFunction>(e.LeadingDerivative.Variable, _functionFactory.Create(e.Function)))
-                .ToList();
-
-            var lastValues = initialConditions;
-            while(true)
-            {
-                yield return lastValues = GetNextValues(functions, lastValues, step);
-            }            
-        }
-
-        private static Dictionary<string, double> GetNextValues(IEnumerable<Tuple<VariablePrimitive, IExecutableFunction>> functions, IReadOnlyDictionary<string, double> variables, double step)
+        protected override IReadOnlyDictionary<string, double> GetNextValues(IList<ExecutableFunctionInfo> functions, IReadOnlyDictionary<string, double> variables, double step, object extra)
         {
             var vars = variables.ToDictionary(v => v.Key, v => v.Value);
 
             foreach (var function in functions)
             {
-                var arguments = function.Item2.OrderedArguments.Select(a => variables[a]).ToArray();
-                vars[function.Item1.Name] = variables[function.Item1.Name] + step*function.Item2.Execute(arguments);
+                var arguments = function.Function.OrderedArguments.Select(a => variables[a]).ToArray();
+                vars[function.Name] = variables[function.Name] + step*function.Function.Execute(arguments);
             }
 
             return vars;
