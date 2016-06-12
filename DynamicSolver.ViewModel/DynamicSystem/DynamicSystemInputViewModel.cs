@@ -11,7 +11,7 @@ using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
 {
-    public class SystemInputViewModel : ReactiveObject
+    public class DynamicSystemInputViewModel : ReactiveObject
     {
         private readonly IExpressionParser _parser;
 
@@ -21,7 +21,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         private readonly ObservableAsPropertyHelper<ExplicitOrdinaryDifferentialEquationSystem> _system;
         private readonly ObservableAsPropertyHelper<string> _errorMessage;
-        private readonly ObservableAsPropertyHelper<IReactiveList<VariableValue>> _variables;
+        private readonly ObservableAsPropertyHelper<IReactiveList<VariableViewModel>> _variables;
         private readonly ObservableAsPropertyHelper<DynamicSystemSolverInput> _taskInput;
         
         public string Expression
@@ -44,11 +44,11 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         public ExplicitOrdinaryDifferentialEquationSystem System => _system.Value;
         public string ErrorMessage => _errorMessage.Value;
-        public IReactiveList<VariableValue> Variables => _variables.Value;
+        public IReactiveList<VariableViewModel> Variables => _variables.Value;
         public DynamicSystemSolverInput TaskInput  => _taskInput.Value;
         
 
-        public SystemInputViewModel([NotNull] IExpressionParser parser)
+        public DynamicSystemInputViewModel([NotNull] IExpressionParser parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 
@@ -63,7 +63,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 .Where(m => m.Item2.Length == 0)
                 .Throttle(TimeSpan.FromSeconds(0.5), DispatcherScheduler.Current)
                 .Select(m => CreateVariables(m.Item1))
-                .ToProperty(this, m => m.Variables, new ReactiveList<VariableValue>());
+                .ToProperty(this, m => m.Variables, new ReactiveList<VariableViewModel>());
 
             _taskInput = Observable.Merge(
                 parseResult.Select(_ => Unit.Default),
@@ -76,31 +76,31 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 .ToProperty(this, m => m.TaskInput);            
         }
 
-        private IReactiveList<VariableValue> CreateVariables(ExplicitOrdinaryDifferentialEquationSystem system)
+        private IReactiveList<VariableViewModel> CreateVariables(ExplicitOrdinaryDifferentialEquationSystem system)
         {
             if (system == null)
             {
-                return new ReactiveList<VariableValue>();
+                return new ReactiveList<VariableViewModel>();
             }
 
             var expressionVariables = system.Equations.SelectMany(e => e.Function.Analyzer.Variables)
                 .Concat(system.Equations.Select(e => e.LeadingDerivative.Variable.Name))
                 .Distinct().ToList();
 
-            var comparer = Comparer<VariableValue>.Create((v1, v2) => string.Compare(v1.VariableName, v2.VariableName, StringComparison.Ordinal));
-            var newVariables = new SortedSet<VariableValue>(comparer);
+            var comparer = Comparer<VariableViewModel>.Create((v1, v2) => string.Compare(v1.Name, v2.Name, StringComparison.Ordinal));
+            var newVariables = new SortedSet<VariableViewModel>(comparer);
 
-            foreach (var model in Variables.Where(v => expressionVariables.Contains(v.VariableName)))
+            foreach (var model in Variables.Where(v => expressionVariables.Contains(v.Name)))
             {
-                newVariables.Add(new VariableValue(model.VariableName) {Value = model.Value});
+                newVariables.Add(new VariableViewModel(model.Name) {Value = model.Value});
             }
 
-            foreach (var variable in expressionVariables.Select(s => new VariableValue(s)))
+            foreach (var variable in expressionVariables.Select(s => new VariableViewModel(s)))
             {
                 newVariables.Add(variable);
             }
 
-            return new ReactiveList<VariableValue>(newVariables) { ChangeTrackingEnabled = true };
+            return new ReactiveList<VariableViewModel>(newVariables) { ChangeTrackingEnabled = true };
         }
 
         private DynamicSystemSolverInput GetTaskInput()

@@ -8,6 +8,7 @@ using DynamicSolver.Common.Extensions;
 using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
+using DynamicSolver.ViewModel.Common.Select;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -22,9 +23,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private string _error;
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
-        private SystemSolverSelectItemViewModel _selectedSolver;
-
-        public SystemInputViewModel InputViewModel { get; }
+        
+        public DynamicSystemInputViewModel InputViewModel { get; }
 
         public string Error
         {
@@ -34,13 +34,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         public IReactiveCommand Calculate { get; }
 
-        public IReadOnlyCollection<SystemSolverSelectItemViewModel> SolverSelectItems { get; private set; }
-
-        public SystemSolverSelectItemViewModel SelectedSolver
-        {
-            get { return _selectedSolver; }
-            set { this.RaiseAndSetIfChanged(ref _selectedSolver, value); }
-        }
+        public SelectViewModel<IDynamicSystemSolver> SolverSelect { get; }
 
         public bool IsBusy
         {
@@ -62,26 +56,25 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         public SystemSolverViewModel()
         {
-            InputViewModel = new SystemInputViewModel(new ExpressionParser());
+            var functionFactory = new CompiledFunctionFactory();
 
-            var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput, m => m.SelectedSolver);
+            SolverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
+            SolverSelect.AddItem("Euler", new EulerDynamicSystemSolver(functionFactory));
+            SolverSelect.AddItem("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3));
+            SolverSelect.AddItem("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4));
+            SolverSelect.AddItem("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory));
+            SolverSelect.AddItem("KD", new KDDynamicSystemSolver(functionFactory));
+            SolverSelect.AddItem("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory));
+            SolverSelect.AddItem("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory));
+            SolverSelect.AddItem("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory));
+
+            SolverSelect.SelectedItem = SolverSelect.Items.FirstOrDefault();
+
+            InputViewModel = new DynamicSystemInputViewModel(new ExpressionParser());
+
+            var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput, m => m.SolverSelect.SelectedItem);
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
-
-            var functionFactory = new CompiledFunctionFactory();
-            SolverSelectItems = new List<SystemSolverSelectItemViewModel>()
-            {
-                new SystemSolverSelectItemViewModel("Euler", new EulerDynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3)),
-                new SystemSolverSelectItemViewModel("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4)),
-                new SystemSolverSelectItemViewModel("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("KD", new KDDynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory))
-            };
-
-            SelectedSolver = SolverSelectItems.FirstOrDefault();
         }
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
@@ -92,7 +85,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             Error = null;
             try
             {
-                var solver = SelectedSolver.Solver;
+                var solver = SolverSelect.SelectedItem.Value;
                 var baselineSolver = new DormandPrince8DynamicSystemSolver(new CompiledFunctionFactory());
 
                 IsBusy = true;
@@ -121,7 +114,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             if (baselineSolver == null) throw new ArgumentNullException(nameof(baselineSolver));
 
             var itemsCount = (int)(input.ModellingLimit / input.Step);
-            var startValues = input.Variables.ToDictionary(v => v.VariableName, v => v.Value.Value);
+            var startValues = input.Variables.ToDictionary(v => v.Name, v => v.Value.Value);
 
             var actual = startValues.Yield().Concat(solver.Solve(input.System, startValues, input.Step));
             var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Throttle(9, 9));

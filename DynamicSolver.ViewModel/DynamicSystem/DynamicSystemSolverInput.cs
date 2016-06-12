@@ -12,9 +12,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         public double Step { get; set; }
         public double ModellingLimit { get; set; }
 
-        public IReadOnlyCollection<VariableValue> Variables { get; }
+        public IReadOnlyCollection<VariableViewModel> Variables { get; }
 
-        public DynamicSystemSolverInput([NotNull] ExplicitOrdinaryDifferentialEquationSystem system, [NotNull] IEnumerable<VariableValue> variables, double step, double modellingLimit)
+        public DynamicSystemSolverInput([NotNull] ExplicitOrdinaryDifferentialEquationSystem system, [NotNull] IEnumerable<VariableViewModel> variables, double step, double modellingLimit)
         {
             if (system == null) throw new ArgumentNullException(nameof(system));
             if (variables == null) throw new ArgumentNullException(nameof(variables));

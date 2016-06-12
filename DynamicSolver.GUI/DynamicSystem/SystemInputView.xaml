@@ -47,7 +47,7 @@
                             <ColumnDefinition Width="Auto" MinWidth="40" />
                             <ColumnDefinition Width="Auto" MinWidth="100" />
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding VariableName}" />
+                        <Label Content="{Binding Name}" />
                         <xctk:DoubleUpDown Grid.Column="1" Value="{Binding Value, Mode=TwoWay}" Increment="0.1" AllowInputSpecialValues="None" FormatString="0.0##" />
                     </Grid>
                 </DataTemplate>

@@ -26,7 +26,7 @@
 
                 <TextBlock Grid.Row="0" Text="{Binding Error, Mode=OneWay}" Foreground="Red" />
                 <ComboBox Grid.Row="1" HorizontalAlignment="Right" 
-                          ItemsSource="{Binding SolverSelectItems}" SelectedItem="{Binding SelectedSolver, Mode=TwoWay}"
+                          ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
                           DisplayMemberPath="Name" 
                           MinWidth="80" />
                 <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />

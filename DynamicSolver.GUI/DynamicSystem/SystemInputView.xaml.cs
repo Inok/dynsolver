@@ -6,11 +6,11 @@ namespace DynamicSolver.GUI.DynamicSystem
 {
     public partial class SystemInputView : UserControl
     {
-        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(SystemInputViewModel), typeof(SystemInputView), new PropertyMetadata(default(SystemInputViewModel)));
+        public static readonly DependencyProperty ViewModelProperty = DependencyProperty.Register("ViewModel", typeof(DynamicSystemInputViewModel), typeof(SystemInputView), new PropertyMetadata(default(DynamicSystemInputViewModel)));
 
-        public SystemInputViewModel ViewModel
+        public DynamicSystemInputViewModel ViewModel
         {
-            get { return (SystemInputViewModel) GetValue(ViewModelProperty); }
+            get { return (DynamicSystemInputViewModel) GetValue(ViewModelProperty); }
             set { SetValue(ViewModelProperty, value); }
         }
 
