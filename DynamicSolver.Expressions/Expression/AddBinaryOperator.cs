@@ -1,5 +1,4 @@
-﻿using DynamicSolver.Abstractions.Expression;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace DynamicSolver.Expressions.Expression
 {

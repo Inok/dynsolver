@@ -57,9 +57,9 @@
     <Compile Include="DynamicSystemSolverTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.Abstractions\DynamicSolver.Abstractions.csproj">
+    <ProjectReference Include="..\DynamicSolver.Common\DynamicSolver.Common.csproj">
       <Project>{74375775-643E-4016-A7E2-F2B477A3175A}</Project>
-      <Name>DynamicSolver.Abstractions</Name>
+      <Name>DynamicSolver.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj">
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
