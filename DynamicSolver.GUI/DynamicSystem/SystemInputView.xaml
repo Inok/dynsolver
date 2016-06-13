@@ -7,8 +7,26 @@
              x:Name="UserControl" mc:Ignorable="d">
     <StackPanel DataContext="{Binding ViewModel,  ElementName=UserControl}">
         <Label>System:</Label>
-        <TextBox Text="{Binding Expression, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="2"/>
-        <TextBlock Text="{Binding ErrorMessage}" Foreground="Red"/>
+        <TextBox Text="{Binding  EquationSystemInputViewModel.Input, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" MinLines="2"/>
+
+        <ListBox ItemsSource="{Binding EquationSystemInputViewModel.Errors}" Margin="0,10,0,0">
+            <ListBox.Style>
+                <Style TargetType="ListBox">
+                    <Setter Property="Visibility" Value="Visible" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EquationSystemInputViewModel.Errors.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Hidden" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ListBox.Style>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding }" Foreground="Red"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" MinWidth="40" />

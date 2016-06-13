@@ -13,7 +13,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <dynamicSystem:SystemInputView ViewModel="{Binding InputViewModel}" />
+        <dynamicSystem:SystemInputView ViewModel="{Binding TaskViewModel}" />
         
         <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsBusy}">
             <Grid>

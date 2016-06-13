@@ -2,17 +2,18 @@
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.Common.Select
+namespace DynamicSolver.ViewModel.Common.Edit
 {
-    public class SelectItemViewModel<T> : ReactiveObject
+    public class EditViewModel<T> : ReactiveObject
     {
         private string _name;
         private T _value;
-        
-        public SelectItemViewModel([NotNull] string name, T value)
+
+        public EditViewModel([NotNull] string name, T value)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             _name = name;
+
             _value = value;
         }
 
@@ -21,11 +22,10 @@ namespace DynamicSolver.ViewModel.Common.Select
             get { return _name; }
             set
             {
-                if (value == null)
+                if(value == null)
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-
                 this.RaiseAndSetIfChanged(ref _name, value);
             }
         }

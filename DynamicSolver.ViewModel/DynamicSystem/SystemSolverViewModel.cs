@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -24,7 +23,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
         
-        public DynamicSystemInputViewModel InputViewModel { get; }
+        public DynamicSystemTaskViewModel TaskViewModel { get; }
 
         public string Error
         {
@@ -58,28 +57,29 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         {
             var functionFactory = new CompiledFunctionFactory();
 
-            SolverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
-            SolverSelect.AddItem("Euler", new EulerDynamicSystemSolver(functionFactory));
-            SolverSelect.AddItem("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3));
-            SolverSelect.AddItem("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4));
-            SolverSelect.AddItem("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory));
-            SolverSelect.AddItem("KD", new KDDynamicSystemSolver(functionFactory));
-            SolverSelect.AddItem("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory));
-            SolverSelect.AddItem("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory));
-            SolverSelect.AddItem("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory));
+            var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
+            solverSelect.AddItem("Euler", new EulerDynamicSystemSolver(functionFactory));
+            solverSelect.AddItem("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3));
+            solverSelect.AddItem("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4));
+            solverSelect.AddItem("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory));
+            solverSelect.AddItem("KD", new KDDynamicSystemSolver(functionFactory));
+            solverSelect.AddItem("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory));
+            solverSelect.AddItem("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory));
+            solverSelect.AddItem("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory));
+            solverSelect.SelectedItem = solverSelect.Items.FirstOrDefault();
 
-            SolverSelect.SelectedItem = SolverSelect.Items.FirstOrDefault();
+            SolverSelect = solverSelect;
 
-            InputViewModel = new DynamicSystemInputViewModel(new ExpressionParser());
+            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
 
-            var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput, m => m.SolverSelect.SelectedItem);
+            var inputObservable = this.WhenAnyValue(m => m.TaskViewModel.TaskInput, m => m.SolverSelect.SelectedItem);
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
         }
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
         {
-            var input = InputViewModel.TaskInput;
+            var input = TaskViewModel.TaskInput;
             if (input == null) return;
 
             Error = null;
@@ -114,7 +114,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             if (baselineSolver == null) throw new ArgumentNullException(nameof(baselineSolver));
 
             var itemsCount = (int)(input.ModellingLimit / input.Step);
-            var startValues = input.Variables.ToDictionary(v => v.Name, v => v.Value.Value);
+            var startValues = input.Variables;
 
             var actual = startValues.Yield().Concat(solver.Solve(input.System, startValues, input.Step));
             var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Throttle(9, 9));
