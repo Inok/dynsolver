@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.Expressions.Parser;
-using DynamicSolver.ViewModel.Properties;
+using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
@@ -15,14 +15,17 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private string _input;
         private ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
 
+        [CanBeNull]
         public string Input
         {
             get { return _input; }
             set { this.RaiseAndSetIfChanged(ref _input, value); }
         }
 
+        [NotNull, ItemNotNull]
         public IReactiveList<string> Errors { get; }
 
+        [CanBeNull]
         public ExplicitOrdinaryDifferentialEquationSystem EquationSystem
         {
             get { return _equationSystem; }

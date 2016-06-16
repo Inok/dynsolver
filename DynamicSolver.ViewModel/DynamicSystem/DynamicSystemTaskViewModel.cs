@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.Expressions.Parser;
 using DynamicSolver.ViewModel.Common.Edit;
-using DynamicSolver.ViewModel.Properties;
+using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
@@ -19,7 +19,11 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         private readonly ObservableAsPropertyHelper<DynamicSystemSolverInput> _taskInput;
 
+        [NotNull]
         public ExplicitOrdinaryDifferentialEquationSystemViewModel EquationSystemInputViewModel { get; }
+
+        [NotNull, ItemNotNull]
+        public IReactiveList<EditViewModel<double?>> Variables { get; }
 
         public double Step
         {
@@ -32,8 +36,6 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             get { return _time; }
             set { this.RaiseAndSetIfChanged(ref _time, value); }
         }
-
-        public IReactiveList<EditViewModel<double?>> Variables { get; }
 
         public DynamicSystemSolverInput TaskInput  => _taskInput.Value;
         
@@ -55,13 +57,13 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             _taskInput = Observable.Merge(
                     parseResult.Select(_ => Unit.Default),
-                    this.WhenAnyValue(m => m.Time).Select(_ => Unit.Default),
+                    this.WhenAnyObservable(m => m.Variables.Changed).Select(_ => Unit.Default),
+                    this.WhenAnyObservable(m => m.Variables.ItemChanged).Select(_ => Unit.Default),
                     this.WhenAnyValue(m => m.Step).Select(_ => Unit.Default),
-                    this.WhenAnyValue(m => m.Variables).Select(_ => Unit.Default),
-                    this.WhenAnyObservable(m => m.Variables.ItemChanged).Select(_ => Unit.Default))
+                    this.WhenAnyValue(m => m.Time).Select(_ => Unit.Default))
                 .Throttle(TimeSpan.FromSeconds(0.5), DispatcherScheduler.Current)
                 .Select(_ => GetTaskInput())
-                .ToProperty(this, m => m.TaskInput);            
+                .ToProperty(this, m => m.TaskInput);
         }
 
         private void CreateVariables(ExplicitOrdinaryDifferentialEquationSystem system)
@@ -72,9 +74,10 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 return;
             }
 
-            var actualVariables = system.Equations.SelectMany(e => e.Function.Analyzer.Variables)
+            var actualVariables = system.Equations
+                .SelectMany(e => e.Function.Analyzer.Variables)
                 .Concat(system.Equations.Select(e => e.LeadingDerivative.Variable.Name))
-                .Distinct().ToList();
+                .Distinct(StringComparer.Ordinal).ToList();
 
             Variables.RemoveAll(Variables.Where(v => !actualVariables.Contains(v.Name)).ToList());
             

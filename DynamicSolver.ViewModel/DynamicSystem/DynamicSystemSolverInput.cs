@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DynamicSolver.DynamicSystem;
-using DynamicSolver.ViewModel.Properties;
+using JetBrains.Annotations;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
 {
