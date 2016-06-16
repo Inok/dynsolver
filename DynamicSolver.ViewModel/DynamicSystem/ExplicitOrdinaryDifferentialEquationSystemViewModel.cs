@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.Expressions.Parser;
+using DynamicSolver.ViewModel.Common.ErrorList;
 using JetBrains.Annotations;
 using ReactiveUI;
 
@@ -22,8 +23,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _input, value); }
         }
 
-        [NotNull, ItemNotNull]
-        public IReactiveList<string> Errors { get; }
+        [NotNull]
+        public ErrorListViewModel ErrorListViewModel { get; }
 
         [CanBeNull]
         public ExplicitOrdinaryDifferentialEquationSystem EquationSystem
@@ -37,14 +38,15 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             _parser = parser;
 
-            Errors = new ReactiveList<string>();
+            ErrorListViewModel = new ErrorListViewModel();
             
             this.WhenAnyValue(x => x.Input).Subscribe(ParseInput);
         }
 
         private void ParseInput(string userInput)
         {
-            Errors.Clear();
+            ErrorListViewModel.Errors.Clear();
+
             EquationSystem = null;
 
             var lines = (userInput ?? string.Empty).Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
@@ -58,22 +60,31 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 }
                 catch (FormatException e)
                 {
-                    Errors.Add($"{pair.number + 1} statement: {e.Message}");
+                    ErrorListViewModel.Errors.Add(new ErrorViewModel()
+                    {
+                        Level = ErrorLevel.Error,
+                        Source = $"{pair.number + 1} statement",
+                        Message = e.Message
+                    });
                 }
             }
 
-            if (Errors.Count > 0 || equations.Count == 0)
+            if (ErrorListViewModel.HasErrors || equations.Count == 0)
             {
                 return;
             }
 
             try
             {
-                EquationSystem = new ExplicitOrdinaryDifferentialEquationSystem(equations);                
+                EquationSystem = new ExplicitOrdinaryDifferentialEquationSystem(equations);
             }
             catch (FormatException e)
             {
-                Errors.Add(e.Message);                
+                ErrorListViewModel.Errors.Add(new ErrorViewModel()
+                {
+                    Level = ErrorLevel.Error,
+                    Message = e.Message
+                });
             }
         }
 

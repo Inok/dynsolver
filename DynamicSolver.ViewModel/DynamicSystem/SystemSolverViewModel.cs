@@ -6,13 +6,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using DynamicSolver.Common.Extensions;
 using DynamicSolver.DynamicSystem.Solver;
-using DynamicSolver.Expressions;
-using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
+using DynamicSolver.ViewModel.Common.ErrorList;
 using DynamicSolver.ViewModel.Common.Select;
 using JetBrains.Annotations;
-using Ninject;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -23,17 +21,13 @@ namespace DynamicSolver.ViewModel.DynamicSystem
     public class SystemSolverViewModel : ReactiveObject, IRoutableViewModel
     {
         private bool _isBusy;
-        private string _error;
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
         
         public DynamicSystemTaskViewModel TaskViewModel { get; }
 
-        public string Error
-        {
-            get { return _error; }
-            set { this.RaiseAndSetIfChanged(ref _error, value); }
-        }
+        [NotNull]
+        public ErrorListViewModel ErrorListViewModel { get; }
 
         public IReactiveCommand Calculate { get; }
 
@@ -64,6 +58,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             HostScreen = hostScreen;
 
+            ErrorListViewModel = new ErrorListViewModel();
+
             var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
             foreach (var solver in solvers)
             {
@@ -86,7 +82,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             var input = TaskViewModel.TaskInput;
             if (input == null) return;
 
-            Error = null;
+            ErrorListViewModel.Errors.Clear();
+
             try
             {
                 var solver = SolverSelect.SelectedItem.Value;
@@ -103,7 +100,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             {
                 ValuePlotModel = null;
                 DeviationPlotModel = null;
-                Error = ex.Message;
+                ErrorListViewModel.Errors.Add(new ErrorViewModel
+                {
+                    Level = ErrorLevel.Error,
+                    Source = "solver",
+                    Message = ex.Message
+                });
             }
             finally
             {
