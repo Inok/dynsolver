@@ -28,7 +28,7 @@
                 <ComboBox Grid.Row="1" HorizontalAlignment="Right" 
                           ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
                           DisplayMemberPath="Name" 
-                          MinWidth="80" />
+                          MinWidth="150"/>
                 <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
                 <oxy:PlotView Grid.Row="3" Model="{Binding DeviationPlotModel}" />
             </Grid>

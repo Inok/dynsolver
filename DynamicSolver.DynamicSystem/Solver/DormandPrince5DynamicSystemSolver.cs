@@ -27,5 +27,10 @@ namespace DynamicSolver.DynamicSystem.Solver
         public DormandPrince5DynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
         {
         }
+
+        public override string ToString()
+        {
+            return $"Dormand-Prince 5";
+        }
     }
 }

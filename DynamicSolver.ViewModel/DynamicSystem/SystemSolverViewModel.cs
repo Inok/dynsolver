@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -56,22 +57,19 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _deviationPlotModel, value); }
         }
 
-        public SystemSolverViewModel([NotNull] IScreen hostScreen, [NotNull] IExecutableFunctionFactory functionFactory)
+        public SystemSolverViewModel([NotNull] IScreen hostScreen, [NotNull] IEnumerable<IDynamicSystemSolver> solvers)
         {
             if (hostScreen == null) throw new ArgumentNullException(nameof(hostScreen));
-            if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
+            if (solvers == null) throw new ArgumentNullException(nameof(solvers));
 
             HostScreen = hostScreen;
 
             var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
-            solverSelect.AddItem("Euler", new EulerDynamicSystemSolver(functionFactory));
-            solverSelect.AddItem("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3));
-            solverSelect.AddItem("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4));
-            solverSelect.AddItem("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory));
-            solverSelect.AddItem("KD", new KDDynamicSystemSolver(functionFactory));
-            solverSelect.AddItem("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory));
-            solverSelect.AddItem("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory));
-            solverSelect.AddItem("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory));
+            foreach (var solver in solvers)
+            {
+                solverSelect.AddItem(solver.ToString(), solver);
+            }
+
             solverSelect.SelectedItem = solverSelect.Items.FirstOrDefault();
 
             SolverSelect = solverSelect;
