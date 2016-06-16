@@ -47,6 +47,10 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
@@ -68,6 +72,7 @@
     <Compile Include="Derivation\SymbolicDerivationService.cs" />
     <Compile Include="Execution\Compiler\CompiledFunction.cs" />
     <Compile Include="Execution\Compiler\CompiledFunctionFactory.cs" />
+    <Compile Include="ExpressionRegistrationModule.cs" />
     <Compile Include="Execution\IExecutableFunction.cs" />
     <Compile Include="Execution\IExecutableFunctionFactory.cs" />
     <Compile Include="Execution\IExpressionAnalyzer.cs" />

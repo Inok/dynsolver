@@ -5,10 +5,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using DynamicSolver.Common.Extensions;
 using DynamicSolver.DynamicSystem.Solver;
+using DynamicSolver.Expressions;
+using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
 using DynamicSolver.ViewModel.Common.Select;
 using JetBrains.Annotations;
+using Ninject;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
@@ -53,12 +56,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _deviationPlotModel, value); }
         }
 
-        public SystemSolverViewModel([NotNull] IScreen hostScreen)
+        public SystemSolverViewModel([NotNull] IScreen hostScreen, [NotNull] IExecutableFunctionFactory functionFactory)
         {
             if (hostScreen == null) throw new ArgumentNullException(nameof(hostScreen));
-            HostScreen = hostScreen;
+            if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
 
-            var functionFactory = new CompiledFunctionFactory();
+            HostScreen = hostScreen;
 
             var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
             solverSelect.AddItem("Euler", new EulerDynamicSystemSolver(functionFactory));

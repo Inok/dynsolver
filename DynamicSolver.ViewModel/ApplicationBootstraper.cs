@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DynamicSolver.Expressions;
 using DynamicSolver.ViewModel.DynamicSystem;
 using Ninject;
 using Ninject.Modules;
@@ -19,15 +20,19 @@ namespace DynamicSolver.ViewModel
 
             Locator.CurrentMutable = new NinjectLocator(kernel);
 
-            Router.Navigate.Execute(new SystemSolverViewModel(this));
+            Router.Navigate.Execute(kernel.Get<SystemSolverViewModel>());
         }
 
-        private static IKernel InitializeKernel(IEnumerable<INinjectModule> modules)
+        private IKernel InitializeKernel(IEnumerable<INinjectModule> modules)
         {
             IKernel kernel = new StandardKernel();
 
             kernel.Load(modules);
             
+            kernel.Load(new ExpressionRegistrationModule(ExpressionRegistrationModule.FunctionFactoryType.Compiled));
+
+            kernel.Bind<IScreen>().ToConstant(this);
+            kernel.Bind<SystemSolverViewModel>().ToSelf();
 
             return kernel;
         }
