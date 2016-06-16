@@ -40,6 +40,10 @@
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2100\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
@@ -123,15 +127,16 @@
     <Compile Include="DynamicSystem\SystemSolverView.xaml.cs">
       <DependentUpon>SystemSolverView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DynamicSystem\SystemInputView.xaml.cs">
-      <DependentUpon>SystemInputView.xaml</DependentUpon>
+    <Compile Include="DynamicSystem\DynamicSystemTaskView.xaml.cs">
+      <DependentUpon>DynamicSystemTaskView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.cs" />
+    <Compile Include="ViewsRegistrationModule.cs" />
     <Page Include="DynamicSystem\SystemSolverView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DynamicSystem\SystemInputView.xaml">
+    <Page Include="DynamicSystem\DynamicSystemTaskView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

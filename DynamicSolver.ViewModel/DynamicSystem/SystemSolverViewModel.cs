@@ -16,7 +16,7 @@ using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
 {
-    public class SystemSolverViewModel : ReactiveObject
+    public class SystemSolverViewModel : ReactiveObject, IRoutableViewModel
     {
         private bool _isBusy;
         private string _error;
@@ -53,8 +53,11 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _deviationPlotModel, value); }
         }
 
-        public SystemSolverViewModel()
+        public SystemSolverViewModel([NotNull] IScreen hostScreen)
         {
+            if (hostScreen == null) throw new ArgumentNullException(nameof(hostScreen));
+            HostScreen = hostScreen;
+
             var functionFactory = new CompiledFunctionFactory();
 
             var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
@@ -152,5 +155,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             return new Tuple<PlotModel, PlotModel>(actualPlot, deviationPlot);
         }
+
+        public string UrlPathSegment => nameof(SystemSolverViewModel);
+
+        public IScreen HostScreen { get; }
     }
 }
