@@ -8,6 +8,7 @@ using DynamicSolver.Common.Extensions;
 using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
+using DynamicSolver.ViewModel.Common.Busy;
 using DynamicSolver.ViewModel.Common.ErrorList;
 using DynamicSolver.ViewModel.Common.Select;
 using JetBrains.Annotations;
@@ -20,24 +21,21 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 {
     public class SystemSolverViewModel : ReactiveObject, IRoutableViewModel
     {
-        private bool _isBusy;
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
         
         public DynamicSystemTaskViewModel TaskViewModel { get; }
 
         [NotNull]
-        public ErrorListViewModel ErrorListViewModel { get; }
+        public ErrorListViewModel ErrorListViewModel { get; } = new ErrorListViewModel();
+
+        [NotNull]
+        public BusyIndicatorViewModel BusyViewModel { get; } = new BusyIndicatorViewModel();
+
 
         public IReactiveCommand Calculate { get; }
 
         public SelectViewModel<IDynamicSystemSolver> SolverSelect { get; }
-
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { this.RaiseAndSetIfChanged(ref _isBusy, value); }
-        }
 
         public PlotModel ValuePlotModel
         {
@@ -57,8 +55,6 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             if (solvers == null) throw new ArgumentNullException(nameof(solvers));
 
             HostScreen = hostScreen;
-
-            ErrorListViewModel = new ErrorListViewModel();
 
             var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
             foreach (var solver in solvers)
@@ -84,32 +80,29 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             ErrorListViewModel.Errors.Clear();
 
-            try
+            using (BusyViewModel.CreateScope())
             {
-                var solver = SolverSelect.SelectedItem.Value;
-                var baselineSolver = new DormandPrince8DynamicSystemSolver(new CompiledFunctionFactory());
-
-                IsBusy = true;
-
-                var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
-
-                ValuePlotModel = plotters.Item1;
-                DeviationPlotModel = plotters.Item2;
-            }
-            catch (Exception ex)
-            {
-                ValuePlotModel = null;
-                DeviationPlotModel = null;
-                ErrorListViewModel.Errors.Add(new ErrorViewModel
+                try
                 {
-                    Level = ErrorLevel.Error,
-                    Source = "solver",
-                    Message = ex.Message
-                });
-            }
-            finally
-            {
-                IsBusy = false;
+                    var solver = SolverSelect.SelectedItem.Value;
+                    var baselineSolver = new DormandPrince8DynamicSystemSolver(new CompiledFunctionFactory());
+
+                    var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
+
+                    ValuePlotModel = plotters.Item1;
+                    DeviationPlotModel = plotters.Item2;
+                }
+                catch (Exception ex)
+                {
+                    ValuePlotModel = null;
+                    DeviationPlotModel = null;
+                    ErrorListViewModel.Errors.Add(new ErrorViewModel
+                    {
+                        Level = ErrorLevel.Error,
+                        Source = "solver",
+                        Message = ex.Message
+                    });
+                }
             }
         }
 

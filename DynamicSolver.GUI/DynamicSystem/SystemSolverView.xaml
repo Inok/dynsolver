@@ -16,7 +16,7 @@
 
         <dynamicSystem:DynamicSystemTaskView ViewModel="{Binding TaskViewModel}" />
         
-        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsBusy}">
+        <common:BusyIndicatorView Grid.Row="1" ViewModel="{Binding BusyViewModel, Mode=OneTime}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MinHeight="25" />
@@ -34,7 +34,7 @@
                 <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
                 <oxy:PlotView Grid.Row="3" Model="{Binding DeviationPlotModel}" />
             </Grid>
-        </xctk:BusyIndicator>
+        </common:BusyIndicatorView>
     </Grid>
 
 </UserControl>

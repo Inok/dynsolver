@@ -86,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationBootstraper.cs" />
+    <Compile Include="Common\Busy\BusyIndicatorViewModel.cs" />
     <Compile Include="Common\Edit\EditViewModel.cs" />
     <Compile Include="Common\ErrorList\ErrorLevel.cs" />
     <Compile Include="Common\ErrorList\ErrorListViewModel.cs" />
