@@ -34,6 +34,9 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Inok.Tools">
+      <HintPath>..\packages\Inok.Tools.0.1.0.7\lib\net461\Inok.Tools.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
@@ -67,10 +70,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.Common\DynamicSolver.Common.csproj">
-      <Project>{74375775-643E-4016-A7E2-F2B477A3175A}</Project>
-      <Name>DynamicSolver.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
       <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
       <Name>DynamicSolver.Expressions</Name>

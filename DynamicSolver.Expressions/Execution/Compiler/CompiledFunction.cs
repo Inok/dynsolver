@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using DynamicSolver.Common.Extensions;
 using DynamicSolver.Expressions.Expression;
+using Inok.Tools.Dump;
 using JetBrains.Annotations;
 using static System.Linq.Expressions.Expression;
 

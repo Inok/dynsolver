@@ -4,13 +4,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicSolver.Common.Extensions;
 using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
 using DynamicSolver.ViewModel.Common.Busy;
 using DynamicSolver.ViewModel.Common.ErrorList;
 using DynamicSolver.ViewModel.Common.Select;
+using Inok.Tools.Linq;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -116,7 +116,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             var startValues = input.Variables;
 
             var actual = startValues.Yield().Concat(solver.Solve(input.System, startValues, input.Step));
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Throttle(9, 9));
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Skipping(9, 9));
 
             var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b}).Take(itemsCount);
             
