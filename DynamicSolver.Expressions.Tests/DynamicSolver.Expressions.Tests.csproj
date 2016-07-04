@@ -34,8 +34,8 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Inok.Tools, Version=0.1.0.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Inok.Tools.0.1.0.7\lib\net461\Inok.Tools.dll</HintPath>
+    <Reference Include="Inok.Tools, Version=0.1.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Inok.Tools.0.1.0.9\lib\net40\Inok.Tools.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
