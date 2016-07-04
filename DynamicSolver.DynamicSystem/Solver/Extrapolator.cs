@@ -6,7 +6,8 @@ namespace DynamicSolver.DynamicSystem.Solver
 {
     public class Extrapolator
     {
-        private readonly int _extrapolationStageCount;
+        public int ExtrapolationStageCount { get; }
+
         private readonly int[] _extrapolationCoefficients;
 
         private readonly double[,] _buffer;
@@ -18,7 +19,7 @@ namespace DynamicSolver.DynamicSystem.Solver
             if (extrapolationStageCount <= 0) throw new ArgumentOutOfRangeException(nameof(extrapolationStageCount));
             if (baseMethodOrder <= 0) throw new ArgumentOutOfRangeException(nameof(baseMethodOrder));
 
-            _extrapolationStageCount = extrapolationStageCount;
+            ExtrapolationStageCount = extrapolationStageCount;
             _baseMethodOrder = baseMethodOrder;
             _extrapolationCoefficients = Enumerable.Range(1, extrapolationStageCount).ToArray();
             _buffer = new double[extrapolationStageCount,extrapolationStageCount];
@@ -41,7 +42,7 @@ namespace DynamicSolver.DynamicSystem.Solver
 
             foreach (var variable in variables.Keys)
             {
-                for (var j = 0; j < _extrapolationStageCount; j++)
+                for (var j = 0; j < ExtrapolationStageCount; j++)
                 {
                     _buffer[j, 0] = _solvesBuffer[j][variable];
 
@@ -51,7 +52,7 @@ namespace DynamicSolver.DynamicSystem.Solver
                     }
                 }
 
-                newValues[variable] = _buffer[_extrapolationStageCount - 1, _extrapolationStageCount - 1];
+                newValues[variable] = _buffer[ExtrapolationStageCount - 1, ExtrapolationStageCount - 1];
             }
 
             return newValues;

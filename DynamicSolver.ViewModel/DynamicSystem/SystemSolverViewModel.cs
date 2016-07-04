@@ -4,10 +4,13 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicSolver.Common.Extensions;
 using DynamicSolver.DynamicSystem.Solver;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Parser;
+using DynamicSolver.ViewModel.Common.Busy;
+using DynamicSolver.ViewModel.Common.ErrorList;
+using DynamicSolver.ViewModel.Common.Select;
+using Inok.Tools.Linq;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -16,37 +19,23 @@ using ReactiveUI;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
 {
-    public class SystemSolverViewModel : ReactiveObject
+    public class SystemSolverViewModel : ReactiveObject, IRoutableViewModel
     {
-        private bool _isBusy;
-        private string _error;
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
-        private SystemSolverSelectItemViewModel _selectedSolver;
+        
+        public DynamicSystemTaskViewModel TaskViewModel { get; }
 
-        public SystemInputViewModel InputViewModel { get; }
+        [NotNull]
+        public ErrorListViewModel ErrorListViewModel { get; } = new ErrorListViewModel();
 
-        public string Error
-        {
-            get { return _error; }
-            set { this.RaiseAndSetIfChanged(ref _error, value); }
-        }
+        [NotNull]
+        public BusyIndicatorViewModel BusyViewModel { get; } = new BusyIndicatorViewModel();
+
 
         public IReactiveCommand Calculate { get; }
 
-        public IReadOnlyCollection<SystemSolverSelectItemViewModel> SolverSelectItems { get; private set; }
-
-        public SystemSolverSelectItemViewModel SelectedSolver
-        {
-            get { return _selectedSolver; }
-            set { this.RaiseAndSetIfChanged(ref _selectedSolver, value); }
-        }
-
-        public bool IsBusy
-        {
-            get { return _isBusy; }
-            set { this.RaiseAndSetIfChanged(ref _isBusy, value); }
-        }
+        public SelectViewModel<IDynamicSystemSolver> SolverSelect { get; }
 
         public PlotModel ValuePlotModel
         {
@@ -60,60 +49,60 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _deviationPlotModel, value); }
         }
 
-        public SystemSolverViewModel()
+        public SystemSolverViewModel([NotNull] IScreen hostScreen, [NotNull] IEnumerable<IDynamicSystemSolver> solvers)
         {
-            InputViewModel = new SystemInputViewModel(new ExpressionParser());
+            if (hostScreen == null) throw new ArgumentNullException(nameof(hostScreen));
+            if (solvers == null) throw new ArgumentNullException(nameof(solvers));
 
-            var inputObservable = this.WhenAnyValue(m => m.InputViewModel.TaskInput, m => m.SelectedSolver);
+            HostScreen = hostScreen;
+
+            var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
+            foreach (var solver in solvers)
+            {
+                solverSelect.AddItem(solver.ToString(), solver);
+            }
+
+            solverSelect.SelectedItem = solverSelect.Items.FirstOrDefault();
+
+            SolverSelect = solverSelect;
+
+            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
+
+            var inputObservable = this.WhenAnyValue(m => m.TaskViewModel.TaskInput, m => m.SolverSelect.SelectedItem);
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
-
-            var functionFactory = new CompiledFunctionFactory();
-            SolverSelectItems = new List<SystemSolverSelectItemViewModel>()
-            {
-                new SystemSolverSelectItemViewModel("Euler", new EulerDynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("Euler Extr-3", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 3)),
-                new SystemSolverSelectItemViewModel("Euler Extr-4", new ExtrapolationEulerDynamicSystemSolver(functionFactory, 4)),
-                new SystemSolverSelectItemViewModel("Impl Euler", new ImplicitEulerDynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("Impl Euler Extr-3", new ExtrapolationImplicitEulerDynamicSystemSolver(functionFactory, 3)),
-                new SystemSolverSelectItemViewModel("Impl Euler Extr-4", new ExtrapolationImplicitEulerDynamicSystemSolver(functionFactory, 4)),
-                new SystemSolverSelectItemViewModel("RK 4", new RungeKutta4DynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("KD", new KDDynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("DOPRI 5", new DormandPrince5DynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("DOPRI 7", new DormandPrince7DynamicSystemSolver(functionFactory)),
-                new SystemSolverSelectItemViewModel("DOPRI 8", new DormandPrince8DynamicSystemSolver(functionFactory))
-            };
-
-            SelectedSolver = SolverSelectItems.FirstOrDefault();
         }
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
         {
-            var input = InputViewModel.TaskInput;
+            var input = TaskViewModel.TaskInput;
             if (input == null) return;
 
-            Error = null;
-            try
-            {
-                var solver = SelectedSolver.Solver;
-                var baselineSolver = new DormandPrince8DynamicSystemSolver(new CompiledFunctionFactory());
+            ErrorListViewModel.Errors.Clear();
 
-                IsBusy = true;
-
-                var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
-
-                ValuePlotModel = plotters.Item1;
-                DeviationPlotModel = plotters.Item2;
-            }
-            catch (Exception ex)
+            using (BusyViewModel.CreateScope())
             {
-                ValuePlotModel = null;
-                DeviationPlotModel = null;
-                Error = ex.Message;
-            }
-            finally
-            {
-                IsBusy = false;
+                try
+                {
+                    var solver = SolverSelect.SelectedItem.Value;
+                    var baselineSolver = new DormandPrince8DynamicSystemSolver(new CompiledFunctionFactory());
+
+                    var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
+
+                    ValuePlotModel = plotters.Item1;
+                    DeviationPlotModel = plotters.Item2;
+                }
+                catch (Exception ex)
+                {
+                    ValuePlotModel = null;
+                    DeviationPlotModel = null;
+                    ErrorListViewModel.Errors.Add(new ErrorViewModel
+                    {
+                        Level = ErrorLevel.Error,
+                        Source = "solver",
+                        Message = ex.Message
+                    });
+                }
             }
         }
 
@@ -124,10 +113,10 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             if (baselineSolver == null) throw new ArgumentNullException(nameof(baselineSolver));
 
             var itemsCount = (int)(input.ModellingLimit / input.Step);
-            var startValues = input.Variables.ToDictionary(v => v.VariableName, v => v.Value.Value);
+            var startValues = input.Variables;
 
             var actual = startValues.Yield().Concat(solver.Solve(input.System, startValues, input.Step));
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Throttle(9, 9));
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Skipping(9, 9));
 
             var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b}).Take(itemsCount);
             
@@ -162,5 +151,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             return new Tuple<PlotModel, PlotModel>(actualPlot, deviationPlot);
         }
+
+        public string UrlPathSegment => nameof(SystemSolverViewModel);
+
+        public IScreen HostScreen { get; }
     }
 }

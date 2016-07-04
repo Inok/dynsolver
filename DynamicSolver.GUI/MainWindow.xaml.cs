@@ -1,14 +1,16 @@
-﻿using System.Windows;
+﻿using DynamicSolver.ViewModel;
+using ReactiveUI;
 
 namespace DynamicSolver.GUI
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
+        public IScreen ApplicationScreen { get; }
+
         public MainWindow()
         {
+            ApplicationScreen = new ApplicationBootstraper(modules: new[] {new ViewsRegistrationModule()});
+
             InitializeComponent();
         }
     }

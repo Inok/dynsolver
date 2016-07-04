@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DynamicSolver.Common.Extensions;
 using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Parser;
+using Inok.Tools.Dump;
 using NUnit.Framework;
 
 namespace DynamicSolver.Expressions.Tests.Parser

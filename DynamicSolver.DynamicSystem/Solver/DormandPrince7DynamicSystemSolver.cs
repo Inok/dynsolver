@@ -33,5 +33,10 @@ namespace DynamicSolver.DynamicSystem.Solver
         {
             
         }
+
+        public override string ToString()
+        {
+            return $"Dormand-Prince 7";
+        }
     }
 }

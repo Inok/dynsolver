@@ -20,5 +20,10 @@ namespace DynamicSolver.DynamicSystem.Solver
         public RungeKutta4DynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
         {
         }
+
+        public override string ToString()
+        {
+            return $"Runge-Kutta 4";
+        }
     }
 }

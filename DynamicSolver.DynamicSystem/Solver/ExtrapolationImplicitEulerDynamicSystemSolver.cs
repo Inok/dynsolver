@@ -17,5 +17,11 @@ namespace DynamicSolver.DynamicSystem.Solver
         {
             return _extrapolator.Extrapolate(variables, step, (v, st) => base.GetNextValues(functions, v, st, extra));
         }
+
+        public override string ToString()
+        {
+            return $"Implicit Euler Extrapolation {_extrapolator.ExtrapolationStageCount}";
+        }
+
     }
 }

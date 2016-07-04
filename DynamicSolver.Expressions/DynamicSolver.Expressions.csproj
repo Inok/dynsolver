@@ -31,20 +31,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Inok.Tools, Version=0.1.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Inok.Tools.0.1.0.9\lib\net40\Inok.Tools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="JetBrains.Annotations, Version=10.1.4.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.10.1.4\lib\net20\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.2.1\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.2.2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.2.1\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.2.2\lib\net45\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -68,6 +76,7 @@
     <Compile Include="Derivation\SymbolicDerivationService.cs" />
     <Compile Include="Execution\Compiler\CompiledFunction.cs" />
     <Compile Include="Execution\Compiler\CompiledFunctionFactory.cs" />
+    <Compile Include="ExpressionRegistrationModule.cs" />
     <Compile Include="Execution\IExecutableFunction.cs" />
     <Compile Include="Execution\IExecutableFunctionFactory.cs" />
     <Compile Include="Execution\IExpressionAnalyzer.cs" />
@@ -103,12 +112,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\ExpressionAnalyzer.cs" />
     <Compile Include="Tools\ExpressionVisitor.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.Common\DynamicSolver.Common.csproj">
-      <Project>{74375775-643e-4016-a7e2-f2b477a3175a}</Project>
-      <Name>DynamicSolver.Common</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

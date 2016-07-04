@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using DynamicSolver.DynamicSystem;
-using DynamicSolver.ViewModel.Properties;
+using JetBrains.Annotations;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
 {
     public class DynamicSystemSolverInput
     {
         public ExplicitOrdinaryDifferentialEquationSystem System { get; }
-        public double Step { get; set; }
-        public double ModellingLimit { get; set; }
+        public double Step { get; }
+        public double ModellingLimit { get; }
 
-        public IReadOnlyCollection<VariableValue> Variables { get; }
+        public IReadOnlyDictionary<string, double> Variables { get; }
 
-        public DynamicSystemSolverInput([NotNull] ExplicitOrdinaryDifferentialEquationSystem system, [NotNull] IEnumerable<VariableValue> variables, double step, double modellingLimit)
+        public DynamicSystemSolverInput([NotNull] ExplicitOrdinaryDifferentialEquationSystem system, [NotNull] IReadOnlyDictionary<string, double> variables, double step, double modellingLimit)
         {
             if (system == null) throw new ArgumentNullException(nameof(system));
             if (variables == null) throw new ArgumentNullException(nameof(variables));
@@ -22,14 +21,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             System = system;
             Step = step;
             ModellingLimit = modellingLimit;
-            Variables = variables.ToList();
-
-            if (Variables.Any(v => !v.Value.HasValue))
-            {
-                throw new ArgumentException("Any variables has no value.");
-            }
+            Variables = variables;            
         }
-
-
     }
 }

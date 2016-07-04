@@ -24,5 +24,10 @@ namespace DynamicSolver.DynamicSystem.Solver
 
             return vars;
         }
+
+        public override string ToString()
+        {
+            return $"Euler";
+        }
     }
 }
