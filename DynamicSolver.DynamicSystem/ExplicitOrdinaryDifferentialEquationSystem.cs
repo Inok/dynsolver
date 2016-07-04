@@ -7,6 +7,7 @@ namespace DynamicSolver.DynamicSystem
 {
     public class ExplicitOrdinaryDifferentialEquationSystem
     {
+        [NotNull]
         public IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> Equations { get; }
         
         public int Dimension => Equations.Count;

@@ -6,6 +6,7 @@
              xmlns:dynamicSystem="clr-namespace:DynamicSolver.GUI.DynamicSystem"
              xmlns:oxy="http://oxyplot.org/wpf"
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:common="clr-namespace:DynamicSolver.GUI.Common"
              x:Name="UserControl" mc:Ignorable="d">
     <Grid DataContext="{Binding ViewModel,  ElementName=UserControl}">
         <Grid.RowDefinitions>
@@ -13,9 +14,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <dynamicSystem:SystemInputView ViewModel="{Binding InputViewModel}" />
-        
-        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding IsBusy}">
+        <dynamicSystem:DynamicSystemTaskView ViewModel="{Binding TaskViewModel}" />
+
+        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding BusyViewModel.IsBusy}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MinHeight="25" />
@@ -24,11 +25,12 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="{Binding Error, Mode=OneWay}" Foreground="Red" />
+                <common:ErrorListView ViewModel="{Binding ErrorListViewModel}" Margin="0,10"/>
+
                 <ComboBox Grid.Row="1" HorizontalAlignment="Right" 
-                          ItemsSource="{Binding SolverSelectItems}" SelectedItem="{Binding SelectedSolver, Mode=TwoWay}"
+                          ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
                           DisplayMemberPath="Name" 
-                          MinWidth="80" />
+                          MinWidth="150"/>
                 <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
                 <oxy:PlotView Grid.Row="3" Model="{Binding DeviationPlotModel}" />
             </Grid>

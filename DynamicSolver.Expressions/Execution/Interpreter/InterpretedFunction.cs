@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DynamicSolver.Common.Extensions;
 using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Tools;
+using Inok.Tools.Dump;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Expressions.Execution.Interpreter

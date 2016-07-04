@@ -48,5 +48,11 @@ namespace DynamicSolver.DynamicSystem.Solver
 
             return secondHalfVars;
         }
+
+        public override string ToString()
+        {
+            return $"KD";
+        }
+
     }
 }
