@@ -63,8 +63,10 @@
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
     <Compile Include="Solver\ExecutableFunctionInfo.cs" />
     <Compile Include="Solver\ExtrapolationEulerDynamicSystemSolver.cs" />
+    <Compile Include="Solver\ExtrapolationImplicitEulerDynamicSystemSolver.cs" />
     <Compile Include="Solver\Extrapolator.cs" />
     <Compile Include="Solver\IDynamicSystemSolver.cs" />
+    <Compile Include="Solver\ImplicitEulerDynamicSystemSolver.cs" />
     <Compile Include="Solver\KDDynamicSystemSolver.cs" />
     <Compile Include="NextStateVariableValueCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
