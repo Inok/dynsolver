@@ -14,6 +14,9 @@ namespace DynamicSolver.DynamicSystem.Tests
     [TestFixture(typeof(ImplicitEulerDynamicSystemSolver), 1)]
     [TestFixture(typeof(ExtrapolationImplicitEulerDynamicSystemSolver), 3, 3)]
     [TestFixture(typeof(ExtrapolationImplicitEulerDynamicSystemSolver), 4, 4)]
+    [TestFixture(typeof(KDDynamicSystemSolver), 1)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 5, 3)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 7, 4)]
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince8DynamicSystemSolver), 8)]
@@ -73,7 +76,7 @@ namespace DynamicSolver.DynamicSystem.Tests
             foreach (var actualValue in actual)
             {
                 double t = STEP * ++i;
-                Assert.That(actualValue.Keys, Is.EqualTo(new [] {"x1", "x2"}));
+                Assert.That(actualValue.Keys, Is.EquivalentTo(new [] {"x1", "x2"}));
                 Assert.That(actualValue["x1"], Is.EqualTo(_expectedX1(t)).Within(accuracy), $"t = {t}, deviation = {_expectedX1(t) - actualValue["x1"]}");
                 Assert.That(actualValue["x2"], Is.EqualTo(_expectedX2(t)).Within(accuracy), $"t = {t}, deviation = {_expectedX2(t) - actualValue["x2"]}");
             }
