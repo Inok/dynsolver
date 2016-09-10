@@ -27,27 +27,54 @@ namespace DynamicSolver.DynamicSystem.Solver
             for (int i = 0; i < functions.Count; i++)
             {
                 var function = functions[i];
-                var arguments = function.Function.OrderedArguments.Select(a =>
-                    functions.Select(f => f.Name).Take(i + 1).Contains(a)
-                        ? (firstHalfVars.ContainsKey(a) ? firstHalfVars[a] : extra[a].Execute(extra[a].OrderedArguments.Select(t => t == "h" ? halfStep : variables[t]).ToArray()))
-                        : variables[a]).ToArray();
 
-                firstHalfVars[function.Name] = variables[function.Name] + halfStep * function.Function.Execute(arguments);
+                var newtonBasedArguments = functions.Select(f => f.Name).Take(i + 1).ToList();
+                var arguments = GetFunctionArguments(function, extra, newtonBasedArguments, variables, firstHalfVars, halfStep);
+
+                firstHalfVars[function.Name] = variables[function.Name] + halfStep * function.Function.Execute(arguments.ToArray());
             }
 
             var secondHalfVars = new Dictionary<string, double>();
             for (int i = functions.Count - 1; i >= 0; i--)
             {
                 var function = functions[i];
-                var arguments = function.Function.OrderedArguments.Select(a =>
-                    functions.Select(f => f.Name).Skip(i + 1).Contains(a)
-                        ? (secondHalfVars.ContainsKey(a) ? secondHalfVars[a] : extra[a].Execute(extra[a].OrderedArguments.Select(t => t == "h" ? halfStep : firstHalfVars[t]).ToArray()))
-                        : firstHalfVars[a]).ToArray();
 
-                secondHalfVars[function.Name] = firstHalfVars[function.Name] + halfStep * function.Function.Execute(arguments);
+                var newtonBasedArguments = functions.Select(f => f.Name).Skip(i + 1).ToList();
+                var arguments = GetFunctionArguments(function, extra, newtonBasedArguments, firstHalfVars, secondHalfVars, halfStep);
+
+                secondHalfVars[function.Name] = firstHalfVars[function.Name] + halfStep * function.Function.Execute(arguments.ToArray());
             }
 
             return secondHalfVars;
+        }
+
+        private static IEnumerable<double> GetFunctionArguments(
+            ExecutableFunctionInfo function,
+            IReadOnlyDictionary<string, IExecutableFunction> nextStateExpressions,
+            ICollection<string> newtonBasedArguments,
+            IReadOnlyDictionary<string, double> currentStepVariables,
+            IReadOnlyDictionary<string, double> nextStepValues,
+            double step)
+        {
+            foreach (var arg in function.Function.OrderedArguments)
+            {
+                if (newtonBasedArguments.Contains(arg))
+                {
+                    if (nextStepValues.ContainsKey(arg))
+                    {
+                        yield return nextStepValues[arg];
+                    }
+                    else
+                    {
+                        var arguments = nextStateExpressions[arg].OrderedArguments.Select(a => a == "h" ? step : currentStepVariables[a]).ToArray();
+                        yield return nextStateExpressions[arg].Execute(arguments);
+                    }
+                }
+                else
+                {
+                    yield return currentStepVariables[arg];
+                }
+            }
         }
 
         public override string ToString()
