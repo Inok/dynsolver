@@ -107,6 +107,11 @@ namespace DynamicSolver.Expressions.Expression
                 {
                     return $"({InternalFormat(operand)})";
                 }
+
+                if (_this is SubtractBinaryOperator)
+                {
+                    return $"({InternalFormat(operand)})";
+                }
             }
 
             return InternalFormat(operand);

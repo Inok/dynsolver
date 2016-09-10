@@ -31,14 +31,14 @@ namespace DynamicSolver.Expressions.Tests.Expression
 
         [TestCase( typeof(AssignmentBinaryOperator),    typeof(AddBinaryOperator),       false)]
         [TestCase( typeof(AddBinaryOperator),      typeof(AddBinaryOperator),       false)]
-        [TestCase( typeof(SubtractBinaryOperator), typeof(AddBinaryOperator),       false)]
+        [TestCase( typeof(SubtractBinaryOperator), typeof(AddBinaryOperator),       true)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(AddBinaryOperator),       true )]
         [TestCase( typeof(DivideBinaryOperator),   typeof(AddBinaryOperator),       true )]
         [TestCase( typeof(PowBinaryOperator),      typeof(AddBinaryOperator),       true )]
                    
         [TestCase( typeof(AssignmentBinaryOperator),    typeof(SubtractBinaryOperator),  false)]
         [TestCase( typeof(AddBinaryOperator),      typeof(SubtractBinaryOperator),  false)]
-        [TestCase( typeof(SubtractBinaryOperator), typeof(SubtractBinaryOperator),  false)]
+        [TestCase( typeof(SubtractBinaryOperator), typeof(SubtractBinaryOperator),  true)]
         [TestCase( typeof(MultiplyBinaryOperator), typeof(SubtractBinaryOperator),  true )]
         [TestCase( typeof(DivideBinaryOperator),   typeof(SubtractBinaryOperator),  true )]
         [TestCase( typeof(PowBinaryOperator),      typeof(SubtractBinaryOperator),  true )]
