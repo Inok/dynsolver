@@ -5,33 +5,33 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem.Solver
 {
-    public class KDDynamicSystemSolver : DynamicSystemSolver<Dictionary<string, IExecutableFunction>>, IDynamicSystemSolver
+    public class KDDynamicSystemSolver : DynamicSystemSolver<Dictionary<string, Dictionary<string, IExecutableFunction>>>, IDynamicSystemSolver
     {
         public KDDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory) 
         {            
         }
 
-        protected override Dictionary<string, IExecutableFunction> GetExtraArguments(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IList<ExecutableFunctionInfo> functions, IReadOnlyDictionary<string, double> initialConditions, double step)
+        protected override Dictionary<string, Dictionary<string, IExecutableFunction>> GetExtraArguments(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IList<ExecutableFunctionInfo> functions, IReadOnlyDictionary<string, double> initialConditions, double step)
         {
-            var service = new NextStateVariableValueCalculationService();
-            var nextStateExpressions = service.ExpressNextStateVariableValueExpressions(equationSystem, "h");
-            return nextStateExpressions.ToDictionary(p => p.Key, p => FunctionFactory.Create(p.Value));
+            var service = new JacobianCalculationService();
+            var nextStateExpressions = service.ExpressNextStateVariableValueExpressions(equationSystem);
+            return nextStateExpressions.ToDictionary(p => p.Key, p => p.Value.ToDictionary(t => t.Key, t => FunctionFactory.Create(t.Value)));
         }
 
-        protected override IReadOnlyDictionary<string, double> GetNextValues(IList<ExecutableFunctionInfo> functions, IReadOnlyDictionary<string, double> variables, double step, Dictionary<string, IExecutableFunction> extra)
+        protected override IReadOnlyDictionary<string, double> GetNextValues(IList<ExecutableFunctionInfo> functions, IReadOnlyDictionary<string, double> variables, double step, Dictionary<string, Dictionary<string, IExecutableFunction>> extra)
         {
             var halfStep = step/2;
 
             var firstHalfVars = new Dictionary<string, double>();
-
             for (int i = 0; i < functions.Count; i++)
             {
                 var function = functions[i];
 
-                var newtonBasedArguments = functions.Select(f => f.Name).Take(i + 1).ToList();
-                var arguments = GetFunctionArguments(function, extra, newtonBasedArguments, variables, firstHalfVars, halfStep);
+                var arguments = GetExplicitFunctionArguments(functions, i, variables, firstHalfVars);
 
-                firstHalfVars[function.Name] = variables[function.Name] + halfStep * function.Function.Execute(arguments.ToArray());
+                var functionValue = ExecuteFunction(function.Function, arguments);
+
+                firstHalfVars[function.Name] = variables[function.Name] + halfStep * functionValue;
             }
 
             var secondHalfVars = new Dictionary<string, double>();
@@ -39,42 +39,47 @@ namespace DynamicSolver.DynamicSystem.Solver
             {
                 var function = functions[i];
 
-                var newtonBasedArguments = functions.Select(f => f.Name).Skip(i + 1).ToList();
-                var arguments = GetFunctionArguments(function, extra, newtonBasedArguments, firstHalfVars, secondHalfVars, halfStep);
+                var arguments = GetImplicitFunctionArguments(functions, i, firstHalfVars, secondHalfVars);
+                var functionValue = ExecuteFunction(function.Function, arguments);
 
-                secondHalfVars[function.Name] = firstHalfVars[function.Name] + halfStep * function.Function.Execute(arguments.ToArray());
+                var derivationFunction = extra[function.Name][function.Name];
+                var fDer = ExecuteFunction(derivationFunction, arguments);
+
+                secondHalfVars[function.Name] = firstHalfVars[function.Name] + (halfStep * functionValue) / (1 - halfStep * fDer);
             }
 
             return secondHalfVars;
         }
 
-        private static IEnumerable<double> GetFunctionArguments(
-            ExecutableFunctionInfo function,
-            IReadOnlyDictionary<string, IExecutableFunction> nextStateExpressions,
-            ICollection<string> newtonBasedArguments,
-            IReadOnlyDictionary<string, double> currentStepVariables,
-            IReadOnlyDictionary<string, double> nextStepValues,
-            double step)
+        private double ExecuteFunction(IExecutableFunction function, IDictionary<string, double> arguments)
         {
-            foreach (var arg in function.Function.OrderedArguments)
+            return function.Execute(function.OrderedArguments.Select(a => arguments[a]).ToArray());
+        }
+
+        private static IDictionary<string, double> GetExplicitFunctionArguments(IList<ExecutableFunctionInfo> functions, int firstItemsCountAsNextStepPoint, IReadOnlyDictionary<string, double> currentStepVariables, IReadOnlyDictionary<string, double> nextStepValues)
+        {
+            var result = new Dictionary<string, double>();
+
+            for (var i = 0; i < functions.Count; i++)
             {
-                if (newtonBasedArguments.Contains(arg))
-                {
-                    if (nextStepValues.ContainsKey(arg))
-                    {
-                        yield return nextStepValues[arg];
-                    }
-                    else
-                    {
-                        var arguments = nextStateExpressions[arg].OrderedArguments.Select(a => a == "h" ? step : currentStepVariables[a]).ToArray();
-                        yield return nextStateExpressions[arg].Execute(arguments);
-                    }
-                }
-                else
-                {
-                    yield return currentStepVariables[arg];
-                }
+                var name = functions[i].Name;
+                result[name] = i < firstItemsCountAsNextStepPoint ? nextStepValues[name] : currentStepVariables[name];
             }
+
+            return result;
+        }
+
+        private IDictionary<string, double> GetImplicitFunctionArguments(IList<ExecutableFunctionInfo> functions, int implicitFunctionIndex, Dictionary<string, double> firstHalfVars, Dictionary<string, double> secondHalfVars)
+        {
+            var result = new Dictionary<string, double>();
+
+            for (var i = 0; i < functions.Count; i++)
+            {
+                var name = functions[i].Name;
+                result[name] = i <= implicitFunctionIndex ? firstHalfVars[name] : secondHalfVars[name];
+            }
+
+            return result;
         }
 
         public override string ToString()

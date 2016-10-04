@@ -12,9 +12,9 @@ namespace DynamicSolver.DynamicSystem
             Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 3));
             Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 4));
 
-            Bind<IDynamicSystemSolver>().To<ImplicitEulerDynamicSystemSolver>();
+            /*Bind<IDynamicSystemSolver>().To<ImplicitEulerDynamicSystemSolver>();
             Bind<IDynamicSystemSolver>().To<ExtrapolationImplicitEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 3));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationImplicitEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 4));
+            Bind<IDynamicSystemSolver>().To<ExtrapolationImplicitEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 4));*/
 
             Bind<IDynamicSystemSolver>().To<RungeKutta4DynamicSystemSolver>();
             Bind<IDynamicSystemSolver>().To<KDDynamicSystemSolver>();

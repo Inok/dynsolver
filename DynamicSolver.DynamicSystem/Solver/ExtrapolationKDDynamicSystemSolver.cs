@@ -14,7 +14,7 @@ namespace DynamicSolver.DynamicSystem.Solver
         }
 
         protected override IReadOnlyDictionary<string, double> GetNextValues(IList<ExecutableFunctionInfo> functions,
-            IReadOnlyDictionary<string, double> variables, double step, Dictionary<string, IExecutableFunction> extra)
+            IReadOnlyDictionary<string, double> variables, double step, Dictionary<string, Dictionary<string, IExecutableFunction>> extra)
         {
             return _extrapolator.Extrapolate(variables, step, (v, st) => base.GetNextValues(functions, v, st, extra));
         }

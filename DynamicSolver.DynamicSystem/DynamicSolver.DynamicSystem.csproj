@@ -75,7 +75,7 @@
     <Compile Include="Solver\IDynamicSystemSolver.cs" />
     <Compile Include="Solver\ImplicitEulerDynamicSystemSolver.cs" />
     <Compile Include="Solver\KDDynamicSystemSolver.cs" />
-    <Compile Include="NextStateVariableValueCalculationService.cs" />
+    <Compile Include="JacobianCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Solver\RungeKutta4DynamicSystemSolver.cs" />
     <Compile Include="VariableDerivative.cs" />

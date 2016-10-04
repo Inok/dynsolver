@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem.Solver
 {
+/*
     public class ExtrapolationImplicitEulerDynamicSystemSolver : ImplicitEulerDynamicSystemSolver
     {
         [NotNull] private readonly Extrapolator _extrapolator;
@@ -24,4 +25,5 @@ namespace DynamicSolver.DynamicSystem.Solver
         }
 
     }
+*/
 }

@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem.Solver
 {
+/*
     public class ImplicitEulerDynamicSystemSolver : DynamicSystemSolver<Dictionary<string, IExecutableFunction>>
     {
         public ImplicitEulerDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
@@ -39,7 +40,7 @@ namespace DynamicSolver.DynamicSystem.Solver
 
         protected override Dictionary<string, IExecutableFunction> GetExtraArguments(ExplicitOrdinaryDifferentialEquationSystem equationSystem, IList<ExecutableFunctionInfo> functions, IReadOnlyDictionary<string, double> initialConditions, double step)
         {
-            var service = new NextStateVariableValueCalculationService();
+            var service = new JacobianCalculationService();
             return service.ExpressNextStateVariableValueExpressions(equationSystem, "h").ToDictionary(p => p.Key, p => FunctionFactory.Create(p.Value));
         }
 
@@ -48,4 +49,5 @@ namespace DynamicSolver.DynamicSystem.Solver
             return "Implicit Euler";
         }
     }
+*/
 }
