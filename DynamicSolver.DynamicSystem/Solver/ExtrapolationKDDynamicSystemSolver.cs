@@ -10,7 +10,7 @@ namespace DynamicSolver.DynamicSystem.Solver
 
         public ExtrapolationKDDynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory, int extrapolationStageCount) : base(functionFactory)
         {
-            _extrapolator = new Extrapolator(extrapolationStageCount, 1);
+            _extrapolator = new Extrapolator(extrapolationStageCount, 2);
         }
 
         protected override IReadOnlyDictionary<string, double> GetNextValues(IList<ExecutableFunctionInfo> functions,

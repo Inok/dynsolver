@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Expressions.Execution;
 using JetBrains.Annotations;
@@ -39,13 +40,27 @@ namespace DynamicSolver.DynamicSystem.Solver
             {
                 var function = functions[i];
 
-                var arguments = GetImplicitFunctionArguments(functions, i, firstHalfVars, secondHalfVars);
-                var functionValue = ExecuteFunction(function.Function, arguments);
+                var k = 0;
+                var previous = firstHalfVars[function.Name];
+                do
+                {
+                    var arguments = GetImplicitFunctionArguments(functions, i, firstHalfVars, secondHalfVars);
+                    var derivationFunction = extra[function.Name][function.Name];
+                    var exchangeValue = new KeyValuePair<string, double>(function.Name, previous);
 
-                var derivationFunction = extra[function.Name][function.Name];
-                var fDer = ExecuteFunction(derivationFunction, arguments);
+                    var numerator = previous - firstHalfVars[function.Name] - halfStep * ExecuteFunction(function.Function, arguments, exchangeValue);
+                    var denominator = 1 - halfStep * ExecuteFunction(derivationFunction, arguments, exchangeValue);
+                    var newValue = previous - numerator / denominator;
+                    secondHalfVars[function.Name] = newValue;
 
-                secondHalfVars[function.Name] = firstHalfVars[function.Name] + (halfStep * functionValue) / (1 - halfStep * fDer);
+                    if (++k > 10 || Math.Abs(newValue - previous) <= step * 10e-7)
+                    {
+                        break;
+                    }
+
+                    previous = newValue;
+
+                } while (true);
             }
 
             return secondHalfVars;
@@ -54,6 +69,11 @@ namespace DynamicSolver.DynamicSystem.Solver
         private double ExecuteFunction(IExecutableFunction function, IDictionary<string, double> arguments)
         {
             return function.Execute(function.OrderedArguments.Select(a => arguments[a]).ToArray());
+        }
+
+        private double ExecuteFunction(IExecutableFunction function, IDictionary<string, double> arguments, KeyValuePair<string, double> exchangeValue)
+        {
+            return function.Execute(function.OrderedArguments.Select(a => a == exchangeValue.Key ? exchangeValue.Value : arguments[a]).ToArray());
         }
 
         private static IDictionary<string, double> GetExplicitFunctionArguments(IList<ExecutableFunctionInfo> functions, int firstItemsCountAsNextStepPoint, IReadOnlyDictionary<string, double> currentStepVariables, IReadOnlyDictionary<string, double> nextStepValues)

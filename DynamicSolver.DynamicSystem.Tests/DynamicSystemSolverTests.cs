@@ -15,8 +15,8 @@ namespace DynamicSolver.DynamicSystem.Tests
     [TestFixture(typeof(ExtrapolationImplicitEulerDynamicSystemSolver), 3, 3)]
     [TestFixture(typeof(ExtrapolationImplicitEulerDynamicSystemSolver), 4, 4)]*/
     [TestFixture(typeof(KDDynamicSystemSolver), 1)]
-    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 3, 2)]
-    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 5, 3)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 4, 2)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 6, 3)]
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince7DynamicSystemSolver), 7)]
@@ -70,7 +70,7 @@ namespace DynamicSolver.DynamicSystem.Tests
 
             Assert.That(actual.Count, Is.EqualTo(STEP_COUNT));
 
-            var accuracy = 8.5 * Math.Pow(STEP, _methodAccuracy);
+            var accuracy = 2 * Math.Pow(STEP, _methodAccuracy);
 
             int i = 0;
             foreach (var actualValue in actual)
