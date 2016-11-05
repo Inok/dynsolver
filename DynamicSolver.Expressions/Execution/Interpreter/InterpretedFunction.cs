@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using DynamicSolver.Expressions.Expression;
 using DynamicSolver.Expressions.Tools;
-using Inok.Tools.Dump;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Expressions.Execution.Interpreter
@@ -56,7 +55,7 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
             {
                 throw new ArgumentException(
                     $"There is mismatch between count of arguments and arguments of expression: " +
-                    $"{arguments.DumpInline()} => {OrderedArguments.DumpInline()}");
+                    $"{string.Join(", ", arguments)} => {string.Join(", ", OrderedArguments)}");
             }
 
             var args = OrderedArguments.Select((a, i) => new {a, i}).ToDictionary(arg => arg.a, arg => arguments[arg.i]);
@@ -73,7 +72,7 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
             {
                 throw new ArgumentException(
                     $"There is mismatch between arguments and expression: " +
-                    $"{arguments.Keys.DumpInline()} != {OrderedArguments.DumpInline()}");
+                    $"{string.Join(", ", arguments.Keys)} != {string.Join(", ", OrderedArguments)}");
             }
 
             return ExecuteInternal(_expression, arguments);
@@ -101,7 +100,7 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
                     return arguments[variableName];
                 }
 
-                throw new InvalidOperationException($"Unknown primitive: {expression.Dump()}");
+                throw new InvalidOperationException($"Unknown primitive {expression} of type {expression.GetType().FullName}");
             }
 
             if (expression is IUnaryOperator)
@@ -112,7 +111,7 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
                     return -1.0*ExecuteInternal(unaryMinus.Operand, arguments);
                 }
 
-                throw new InvalidOperationException($"Unknown unary operator: {expression.Dump()}");
+                throw new InvalidOperationException($"Unknown unary operator {expression} of type {expression.GetType().FullName}");
             }
 
             var functionCall = expression as IFunctionCall;
@@ -142,11 +141,11 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
                     case "^":
                         return func(Math.Pow);
                     default:
-                        throw new InvalidOperationException($"Unknown binary operator: {binary.Dump()}");
+                        throw new InvalidOperationException($"Unknown binary operator {expression} of type {expression.GetType().FullName}");
                 }                
             }
 
-            throw new InvalidOperationException($"Unknown expression: {expression.Dump()}");
+            throw new InvalidOperationException($"Unknown expression {expression} of type {expression.GetType().FullName}");
         }
     }
 }

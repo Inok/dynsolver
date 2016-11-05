@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using DynamicSolver.DynamicSystem;
-using DynamicSolver.Expressions;
 using DynamicSolver.ViewModel.DynamicSystem;
 using Ninject;
 using Ninject.Modules;
@@ -30,9 +29,7 @@ namespace DynamicSolver.ViewModel
 
             kernel.Load(modules);
             
-            kernel.Load(new ExpressionRegistrationModule(ExpressionRegistrationModule.FunctionFactoryType.Compiled));
-
-            kernel.Load(new SolverRegistrationModule());
+            kernel.Load(new SolverRegistrationModule(SolverRegistrationModule.FunctionFactoryType.Compiled));
 
             kernel.Bind<IScreen>().ToConstant(this);
             kernel.Bind<SystemSolverViewModel>().ToSelf();
