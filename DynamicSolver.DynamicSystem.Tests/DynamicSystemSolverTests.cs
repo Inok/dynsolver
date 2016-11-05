@@ -11,9 +11,6 @@ namespace DynamicSolver.DynamicSystem.Tests
     [TestFixture(typeof(EulerDynamicSystemSolver), 1)]
     [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 3, 3)]
     [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 4, 4)]
-    /*[TestFixture(typeof(ImplicitEulerDynamicSystemSolver), 1)]
-    [TestFixture(typeof(ExtrapolationImplicitEulerDynamicSystemSolver), 3, 3)]
-    [TestFixture(typeof(ExtrapolationImplicitEulerDynamicSystemSolver), 4, 4)]*/
     [TestFixture(typeof(KDDynamicSystemSolver), 1)]
     [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 4, 2)]
     [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 6, 3)]

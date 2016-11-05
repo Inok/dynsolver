@@ -63,11 +63,9 @@
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
     <Compile Include="Solver\ExecutableFunctionInfo.cs" />
     <Compile Include="Solver\ExtrapolationEulerDynamicSystemSolver.cs" />
-    <Compile Include="Solver\ExtrapolationImplicitEulerDynamicSystemSolver.cs" />
     <Compile Include="Solver\ExtrapolationKDDynamicSystemSolver.cs" />
     <Compile Include="Solver\Extrapolator.cs" />
     <Compile Include="Solver\IDynamicSystemSolver.cs" />
-    <Compile Include="Solver\ImplicitEulerDynamicSystemSolver.cs" />
     <Compile Include="Solver\KDDynamicSystemSolver.cs" />
     <Compile Include="JacobianCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +81,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Solver" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
