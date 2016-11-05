@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
@@ -56,37 +57,57 @@ namespace DynamicSolver.Expressions.Derivation
             var binary = expression as IBinaryOperator;
             if (binary != null)
             {
+                var leftDerivative = GetDerivative(binary.LeftOperand, respectToVariableName);
+                var rightDerivative = GetDerivative(binary.RightOperand, respectToVariableName);
+
                 if (binary is AddBinaryOperator)
                 {
-                    return new AddBinaryOperator(GetDerivative(binary.LeftOperand, respectToVariableName), GetDerivative(binary.RightOperand, respectToVariableName));
+                    return new AddBinaryOperator(leftDerivative, rightDerivative);
                 }
 
                 if (binary is SubtractBinaryOperator)
                 {
-                    return new SubtractBinaryOperator(GetDerivative(binary.LeftOperand, respectToVariableName), GetDerivative(binary.RightOperand, respectToVariableName));
+                    return new SubtractBinaryOperator(leftDerivative, rightDerivative);
                 }
 
                 if (binary is MultiplyBinaryOperator)
                 {
                     return new AddBinaryOperator(
-                        new MultiplyBinaryOperator(GetDerivative(binary.LeftOperand, respectToVariableName), binary.RightOperand),
-                        new MultiplyBinaryOperator(binary.LeftOperand, GetDerivative(binary.RightOperand, respectToVariableName)));
+                        new MultiplyBinaryOperator(leftDerivative, binary.RightOperand),
+                        new MultiplyBinaryOperator(binary.LeftOperand, rightDerivative));
                 }
 
                 if (binary is DivideBinaryOperator)
                 {
                     return new DivideBinaryOperator(
                         new SubtractBinaryOperator(
-                            new MultiplyBinaryOperator(GetDerivative(binary.LeftOperand, respectToVariableName), binary.RightOperand),
-                            new MultiplyBinaryOperator(binary.LeftOperand, GetDerivative(binary.RightOperand, respectToVariableName))),
+                            new MultiplyBinaryOperator(leftDerivative, binary.RightOperand),
+                            new MultiplyBinaryOperator(binary.LeftOperand, rightDerivative)
+                        ),
                         new PowBinaryOperator(binary.RightOperand, new NumericPrimitive("2"))
-                        );
+                    );
                 }
 
                 if (binary is PowBinaryOperator)
                 {
-                    var firstTerm = new MultiplyBinaryOperator(GetDerivative(binary.LeftOperand, respectToVariableName), new DivideBinaryOperator(binary.RightOperand, binary.LeftOperand));
-                    var secondTerm = new MultiplyBinaryOperator(GetDerivative(binary.RightOperand, respectToVariableName), new FunctionCall("ln", binary.LeftOperand));
+                    if (!IsDependOnRespected(binary.RightOperand, respectToVariableName))
+                    {
+                        return new MultiplyBinaryOperator(
+                            binary.RightOperand,
+                            new PowBinaryOperator(binary.LeftOperand, new SubtractBinaryOperator(binary.RightOperand, new NumericPrimitive("1")))
+                        );
+                    }
+
+                    if (!IsDependOnRespected(binary.LeftOperand, respectToVariableName))
+                    {
+                        return new MultiplyBinaryOperator(
+                            binary,
+                            new FunctionCall("ln", binary.LeftOperand)
+                        );
+                    }
+
+                    var firstTerm = new MultiplyBinaryOperator(leftDerivative, new DivideBinaryOperator(binary.RightOperand, binary.LeftOperand));
+                    var secondTerm = new MultiplyBinaryOperator(rightDerivative, new FunctionCall("ln", binary.LeftOperand));
                     var factor = new AddBinaryOperator(firstTerm, secondTerm);
                     return new MultiplyBinaryOperator(binary, factor);
                 }
@@ -107,6 +128,22 @@ namespace DynamicSolver.Expressions.Derivation
             }
 
             throw new NotImplementedException();
+        }
+
+        private bool IsDependOnRespected(IExpression expression, string respectedTo)
+        {
+            if (expression is ConstantPrimitive || expression is NumericPrimitive)
+            {
+                return false;
+            }
+
+            var variablePrimitive = expression as VariablePrimitive;
+            if (variablePrimitive != null && variablePrimitive.Name != respectedTo)
+            {
+                return false;
+            }
+
+            return new Statement(expression).Analyzer.Variables.Contains(respectedTo);
         }
 
         private static readonly Dictionary<string, Func<IExpression, IExpression>> FunctionDerivatives = new Dictionary<string, Func<IExpression, IExpression>>()

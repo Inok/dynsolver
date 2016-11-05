@@ -94,9 +94,24 @@ namespace DynamicSolver.Expressions.Tests.Derivation
         [Test(Description = "(f^g)' == f^g * (f'*g/f + g'*ln(f))")]
         public void PowStatement_ReturnsExpressionTreeAccordingToDerivationRules()
         {
-            Assert.That(_service.GetDerivative(_parser.Parse("x^2"), "x"), Is.EqualTo(_parser.Parse("x^2 * (1*(2/x) + 0*ln(x))")));
-            Assert.That(_service.GetDerivative(_parser.Parse("e^x"), "x"), Is.EqualTo(_parser.Parse("e^x * (0*(x/e) + 1*ln(e))")));
+            Assert.That(_service.GetDerivative(_parser.Parse("x^x"), "x"), Is.EqualTo(_parser.Parse("x^x * (1*(x/x) + 1*ln(x))")));
             Assert.That(_service.GetDerivative(_parser.Parse("(x + 1)^(x)"), "x"), Is.EqualTo(_parser.Parse("(x + 1)^(x) * ((1 + 0) * (x /(x + 1)) + 1 * ln(x+1))")));
+        }
+
+        [Test(Description = "(f^C)' == C*f^(C-1)")]
+        public void PowStatement_WithIndependentRightPart_ReturnsExpressionTreeAccordingToDerivationRules()
+        {
+            Assert.That(_service.GetDerivative(_parser.Parse("x^2"), "x"), Is.EqualTo(_parser.Parse("2*x^(2 - 1)")));
+            Assert.That(_service.GetDerivative(_parser.Parse("x^(2 + 1)"), "x"), Is.EqualTo(_parser.Parse("(2+1)*x^(2+1 - 1)")));
+            Assert.That(_service.GetDerivative(_parser.Parse("x^(y)"), "x"), Is.EqualTo(_parser.Parse("y*x^(y - 1)")));
+        }
+
+        [Test(Description = "(C^f)' == C^f * ln(C)")]
+        public void PowStatement_WithIndependentLeftPart_ReturnsExpressionTreeAccordingToDerivationRules()
+        {
+            Assert.That(_service.GetDerivative(_parser.Parse("e^x"), "x"), Is.EqualTo(_parser.Parse("e^x * ln(e)")));
+            Assert.That(_service.GetDerivative(_parser.Parse("y^x"), "x"), Is.EqualTo(_parser.Parse("y^x * ln(y)")));
+            Assert.That(_service.GetDerivative(_parser.Parse("(y + 1^y)^(x + 3)"), "x"), Is.EqualTo(_parser.Parse("(y + 1^y)^(x + 3) * ln(y + 1^y)")));
         }
 
         private static Statement WrapWithUnaryMinus(string number)
