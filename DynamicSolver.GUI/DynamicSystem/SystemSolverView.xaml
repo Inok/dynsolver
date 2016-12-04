@@ -27,10 +27,11 @@
 
                 <common:ErrorListView ViewModel="{Binding ErrorListViewModel}" Margin="0,10"/>
 
-                <ComboBox Grid.Row="1" HorizontalAlignment="Right" 
-                          ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
-                          DisplayMemberPath="Name" 
-                          MinWidth="150"/>
+                <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <TextBlock Text="{Binding ElapsedTime, StringFormat='Elapsed time: {0}'}" VerticalAlignment="Center" Margin="0,0,15,0"/>
+                    <ComboBox ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
+                              DisplayMemberPath="Name" MinWidth="150"/>
+                </StackPanel>
                 <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
                 <oxy:PlotView Grid.Row="3" Model="{Binding DeviationPlotModel}" />
             </Grid>

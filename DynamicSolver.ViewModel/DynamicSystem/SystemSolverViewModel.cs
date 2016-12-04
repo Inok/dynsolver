@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -23,7 +24,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
     {
         private PlotModel _valuePlotModel;
         private PlotModel _deviationPlotModel;
-        
+        private TimeSpan? _elapsedTime;
+
         public DynamicSystemTaskViewModel TaskViewModel { get; }
 
         [NotNull]
@@ -47,6 +49,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         {
             get { return _deviationPlotModel; }
             set { this.RaiseAndSetIfChanged(ref _deviationPlotModel, value); }
+        }
+
+        public TimeSpan? ElapsedTime
+        {
+            get { return _elapsedTime; }
+            set { this.RaiseAndSetIfChanged(ref _elapsedTime, value); }
         }
 
         public SystemSolverViewModel([NotNull] IScreen hostScreen, [NotNull] IEnumerable<IDynamicSystemSolver> solvers)
@@ -91,11 +99,13 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
                     ValuePlotModel = plotters.Item1;
                     DeviationPlotModel = plotters.Item2;
+                    ElapsedTime = plotters.Item3;
                 }
                 catch (Exception ex)
                 {
                     ValuePlotModel = null;
                     DeviationPlotModel = null;
+                    ElapsedTime = null;
                     ErrorListViewModel.Errors.Add(new ErrorViewModel
                     {
                         Level = ErrorLevel.Error,
@@ -106,7 +116,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
         }
 
-        private static Tuple<PlotModel, PlotModel> FillPlotters([NotNull] DynamicSystemSolverInput input, [NotNull] IDynamicSystemSolver solver, [NotNull] IDynamicSystemSolver baselineSolver)
+        private static Tuple<PlotModel, PlotModel, TimeSpan> FillPlotters([NotNull] DynamicSystemSolverInput input, [NotNull] IDynamicSystemSolver solver, [NotNull] IDynamicSystemSolver baselineSolver)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
             if (solver == null) throw new ArgumentNullException(nameof(solver));
@@ -115,10 +125,14 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             var itemsCount = (int)(input.ModellingLimit / input.Step);
             var startValues = input.Variables;
 
-            var actual = startValues.Yield().Concat(solver.Solve(input.System, startValues, input.Step));
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Skipping(9, 9));
+            var sw = new Stopwatch();
+            sw.Start();
+            var actual = startValues.Yield().Concat(solver.Solve(input.System, startValues, input.Step)).Take(itemsCount).ToList();
+            sw.Stop();
 
-            var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b}).Take(itemsCount);
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(input.System, startValues, input.Step / 10).Skipping(9, 9)).Take(itemsCount);
+
+            var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b});
             
             var names = input.System.Equations.Select(e => e.LeadingDerivative.Variable.Name).ToList();
             var lines = names.Select(n => new {name = n, value = new LineSeries {Title = n}, deviation = new LineSeries {Title = n}}).ToList();
@@ -149,7 +163,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 deviationPlot.Series.Add(lineSeries.deviation);
             }
 
-            return new Tuple<PlotModel, PlotModel>(actualPlot, deviationPlot);
+            return new Tuple<PlotModel, PlotModel, TimeSpan>(actualPlot, deviationPlot, sw.Elapsed);
         }
 
         public string UrlPathSegment => nameof(SystemSolverViewModel);
