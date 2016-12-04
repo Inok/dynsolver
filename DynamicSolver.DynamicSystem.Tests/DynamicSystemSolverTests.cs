@@ -12,8 +12,8 @@ namespace DynamicSolver.DynamicSystem.Tests
     [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 3, 3)]
     [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 4, 4)]
     [TestFixture(typeof(KDDynamicSystemSolver), 1)]
-    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 4, 2)]
-    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 6, 3)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 4, 2, 0.90)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 6, 3, 0.90)]
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince7DynamicSystemSolver), 7)]
@@ -21,9 +21,10 @@ namespace DynamicSolver.DynamicSystem.Tests
     public class DynamicSystemSolverTests<TSolver> where TSolver : IDynamicSystemSolver
     {
         private const double STEP = 0.1;
-        private const int STEP_COUNT = (int)(100d/STEP);
+        private const int STEP_COUNT = (int)(100d / STEP);
         private readonly int _methodAccuracy;
-        
+        private readonly double _proportionTolerance;
+
         private readonly TSolver _solver;
 
         private ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
@@ -33,14 +34,22 @@ namespace DynamicSolver.DynamicSystem.Tests
 
         public DynamicSystemSolverTests(int methodAccuracy)
         {
-            _solver = (TSolver) Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory());
+            _solver = (TSolver)Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory());
             _methodAccuracy = methodAccuracy;
+            _proportionTolerance = 1;
         }
 
         public DynamicSystemSolverTests(int methodAccuracy, int extrapolationSolverStageCountArgument)
         {
-            _solver = (TSolver) Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory(), extrapolationSolverStageCountArgument);
+            _solver = (TSolver)Activator.CreateInstance(typeof(TSolver), new CompiledFunctionFactory(), extrapolationSolverStageCountArgument);
             _methodAccuracy = methodAccuracy;
+            _proportionTolerance = 1;
+        }
+
+        public DynamicSystemSolverTests(int methodAccuracy, int extrapolationSolverStageCountArgument, double proportionTolerance = 1)
+            : this(methodAccuracy, extrapolationSolverStageCountArgument)
+        {
+            _proportionTolerance = proportionTolerance;
         }
 
         [SetUp]
@@ -54,7 +63,7 @@ namespace DynamicSolver.DynamicSystem.Tests
                     ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("x2'= 3*x1 - 4*x2"))
                 });
 
-            _initialValues = new Dictionary<string, double>() {["x1"] = 1, ["x2"] = 2};
+            _initialValues = new Dictionary<string, double>() { ["x1"] = 1, ["x2"] = 2 };
 
             _expectedX1 = t => -1d / 3 * Math.Exp(-2.5d * t) * (Math.Sqrt(15) * Math.Sin(Math.Sqrt(15) * t / 2) - 3 * Math.Cos(Math.Sqrt(15) * t / 2));
             _expectedX2 = t => 2 * Math.Exp(-2.5d * t) * Math.Cos(Math.Sqrt(15) * t / 2);
@@ -73,7 +82,7 @@ namespace DynamicSolver.DynamicSystem.Tests
             foreach (var actualValue in actual)
             {
                 double t = STEP * ++i;
-                Assert.That(actualValue.Keys, Is.EquivalentTo(new [] {"x1", "x2"}));
+                Assert.That(actualValue.Keys, Is.EquivalentTo(new[] { "x1", "x2" }));
                 Assert.That(actualValue["x1"], Is.EqualTo(_expectedX1(t)).Within(accuracy), $"t = {t}, deviation = {_expectedX1(t) - actualValue["x1"]}");
                 Assert.That(actualValue["x2"], Is.EqualTo(_expectedX2(t)).Within(accuracy), $"t = {t}, deviation = {_expectedX2(t) - actualValue["x2"]}");
             }
@@ -94,19 +103,19 @@ namespace DynamicSolver.DynamicSystem.Tests
             }
 
             const double step2 = STEP * 2;
-            var actual2 = _solver.Solve(_equationSystem, _initialValues, step2).Take(STEP_COUNT/2).ToList();
+            var actual2 = _solver.Solve(_equationSystem, _initialValues, step2).Take(STEP_COUNT / 2).ToList();
             double error2 = 0;
             for (var i = 0; i < actual2.Count; i++)
             {
                 var t = step2 * (i + 1);
-                
+
                 var err1 = Math.Abs(actual2[i]["x1"] - _expectedX1(t));
                 var err2 = Math.Abs(actual2[i]["x2"] - _expectedX2(t));
 
                 error2 = Math.Max(Math.Max(err1, err2), error2);
             }
 
-            Assert.That(error2 / error1, Is.GreaterThan(Math.Pow(2, _methodAccuracy)));
+            Assert.That(error2 / error1, Is.GreaterThan(Math.Pow(2, _methodAccuracy) * _proportionTolerance));
         }
     }
 }
