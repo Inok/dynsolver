@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Expression;
-using DynamicSolver.Expressions.Tools;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Expressions.Execution.Interpreter
@@ -28,7 +28,7 @@ namespace DynamicSolver.Expressions.Execution.Interpreter
         public InterpretedFunction([NotNull] IStatement statement)
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
-            if (!statement.Analyzer.IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
+            if (!new ExpressionAnalyzer(statement).IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
 
             _expression = statement.Expression;
 

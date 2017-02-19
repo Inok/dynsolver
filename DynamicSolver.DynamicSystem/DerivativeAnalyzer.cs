@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Expression;
-using DynamicSolver.Expressions.Tools;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem

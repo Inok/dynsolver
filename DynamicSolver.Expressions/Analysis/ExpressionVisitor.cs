@@ -2,7 +2,7 @@
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Expressions.Tools
+namespace DynamicSolver.Expressions.Analysis
 {
     public class ExpressionVisitor
     {

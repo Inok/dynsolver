@@ -33,7 +33,7 @@
                               DisplayMemberPath="Name" MinWidth="150"/>
                 </StackPanel>
                 <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
-                <oxy:PlotView Grid.Row="3" Model="{Binding DeviationPlotModel}" />
+                <oxy:PlotView Grid.Row="3" Model="{Binding ErrorPlotModel}" />
             </Grid>
         </xctk:BusyIndicator>
     </Grid>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
@@ -143,7 +144,7 @@ namespace DynamicSolver.Expressions.Derivation
                 return false;
             }
 
-            return new Statement(expression).Analyzer.Variables.Contains(respectedTo);
+            return new ExpressionAnalyzer(expression).Variables.Contains(respectedTo);
         }
 
         private static readonly Dictionary<string, Func<IExpression, IExpression>> FunctionDerivatives = new Dictionary<string, Func<IExpression, IExpression>>()

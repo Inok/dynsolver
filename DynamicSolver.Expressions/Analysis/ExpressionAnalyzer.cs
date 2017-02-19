@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Expressions.Tools
+namespace DynamicSolver.Expressions.Analysis
 {
     public class ExpressionAnalyzer : IExpressionAnalyzer
     {
@@ -14,6 +13,12 @@ namespace DynamicSolver.Expressions.Tools
         private IReadOnlyCollection<string> _variables;
 
         public IReadOnlyCollection<string> Variables => _variables ?? (_variables = (IReadOnlyCollection<string>) GetVariablesSet());
+
+        public ExpressionAnalyzer([NotNull] IStatement statement)
+        {
+            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            _expression = statement.Expression;
+        }
 
         public ExpressionAnalyzer([NotNull] IExpression expression)
         {

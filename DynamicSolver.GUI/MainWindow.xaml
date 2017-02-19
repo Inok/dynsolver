@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"        
         xmlns:reactiveUi="clr-namespace:ReactiveUI;assembly=ReactiveUI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800"
+        Title="Dynamic Solver" Height="600" Width="800"
         DataContext="{Binding ApplicationScreen, RelativeSource={RelativeSource Self}, Mode=OneTime}">
     <reactiveUi:RoutedViewHost Router="{Binding Router}"/>
 </Window>

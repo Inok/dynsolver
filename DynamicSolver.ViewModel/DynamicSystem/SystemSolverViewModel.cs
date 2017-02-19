@@ -23,7 +23,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
     public class SystemSolverViewModel : ReactiveObject, IRoutableViewModel
     {
         private PlotModel _valuePlotModel;
-        private PlotModel _deviationPlotModel;
+        private PlotModel _errorPlotModel;
         private TimeSpan? _elapsedTime;
 
         public DynamicSystemTaskViewModel TaskViewModel { get; }
@@ -45,10 +45,10 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _valuePlotModel, value); }
         }
 
-        public PlotModel DeviationPlotModel
+        public PlotModel ErrorPlotModel
         {
-            get { return _deviationPlotModel; }
-            set { this.RaiseAndSetIfChanged(ref _deviationPlotModel, value); }
+            get { return _errorPlotModel; }
+            set { this.RaiseAndSetIfChanged(ref _errorPlotModel, value); }
         }
 
         public TimeSpan? ElapsedTime
@@ -98,13 +98,13 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                     var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
 
                     ValuePlotModel = plotters.Item1;
-                    DeviationPlotModel = plotters.Item2;
+                    ErrorPlotModel = plotters.Item2;
                     ElapsedTime = plotters.Item3;
                 }
                 catch (Exception ex)
                 {
                     ValuePlotModel = null;
-                    DeviationPlotModel = null;
+                    ErrorPlotModel = null;
                     ElapsedTime = null;
                     ErrorListViewModel.Errors.Add(new ErrorViewModel
                     {
@@ -153,17 +153,17 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             actualPlot.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, MaximumPadding = 0.05, MinimumPadding = 0.01, Title = "t" });
             actualPlot.Axes.Add(new LinearAxis { Position = AxisPosition.Left, MaximumPadding = 0.05, MinimumPadding = 0.01, Title = "Value" });
 
-            var deviationPlot = new PlotModel();
-            deviationPlot.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, MaximumPadding = 0.05, MinimumPadding = 0.01, Title = "t" });
-            deviationPlot.Axes.Add(new LinearAxis { Position = AxisPosition.Left, MaximumPadding = 0.05, MinimumPadding = 0.01, Title = "Deviation" });
+            var errorPlot = new PlotModel();
+            errorPlot.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, MaximumPadding = 0.05, MinimumPadding = 0.01, Title = "t" });
+            errorPlot.Axes.Add(new LinearAxis { Position = AxisPosition.Left, MaximumPadding = 0.05, MinimumPadding = 0.01, Title = "Error" });
 
             foreach (var lineSeries in lines)
             {
                 actualPlot.Series.Add(lineSeries.value);
-                deviationPlot.Series.Add(lineSeries.deviation);
+                errorPlot.Series.Add(lineSeries.deviation);
             }
 
-            return new Tuple<PlotModel, PlotModel, TimeSpan>(actualPlot, deviationPlot, sw.Elapsed);
+            return new Tuple<PlotModel, PlotModel, TimeSpan>(actualPlot, errorPlot, sw.Elapsed);
         }
 
         public string UrlPathSegment => nameof(SystemSolverViewModel);

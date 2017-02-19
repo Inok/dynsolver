@@ -11,10 +11,12 @@ namespace DynamicSolver.DynamicSystem.Tests
     [TestFixture(typeof(EulerDynamicSystemSolver), 1)]
     [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 3, 3)]
     [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 4, 4)]
+    [TestFixture(typeof(ExtrapolationEulerDynamicSystemSolver), 8, 8)]
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2)]
-    [TestFixture(typeof(KDDynamicSystemSolver), 1)]
-    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 4, 2, 0.90)]
-    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 6, 3, 0.90)]
+    [TestFixture(typeof(KDDynamicSystemSolver), 2)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 4, 2, .90f)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 6, 3, .90f)]
+    [TestFixture(typeof(ExtrapolationKDDynamicSystemSolver), 8, 4, .85f)]
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince7DynamicSystemSolver), 7)]
@@ -47,7 +49,7 @@ namespace DynamicSolver.DynamicSystem.Tests
             _proportionTolerance = 1;
         }
 
-        public DynamicSystemSolverTests(int methodAccuracy, int extrapolationSolverStageCountArgument, double proportionTolerance = 1)
+        public DynamicSystemSolverTests(int methodAccuracy, int extrapolationSolverStageCountArgument, float proportionTolerance = 1)
             : this(methodAccuracy, extrapolationSolverStageCountArgument)
         {
             _proportionTolerance = proportionTolerance;

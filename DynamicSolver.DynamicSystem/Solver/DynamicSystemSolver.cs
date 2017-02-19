@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Execution;
 using JetBrains.Annotations;
 
@@ -26,7 +27,7 @@ namespace DynamicSolver.DynamicSystem.Solver
             {
                 throw new ArgumentException($"{GetType().Name} supports only equations with order = 1.");
             }
-            if (!new HashSet<string>(equationSystem.Equations.SelectMany(e => e.Function.Analyzer.Variables)).SetEquals(initialConditions.Keys))
+            if (!new HashSet<string>(equationSystem.Equations.SelectMany(e => new ExpressionAnalyzer(e.Function).Variables)).SetEquals(initialConditions.Keys))
             {
                 throw new ArgumentException("Initial values has different set of arguments from equation system.");
             }

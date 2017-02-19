@@ -1,6 +1,4 @@
 ﻿using System;
-using DynamicSolver.Expressions.Execution;
-using DynamicSolver.Expressions.Tools;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Expressions.Expression
@@ -12,13 +10,9 @@ namespace DynamicSolver.Expressions.Expression
 
         public IExpression Expression { get; }
 
-        private IExpressionAnalyzer _analyzer;
-        public IExpressionAnalyzer Analyzer => _analyzer ?? (_analyzer = new ExpressionAnalyzer(Expression));
-
         public Statement([NotNull] IExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
-
             Expression = expression;
         }
 

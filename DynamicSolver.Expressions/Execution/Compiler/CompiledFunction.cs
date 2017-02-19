@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 using static System.Linq.Expressions.Expression;
@@ -18,9 +19,16 @@ namespace DynamicSolver.Expressions.Execution.Compiler
         public CompiledFunction([NotNull] IStatement statement)
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
-            if (!statement.Analyzer.IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
 
-            var arguments = statement.Analyzer.Variables.OrderBy(s => s).ToList();
+            var analyzer = new ExpressionAnalyzer(statement);
+
+            if (!analyzer.IsComputable)
+            {
+                throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
+            }
+
+            var arguments = analyzer.Variables.OrderBy(s => s).ToList();
+
             _function = BuildFunction(statement.Expression, arguments);
             OrderedArguments = new ReadOnlyCollection<string>(arguments);
         }

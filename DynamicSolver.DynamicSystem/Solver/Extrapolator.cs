@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DynamicSolver.DynamicSystem.Solver
 {
@@ -26,7 +27,11 @@ namespace DynamicSolver.DynamicSystem.Solver
             _solvesBuffer = new IReadOnlyDictionary<string, double>[extrapolationStageCount];
         }
 
-        public IReadOnlyDictionary<string, double> Extrapolate(IReadOnlyDictionary<string, double> variables, double step, Func<IReadOnlyDictionary<string, double>, double, IReadOnlyDictionary<string, double>> getNextValues)
+        public IReadOnlyDictionary<string, double> Extrapolate(
+            IReadOnlyDictionary<string, double> variables,
+            double step,
+            Func<IReadOnlyDictionary<string, double>, double, IReadOnlyDictionary<string, double>> getNextValues
+        )
         {
             for (var i = 0; i < _solvesBuffer.Length; i++)
             {

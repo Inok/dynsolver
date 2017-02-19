@@ -53,7 +53,7 @@ namespace DynamicSolver.DynamicSystem.Solver
                     var newValue = previous - numerator / denominator;
                     secondHalfVars[function.Name] = newValue;
 
-                    if (++k > 10 || Math.Abs(newValue - previous) <= step * 10e-7)
+                    if (++k > 5 || Math.Abs(newValue - previous) <= step * 10e-7)
                     {
                         break;
                     }

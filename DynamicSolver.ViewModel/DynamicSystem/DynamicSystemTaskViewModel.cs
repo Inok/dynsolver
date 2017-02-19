@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicSolver.DynamicSystem;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Parser;
 using DynamicSolver.ViewModel.Common.Edit;
 using JetBrains.Annotations;
@@ -75,7 +76,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
 
             var actualVariables = system.Equations
-                .SelectMany(e => e.Function.Analyzer.Variables)
+                .SelectMany(e => new ExpressionAnalyzer(e.Function).Variables)
                 .Concat(system.Equations.Select(e => e.LeadingDerivative.Variable.Name))
                 .Distinct(StringComparer.Ordinal).ToList();
 

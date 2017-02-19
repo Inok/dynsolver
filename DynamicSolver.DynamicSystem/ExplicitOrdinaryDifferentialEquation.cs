@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
@@ -32,7 +33,7 @@ namespace DynamicSolver.DynamicSystem
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
             
-            if (!statement.Analyzer.IsSimpleAssignment)
+            if (!new ExpressionAnalyzer(statement).IsSimpleAssignment)
             {
                 throw new FormatException("Statement is not simple assignment.");
             }
