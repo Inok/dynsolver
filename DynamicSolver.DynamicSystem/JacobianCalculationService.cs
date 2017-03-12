@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.Expressions.Derivation;
 using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
@@ -10,7 +11,28 @@ namespace DynamicSolver.DynamicSystem
     public class JacobianCalculationService
     {
         [NotNull]
-        public IDictionary<string, IDictionary<string, IStatement>> ExpressNextStateVariableValueExpressions([NotNull] ExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        public Dictionary<Tuple<string, string>, ExecutableFunctionInfo> GetJacobianFunctions([NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        {
+            var nextStateExpressions = ExpressNextStateVariableValueExpressions(equationSystem);
+
+            var dictionary = new Dictionary<Tuple<string, string>, ExecutableFunctionInfo>();
+
+            foreach (var expr in nextStateExpressions)
+            {
+                foreach (var nameToStatement in expr.Value)
+                {
+                    var key = Tuple.Create(expr.Key, nameToStatement.Key);
+                    var info = new ExecutableFunctionInfo(nameToStatement.Key, equationSystem.FunctionFactory.Create(nameToStatement.Value));
+
+                    dictionary.Add(key, info);
+                }
+            }
+
+            return dictionary;
+        }
+
+        [NotNull]
+        public IDictionary<string, IDictionary<string, IStatement>> ExpressNextStateVariableValueExpressions([NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
             

@@ -1,10 +1,9 @@
-using DynamicSolver.Expressions.Execution;
-using JetBrains.Annotations;
-
-namespace DynamicSolver.DynamicSystem.Solver
+namespace DynamicSolver.DynamicSystem.Solvers.Explicit
 {
     public class DormandPrince5DynamicSystemSolver : ButcherTableDynamicSystemSolver
     {
+        public override DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("Dormand-Prince 5", 5, false);
+
         private static readonly double[,] ACoefficients =
         {
             {           0,            0,           0,           0,            0,      0,    0},
@@ -23,14 +22,5 @@ namespace DynamicSolver.DynamicSystem.Solver
 
         protected override double[,] A => ACoefficients;
         protected override double[] B => BCoefficients;
-
-        public DormandPrince5DynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
-        {
-        }
-
-        public override string ToString()
-        {
-            return $"Dormand-Prince 5";
-        }
     }
 }

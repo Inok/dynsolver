@@ -94,6 +94,7 @@
     <Compile Include="Common\ErrorList\ErrorViewModel.cs" />
     <Compile Include="Common\Select\SelectViewModel.cs" />
     <Compile Include="DynamicSystem\DynamicSystemSolverInput.cs" />
+    <Compile Include="DynamicSystem\ExplicitOrdinaryDifferentialEquationSystemDefinition.cs" />
     <Compile Include="DynamicSystem\ExplicitOrdinaryDifferentialEquationSystemViewModel.cs" />
     <Compile Include="Common\Select\SelectItemViewModel.cs" />
     <Compile Include="DynamicSystem\DynamicSystemTaskViewModel.cs" />

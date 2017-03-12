@@ -1,10 +1,9 @@
-using DynamicSolver.Expressions.Execution;
-using JetBrains.Annotations;
-
-namespace DynamicSolver.DynamicSystem.Solver
+namespace DynamicSolver.DynamicSystem.Solvers.Explicit
 {
-    public class DormandPrince8DynamicSystemSolver : ButcherTableDynamicSystemSolver
+    public class DormandPrince7DynamicSystemSolver : ButcherTableDynamicSystemSolver
     {
+        public override DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("Dormand-Prince 7", 7, false);
+
         private static readonly double[,] ACoefficients = {
             {                      0,     0,       0,                         0,                      0,                        0,                        0,                        0,                        0,                      0,                     0,     0},
             {                  1d/18,     0,       0,                         0,                      0,                        0,                        0,                        0,                        0,                      0,                     0,     0},
@@ -23,20 +22,10 @@ namespace DynamicSolver.DynamicSystem.Solver
 
         private static readonly double[] BCoefficients =
         {
-            14005451d/335480064, 0, 0, 0, 0, -59238493d/1068277825, 181606767d/758867731, 561292985d/797845732, -1041891430d/1371343529, 760417239d/1151165299, 118820643d/751138087, -528747749d/2220607170, 1d/4 
+            13451932d/455176623, 0, 0, 0, 0, -808719846d/976000145, 1757004468d/5645159321, 656045339d/265891186, -3867574721d/1518517206, 465885868d/322736535, 53011238d/667516719, 2d/45, 0
         };
 
         protected override double[,] A => ACoefficients;
         protected override double[] B => BCoefficients;
-
-        public DormandPrince8DynamicSystemSolver([NotNull] IExecutableFunctionFactory functionFactory) : base(functionFactory)
-        {
-            
-        }
-
-        public override string ToString()
-        {
-            return $"Dormand-Prince 8";
-        }
     }
 }

@@ -14,21 +14,34 @@
         
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" MinWidth="40" />
-                <ColumnDefinition Width="Auto" MinWidth="100" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Label Content="Step"></Label>
+
+            <Grid.Resources>
+                <Style TargetType="xctk:DoubleUpDown">
+                    <Setter Property="HorizontalAlignment" Value="Left" />
+                    <Setter Property="MinWidth" Value="100" />
+                    <Setter Property="Margin" Value="0,2" />
+                    <Setter Property="AllowInputSpecialValues" Value="None" />
+                </Style>
+            </Grid.Resources>
+
+            <Label Content="Step:"></Label>
             <xctk:DoubleUpDown Grid.Row="0" Grid.Column="1" Value="{Binding Step, Mode=TwoWay}" 
-                               Minimum="0.00001" Increment="0.1" 
-                               AllowInputSpecialValues="None" FormatString="0.00###" HorizontalAlignment="Left" MinWidth="100"/>
-            <Label Grid.Row="1" Grid.Column="0" Content="Time"></Label>
+                               Minimum="0.00001" Increment="0.1" FormatString="0.00###" />
+            <Label Grid.Row="1" Grid.Column="0" Content="Time:"></Label>
             <xctk:DoubleUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Time, Mode=TwoWay}" 
-                               Minimum="0.1" Increment="1" 
-                               AllowInputSpecialValues="None" FormatString="0.0###"  HorizontalAlignment="Left" MinWidth="100"/>
+                               Minimum="0.1" Increment="1" FormatString="0.0###" />
+            
+            <Label Grid.Row="2" Grid.Column="0" Content="Initial time:"></Label>
+            <xctk:DoubleUpDown Grid.Row="2" Grid.Column="1" Value="{Binding InitialTime, Mode=TwoWay}" 
+                               Increment="1" FormatString="0.0###" />
         </Grid>
 
 

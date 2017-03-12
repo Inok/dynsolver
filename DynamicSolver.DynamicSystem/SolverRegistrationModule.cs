@@ -1,11 +1,13 @@
 ﻿using System;
-using DynamicSolver.DynamicSystem.Solver;
+using DynamicSolver.DynamicSystem.Solvers;
+using DynamicSolver.DynamicSystem.Solvers.Explicit;
+using DynamicSolver.DynamicSystem.Solvers.Extrapolation;
+using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
 using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
 using Ninject.Modules;
-using Ninject.Parameters;
 
 namespace DynamicSolver.DynamicSystem
 {
@@ -39,20 +41,23 @@ namespace DynamicSolver.DynamicSystem
                     throw new ArgumentOutOfRangeException();
             }
 
-            Bind<IDynamicSystemSolver>().To<EulerDynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 3));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 4));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 6));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 8));
-            Bind<IDynamicSystemSolver>().To<ExplicitMiddlePointDynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<RungeKutta4DynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<KDDynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<ExtrapolationKDDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 2));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationKDDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 3));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationKDDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 4));
-            Bind<IDynamicSystemSolver>().To<DormandPrince5DynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<DormandPrince7DynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<DormandPrince8DynamicSystemSolver>();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitEulerSolver());
+
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 2));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 3));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 4));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 8));
+
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDDynamicSystemSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 2));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 3));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 4));
+
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new RungeKutta4DynamicSystemSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince5DynamicSystemSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince7DynamicSystemSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince8DynamicSystemSolver());
         }
     }
 }

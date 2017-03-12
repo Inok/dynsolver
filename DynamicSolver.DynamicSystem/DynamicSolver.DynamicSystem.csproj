@@ -52,25 +52,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DerivativeAnalyzer.cs" />
+    <Compile Include="IExplicitOrdinaryDifferentialEquationSystem.cs" />
+    <Compile Include="Solvers\DynamicSystemSolverDescription.cs" />
+    <Compile Include="Solvers\DynamicSystemState.cs" />
+    <Compile Include="Solvers\ExecutableFunctionInfo.cs" />
+    <Compile Include="Solvers\Explicit\ButcherTableDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\DormandPrince5DynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\DormandPrince7DynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\DormandPrince8DynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\ExplicitEulerSolver.cs" />
+    <Compile Include="Solvers\Explicit\ExplicitMiddlePointDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Extrapolation\ExtrapolationSolver.cs" />
+    <Compile Include="Solvers\SemiImplicit\KDDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\RungeKutta4DynamicSystemSolver.cs" />
+    <Compile Include="Solvers\IDynamicSystemSolver.cs" />
+    <Compile Include="Step\FixedStepStrategyFactory.cs" />
+    <Compile Include="Step\IIndependentVariableStepStrategy.cs" />
+    <Compile Include="Step\IIndependentVariableStepStrategyFactory.cs" />
+    <Compile Include="Step\IndependentVariableValue.cs" />
     <Compile Include="SolverRegistrationModule.cs" />
-    <Compile Include="Solver\ButcherTableDynamicSystemSolver.cs" />
-    <Compile Include="Solver\DormandPrince8DynamicSystemSolver.cs" />
-    <Compile Include="Solver\DormandPrince5DynamicSystemSolver.cs" />
-    <Compile Include="Solver\DormandPrince7DynamicSystemSolver.cs" />
-    <Compile Include="Solver\DynamicSystemSolver.cs" />
-    <Compile Include="Solver\EulerDynamicSystemSolver.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />
-    <Compile Include="Solver\ExecutableFunctionInfo.cs" />
-    <Compile Include="Solver\ExtrapolationEulerDynamicSystemSolver.cs" />
-    <Compile Include="Solver\ExtrapolationKDDynamicSystemSolver.cs" />
-    <Compile Include="Solver\Extrapolator.cs" />
-    <Compile Include="Solver\IDynamicSystemSolver.cs" />
-    <Compile Include="Solver\KDDynamicSystemSolver.cs" />
     <Compile Include="JacobianCalculationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Solver\ExplicitMiddlePointDynamicSystemSolver.cs" />
-    <Compile Include="Solver\RungeKutta4DynamicSystemSolver.cs" />
     <Compile Include="VariableDerivative.cs" />
   </ItemGroup>
   <ItemGroup>
