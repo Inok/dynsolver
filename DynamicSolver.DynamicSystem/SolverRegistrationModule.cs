@@ -41,23 +41,23 @@ namespace DynamicSolver.DynamicSystem
                     throw new ArgumentOutOfRangeException();
             }
 
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitEulerSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitEulerSolver()).InSingletonScope();
 
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 2));
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 3));
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 4));
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 8));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 2)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 3)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 4)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 8)).InSingletonScope();
 
-            Bind<IDynamicSystemSolver>().ToMethod(c => new KDDynamicSystemSolver());
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 2));
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 3));
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 4));
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDDynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 2)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 3)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 4)).InSingletonScope();
 
-            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver());
-            Bind<IDynamicSystemSolver>().ToMethod(c => new RungeKutta4DynamicSystemSolver());
-            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince5DynamicSystemSolver());
-            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince7DynamicSystemSolver());
-            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince8DynamicSystemSolver());
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new RungeKutta4DynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince5DynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince7DynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince8DynamicSystemSolver()).InSingletonScope();
         }
     }
 }
