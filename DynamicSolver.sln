@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.GUI", "DynamicSolver.GUI\DynamicSolver.GUI.csproj", "{3A901D47-DD97-49FA-86A4-FF9E92EEA552}"
 EndProject
@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{45D18E47-66E2-4F45-A734-2F73FF91A507}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
+		build.cake = build.cake
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.ViewModel", "DynamicSolver.ViewModel\DynamicSolver.ViewModel.csproj", "{3DA1C621-033E-4CFA-AEDE-2932CDB35BED}"
