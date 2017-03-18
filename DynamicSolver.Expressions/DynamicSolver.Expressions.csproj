@@ -37,6 +37,9 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="Derivation\SymbolicDerivationService.cs" />
     <Compile Include="Execution\Compiler\CompiledFunction.cs" />
     <Compile Include="Execution\Compiler\CompiledFunctionFactory.cs" />

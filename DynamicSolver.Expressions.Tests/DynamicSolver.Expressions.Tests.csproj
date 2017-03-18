@@ -54,6 +54,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="Derivation\SymbolicDerivationServiceTests.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparerTests.cs" />
     <Compile Include="Expression\ExpressionPrintingTests.cs" />

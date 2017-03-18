@@ -1,23 +1,8 @@
-version: 0.6.0.{build}
-
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}-{branch}'
-
-platform:
-- Any CPU
-
-configuration:
-- Release
-  
 build_script:
-- ps: .\build.ps1 -Target "AppVeyor" -Platform "$env:platform" -Configuration "$env:configuration"
+- ps: .\build.ps1 -Target "AppVeyor" -Platform "Any CPU" -Configuration "Release"
 
 artifacts:
-- path: artifacts/solver.zip
+- path: artifacts/*.zip
   
 pull_requests:
   do_not_increment_build_number: true

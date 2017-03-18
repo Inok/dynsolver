@@ -50,6 +50,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="DerivativeAnalyzer.cs" />
     <Compile Include="IExplicitOrdinaryDifferentialEquationSystem.cs" />
     <Compile Include="Solvers\DynamicSystemSolverDescription.cs" />

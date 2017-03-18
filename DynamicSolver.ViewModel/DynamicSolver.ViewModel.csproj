@@ -85,6 +85,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="ApplicationBootstraper.cs" />
     <Compile Include="Common\Busy\BusyIndicatorViewModel.cs" />
     <Compile Include="Common\Edit\EditViewModel.cs" />

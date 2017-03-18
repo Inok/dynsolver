@@ -1,16 +1,20 @@
 #tool "nuget:https://dotnet.myget.org/F/nuget-build/?package=NuGet.CommandLine"
 #tool "nuget:?package=NUnit.ConsoleRunner"
+#addin nuget:?package=Cake.Git
+
 
 //---------------------------------
 //--- Configuration ---------------
 //---------------------------------
 
-//-- arguments
 var target = Argument("target", "Default");
 var platform = Argument("platform", "Any CPU");
 var configuration = Argument("configuration", "Release");
 
+var rootDir = Directory(".");
+
 var solutionFilePath = "./DynamicSolver.sln";
+var solutionInfoFile = "./SolutionInfo.cs";
 
 var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/" + configuration)
                    + GetDirectories("./DynamicSolver.*/obj/" + configuration);
@@ -22,7 +26,24 @@ var applicationArtifactsFiles = GetFiles("./DynamicSolver.GUI/bin/" + configurat
 
 var artifactsDir = Directory("./artifacts");
 var artifactsSolverDir = Directory(artifactsDir.Path + "/solver");
-var artifactsSolverZip = File(artifactsDir.Path + "/solver.zip");
+
+
+//---------------------------------
+//--- Version ---------------------
+//---------------------------------
+
+var solutionInfo = ParseAssemblyInfo(solutionInfoFile);
+var semanticVersion = solutionInfo.AssemblyVersion;
+
+if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
+{
+    semanticVersion += "-" + BuildSystem.AppVeyor.Environment.Repository.Branch + "-build" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
+}
+else
+{
+    var branch = GitBranchCurrent(rootDir).FriendlyName.Replace("feature/", "");
+    semanticVersion += "-" + branch;
+}
 
 
 
@@ -33,7 +54,9 @@ var artifactsSolverZip = File(artifactsDir.Path + "/solver.zip");
 Setup(context =>
 {
     Information("Building with configuration {0}|{1}", configuration, platform);
+    Information("Current application version: " + semanticVersion);
 });
+
 
 
 //---------------------------------
@@ -76,6 +99,7 @@ Task("Build")
     });
 });
 
+
 Task("Run-Tests")
     .IsDependentOn("Build")
     .Does(() =>
@@ -102,9 +126,11 @@ Task("Pack-Zip-Artifacts")
     .IsDependentOn("Copy-App-Artifacts")
     .Does(() =>
 {
+    var artifactsSolverZip = File(artifactsDir.Path + string.Format("/solver-{0}.zip", semanticVersion));
     Information("Pack directory " + artifactsSolverDir + " to " + artifactsSolverZip);
     Zip(artifactsSolverDir, artifactsSolverZip);
 });
+
 
 
 //---------------------------------
