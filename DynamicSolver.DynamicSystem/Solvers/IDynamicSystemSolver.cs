@@ -12,7 +12,7 @@ namespace DynamicSolver.DynamicSystem.Solvers
         [NotNull, ItemNotNull]
         IEnumerable<DynamicSystemState> Solve(
             [NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem,
-            [NotNull] IIndependentVariableStepStrategyFactory stepStrategyFactory
+            [NotNull] IIndependentVariableStepStrategy stepStrategy
         );
     }
 }

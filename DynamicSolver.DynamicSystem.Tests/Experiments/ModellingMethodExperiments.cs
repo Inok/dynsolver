@@ -64,7 +64,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                 new ExtrapolationSolver(new KDDynamicSystemSolver(), 4)
             };
 
-            var stepStrategyFactory = new FixedStepStrategyFactory(STEP);
+            var stepStrategyFactory = new FixedStepStrategy(STEP);
 
             //warmup
             foreach (var solver in solvers)

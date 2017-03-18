@@ -21,7 +21,7 @@ build:
   verbosity: minimal
 
 artifacts:
-- path: artifacts/gui_app/Release
+- path: DynamicSolver.GUI/bin/Release
   name: gui_app
   
 pull_requests:

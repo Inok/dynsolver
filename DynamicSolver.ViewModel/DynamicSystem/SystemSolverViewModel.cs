@@ -140,10 +140,10 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             
             var sw = new Stopwatch();
             sw.Start();
-            var actual = startValues.Yield().Concat(solver.Solve(definition, new FixedStepStrategyFactory(input.Step))).Take(itemsCount).ToList();
+            var actual = startValues.Yield().Concat(solver.Solve(definition, new FixedStepStrategy(input.Step))).Take(itemsCount).ToList();
             sw.Stop();
 
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new FixedStepStrategyFactory(input.Step / 10)).Skipping(9, 9)).Take(itemsCount);
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new FixedStepStrategy(input.Step / 10)).Skipping(9, 9)).Take(itemsCount);
 
             var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b});
             

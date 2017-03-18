@@ -2,12 +2,12 @@
 
 namespace DynamicSolver.DynamicSystem.Step
 {
-    public struct IndependentVariableValue
+    public struct IndependentVariableStep
     {
         public double AbsoluteValue { get; }
         public double Delta { get; }
 
-        public IndependentVariableValue(double absoluteValue, double delta)
+        public IndependentVariableStep(double absoluteValue, double delta)
         {
             if (delta < 0) throw new ArgumentOutOfRangeException(nameof(delta));
 

@@ -9,13 +9,13 @@ namespace DynamicSolver.DynamicSystem.Tests.Step
         [Test]
         public void Factory_CreatesStepStrategyWithCorrectCurrentValue([Range(-3d, 3d, 0.5d)] double startValue)
         {
-            var factory = new FixedStepStrategyFactory(0.1);
+            var factory = new FixedStepStrategy(0.1);
 
-            var stepStrategy = factory.Create(startValue);
+            var stepper = factory.Create(startValue);
 
-            Assert.That(stepStrategy.Current, Is.Not.Null);
-            Assert.That(stepStrategy.Current.AbsoluteValue, Is.EqualTo(startValue));
-            Assert.That(stepStrategy.Current.Delta, Is.Zero);
+            Assert.That(stepper.CurrentStep, Is.Not.Null);
+            Assert.That(stepper.CurrentStep.AbsoluteValue, Is.EqualTo(startValue));
+            Assert.That(stepper.CurrentStep.Delta, Is.Zero);
         }
 
         [Test]
@@ -24,17 +24,17 @@ namespace DynamicSolver.DynamicSystem.Tests.Step
             [Range(0.1d, 1.5d, 0.3d)] double stepSize
         )
         {
-            var factory = new FixedStepStrategyFactory(stepSize);
+            var factory = new FixedStepStrategy(stepSize);
 
-            var stepStrategy = factory.Create(startValue);
+            var stepper = factory.Create(startValue);
 
-            var newValue = stepStrategy.MoveNext();
+            var newValue = stepper.MoveNext();
 
-            Assert.That(newValue, Is.EqualTo(stepStrategy.Current));
+            Assert.That(newValue, Is.EqualTo(stepper.CurrentStep));
 
-            Assert.That(stepStrategy.Current, Is.Not.Null);
-            Assert.That(stepStrategy.Current.AbsoluteValue, Is.EqualTo(startValue + stepSize));
-            Assert.That(stepStrategy.Current.Delta, Is.EqualTo(stepSize));
+            Assert.That(stepper.CurrentStep, Is.Not.Null);
+            Assert.That(stepper.CurrentStep.AbsoluteValue, Is.EqualTo(startValue + stepSize));
+            Assert.That(stepper.CurrentStep.Delta, Is.EqualTo(stepSize));
         }
 
         [Test]
@@ -43,17 +43,17 @@ namespace DynamicSolver.DynamicSystem.Tests.Step
             const double stepSize = 0.2;
             const double startValue = 1;
 
-            var factory = new FixedStepStrategyFactory(stepSize);
-            var stepStrategy = factory.Create(startValue);
+            var factory = new FixedStepStrategy(stepSize);
+            var stepper = factory.Create(startValue);
 
             var expectedValue = startValue;
             for (var i = 1; i <= 10; i++)
             {
                 expectedValue += stepSize;
 
-                stepStrategy.MoveNext();
-                Assert.That(stepStrategy.Current.Delta, Is.EqualTo(stepSize));
-                Assert.That(stepStrategy.Current.AbsoluteValue, Is.EqualTo(expectedValue));
+                stepper.MoveNext();
+                Assert.That(stepper.CurrentStep.Delta, Is.EqualTo(stepSize));
+                Assert.That(stepper.CurrentStep.AbsoluteValue, Is.EqualTo(expectedValue));
             }
         }
     }

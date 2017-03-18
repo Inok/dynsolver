@@ -76,7 +76,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         [Test]
         public void Solve_ReturnsResultEqualToSystemSolution()
         {
-            var actual = _solver.Solve(_equationSystem, new FixedStepStrategyFactory(STEP)).Take(STEP_COUNT).ToList();
+            var actual = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP)).Take(STEP_COUNT).ToList();
 
             Assert.That(actual.Count, Is.EqualTo(STEP_COUNT));
 
@@ -96,7 +96,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         [Test]
         public void Solve_WithProportionalStep_ErrorsHasProportionalValue()
         {
-            var actual1 = _solver.Solve(_equationSystem, new FixedStepStrategyFactory(STEP)).Take(STEP_COUNT).ToList();
+            var actual1 = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP)).Take(STEP_COUNT).ToList();
             double error1 = 0;
             for (var i = 0; i < actual1.Count; i++)
             {
@@ -108,7 +108,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             }
 
             const double step2 = STEP * 2;
-            var actual2 = _solver.Solve(_equationSystem, new FixedStepStrategyFactory(STEP*2)).Take(STEP_COUNT / 2).ToList();
+            var actual2 = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP*2)).Take(STEP_COUNT / 2).ToList();
             double error2 = 0;
             for (var i = 0; i < actual2.Count; i++)
             {

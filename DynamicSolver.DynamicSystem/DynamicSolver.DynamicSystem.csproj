@@ -65,10 +65,10 @@
     <Compile Include="Solvers\SemiImplicit\KDDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Explicit\RungeKutta4DynamicSystemSolver.cs" />
     <Compile Include="Solvers\IDynamicSystemSolver.cs" />
-    <Compile Include="Step\FixedStepStrategyFactory.cs" />
+    <Compile Include="Step\FixedStepStrategy.cs" />
+    <Compile Include="Step\IIndependentVariableStepper.cs" />
     <Compile Include="Step\IIndependentVariableStepStrategy.cs" />
-    <Compile Include="Step\IIndependentVariableStepStrategyFactory.cs" />
-    <Compile Include="Step\IndependentVariableValue.cs" />
+    <Compile Include="Step\IndependentVariableStep.cs" />
     <Compile Include="SolverRegistrationModule.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquation.cs" />
     <Compile Include="ExplicitOrdinaryDifferentialEquationSystem.cs" />

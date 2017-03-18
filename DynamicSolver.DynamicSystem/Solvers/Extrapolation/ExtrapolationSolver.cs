@@ -26,12 +26,12 @@ namespace DynamicSolver.DynamicSystem.Solvers.Extrapolation
             Description = new DynamicSystemSolverDescription(name, order, false);
         }
 
-        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, IIndependentVariableStepStrategyFactory stepStrategyFactory)
+        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, IIndependentVariableStepStrategy stepStrategy)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
-            if (stepStrategyFactory == null) throw new ArgumentNullException(nameof(stepStrategyFactory));
+            if (stepStrategy == null) throw new ArgumentNullException(nameof(stepStrategy));
 
-            var stepStrategy = stepStrategyFactory.Create(equationSystem.InitialState.IndependentVariable);
+            var stepper = stepStrategy.Create(equationSystem.InitialState.IndependentVariable);
 
             var extrapolationCoefficients = Enumerable.Range(1, _extrapolationStages).ToArray();
             var buffer = new double[_extrapolationStages, _extrapolationStages];
@@ -40,9 +40,9 @@ namespace DynamicSolver.DynamicSystem.Solvers.Extrapolation
             var lastState = equationSystem.InitialState;
             while (true)
             {
-                var previousIndependentVariableValue = stepStrategy.Current.AbsoluteValue;
+                var previousIndependentVariableValue = stepper.CurrentStep.AbsoluteValue;
 
-                var step = stepStrategy.MoveNext();
+                var step = stepper.MoveNext();
 
                 for (var i = 0; i < solvesBuffer.Length; i++)
                 {
@@ -50,7 +50,7 @@ namespace DynamicSolver.DynamicSystem.Solvers.Extrapolation
 
                     var extrapolationCoefficient = extrapolationCoefficients[i];
                     var stepSize = step.Delta / extrapolationCoefficient;
-                    solvesBuffer[i] = _baseSolver.Solve(state, new FixedStepStrategyFactory(stepSize)).Take(extrapolationCoefficient).Last().DependentVariables;
+                    solvesBuffer[i] = _baseSolver.Solve(state, new FixedStepStrategy(stepSize)).Take(extrapolationCoefficient).Last().DependentVariables;
                 }
 
                 var newValues = new Dictionary<string, double>();

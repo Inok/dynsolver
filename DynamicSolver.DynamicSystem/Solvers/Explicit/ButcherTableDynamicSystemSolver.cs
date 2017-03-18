@@ -13,20 +13,20 @@ namespace DynamicSolver.DynamicSystem.Solvers.Explicit
         protected abstract double[] B { get; }
 
 
-        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, IIndependentVariableStepStrategyFactory stepStrategyFactory)
+        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, IIndependentVariableStepStrategy stepStrategy)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
-            if (stepStrategyFactory == null) throw new ArgumentNullException(nameof(stepStrategyFactory));
+            if (stepStrategy == null) throw new ArgumentNullException(nameof(stepStrategy));
 
             var functions = equationSystem.ExecutableFunctions;
-            var stepStrategy = stepStrategyFactory.Create(equationSystem.InitialState.IndependentVariable);
+            var stepper = stepStrategy.Create(equationSystem.InitialState.IndependentVariable);
 
             var functionNameToIndex = functions.Select((f, i) => new { f, i }).ToDictionary(p => p.f.Name, p => p.i);
 
             var lastState = equationSystem.InitialState;
             while (true)
             {
-                var step = stepStrategy.MoveNext();
+                var step = stepper.MoveNext();
 
                 var k = new double[B.Length, functions.Count];
                 var arguments = new double[functions.Count];

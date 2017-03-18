@@ -6,7 +6,6 @@ using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
 using DynamicSolver.Expressions.Execution;
 using DynamicSolver.Expressions.Execution.Compiler;
 using DynamicSolver.Expressions.Execution.Interpreter;
-using DynamicSolver.Expressions.Parser;
 using Ninject.Modules;
 
 namespace DynamicSolver.DynamicSystem
@@ -28,7 +27,6 @@ namespace DynamicSolver.DynamicSystem
 
         public override void Load()
         {
-            Bind<IExpressionParser>().To<ExpressionParser>();
             switch (_factoryType)
             {
                 case FunctionFactoryType.Compiled:

@@ -47,19 +47,6 @@ namespace DynamicSolver.DynamicSystem
             }
         }
 
-        public ExplicitOrdinaryDifferentialEquationSystem([NotNull] IEnumerable<ExplicitOrdinaryDifferentialEquation> equations)
-        {
-            if (equations == null) throw new ArgumentNullException(nameof(equations));
-
-            var equationList = equations.ToList();
-            var initialState = new DynamicSystemState(0, equationList.ToDictionary(e => e.LeadingDerivative.Variable.Name, _ => 0d));
-            ValidateEquationsSystem(equationList);
-            ValidateState(equationList, initialState);
-
-            Equations = equationList;
-            InitialState = initialState;
-        }
-
         public ExplicitOrdinaryDifferentialEquationSystem(
             [NotNull] IEnumerable<ExplicitOrdinaryDifferentialEquation> equations,
             [NotNull] DynamicSystemState initialState,
