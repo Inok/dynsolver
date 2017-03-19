@@ -6,8 +6,5 @@ install:
 build_script:
 - ps: .\build.ps1 -Target "AppVeyor" -Configuration "Release" -Platform "Any CPU"
 
-artifacts:
-- path: artifacts/*.zip
-  
 pull_requests:
   do_not_increment_build_number: true

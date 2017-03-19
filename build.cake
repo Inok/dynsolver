@@ -16,28 +16,35 @@ var configuration = Argument("configuration", "Release");
 
 var rootDir = Directory(".");
 
-var solutionFilePath = "./DynamicSolver.sln";
-var solutionInfoFile = "./SolutionInfo.cs";
+var solutionFilePath = rootDir + File("DynamicSolver.sln");
+var solutionInfoFile = rootDir + File("SolutionInfo.cs");
 
-var artifactsDir = Directory("./artifacts");
-var artifactsSolverDir = Directory(artifactsDir.Path + "/solver");
+var artifactsDir = rootDir + Directory("artifacts");
+var artifactsSolverDir = artifactsDir + Directory("solver");
 
 
 //---------------------------------
 //--- Version ---------------------
 //---------------------------------
 
+string FormatBranch(string branch)
+{
+    return branch.Replace("feature/", "");
+}
+
 var solutionInfo = ParseAssemblyInfo(solutionInfoFile);
 var semanticVersion = solutionInfo.AssemblyVersion;
 
 if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
 {
-    semanticVersion += "-" + BuildSystem.AppVeyor.Environment.Repository.Branch + "-build" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
+    var branch = BuildSystem.AppVeyor.Environment.Repository.Branch;
+    var build = BuildSystem.AppVeyor.Environment.Build.Number;
+    semanticVersion += "." + build + "-" + FormatBranch(branch);
 }
 else
 {
-    var branch = GitBranchCurrent(rootDir).FriendlyName.Replace("feature/", "");
-    semanticVersion += "-" + branch;
+    var branch = GitBranchCurrent(rootDir).FriendlyName;
+    semanticVersion += "-" + FormatBranch(branch);
 }
 
 
@@ -50,6 +57,7 @@ Setup(context =>
 {
     Information("Building with configuration {0}|{1}", configuration, platform);
     Information("Current application version: " + semanticVersion);
+
     if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
     {
         Information("Setting AppVeyor build version...");
@@ -67,7 +75,6 @@ Task("Clean-Build").Does(() =>
 {
     var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/" + configuration)
                        + GetDirectories("./DynamicSolver.*/obj/" + configuration);
-
     CleanDirectories(buildFilesDirs);
 });
 
@@ -150,7 +157,7 @@ Task("Pack-Zip-Artifacts")
     .IsDependentOn("Copy-App-Artifacts")
     .Does(() =>
 {
-    var artifactsSolverZip = File(artifactsDir.Path + string.Format("/solver-{0}.zip", semanticVersion));
+    var artifactsSolverZip = artifactsDir + File(string.Format("solver-{0}.zip", semanticVersion));
     Information("Pack directory " + artifactsSolverDir + " to " + artifactsSolverZip);
     Zip(artifactsSolverDir, artifactsSolverZip);
 });
@@ -168,7 +175,14 @@ Task("Pack-Artifacts")
 
 Task("AppVeyor")
   .IsDependentOn("Pack-Artifacts")
-  .Does(() => { });
+  .Does(() => {
+        var artifacts = GetFiles(artifactsDir.Path + "/*.zip");
+        foreach(var artifact in artifacts)
+        {
+            Information("Uploading artifact: " + artifact);
+            BuildSystem.AppVeyor.UploadArtifact(artifact);
+        }
+    });
 
 
 Task("Default")
