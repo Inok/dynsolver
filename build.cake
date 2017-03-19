@@ -89,7 +89,10 @@ Task("Clean-Artifacts").Does(() =>
 
 Task("Clean-TestResult").Does(() =>
 {
-    DeleteFile(testResultFilePath);
+    if(FileExists(testResultFilePath))
+    {
+        DeleteFile(testResultFilePath);
+    }
 });
 
 
