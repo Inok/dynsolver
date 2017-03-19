@@ -1,3 +1,6 @@
+install:
+  nuget sources add -Name NugetV3 -Source https://api.nuget.org/v3/index.json
+
 build_script:
 - ps: .\build.ps1 -Target "AppVeyor" -Configuration "Release" -Platform "Any CPU"
 

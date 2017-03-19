@@ -91,7 +91,7 @@ Task("Restore-NuGet-Packages").Does(() =>
             }
             else
             {
-                Information(exception.ToString());
+                Information(exception.Message);
                 timeout += 1;
             }})
         .Execute(()=> {
