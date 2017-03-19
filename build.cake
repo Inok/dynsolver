@@ -148,6 +148,14 @@ Task("Run-Tests")
         NoHeader = true,
         OutputFile = testResultFilePath
     });
+})
+    .Finally(() =>
+{
+    if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
+    {
+        Information("Uploading test results: " + testResultFilePath);
+        BuildSystem.AppVeyor.UploadTestResults(testResultFilePath, AppVeyorTestResultsType.NUnit3);
+    }
 });
 
 
@@ -196,9 +204,6 @@ Task("AppVeyor")
   .IsDependentOn("Clean-All")
   .IsDependentOn("Pack-Artifacts")
   .Does(() => {
-        Information("Uploading test results: " + testResultFilePath);
-        BuildSystem.AppVeyor.UploadTestResults(testResultFilePath, AppVeyorTestResultsType.NUnit3);
-
         var artifacts = GetFiles(artifactsDir.Path + "/*.zip");
         foreach(var artifact in artifacts)
         {
