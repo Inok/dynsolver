@@ -41,6 +41,7 @@ var semanticVersion = solutionInfo.AssemblyVersion;
 if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
 {
     semanticVersion += "-" + BuildSystem.AppVeyor.Environment.Repository.Branch + "-build" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
+    BuildSystem.AppVeyor.UpdateBuildVersion(semanticVersion);
 }
 else
 {
