@@ -22,6 +22,8 @@ var solutionInfoFile = rootDir + File("SolutionInfo.cs");
 var artifactsDir = rootDir + Directory("artifacts");
 var artifactsSolverDir = artifactsDir + Directory("solver");
 
+var testResultFilePath = rootDir + File("TestResult.xml");
+
 
 //---------------------------------
 //--- Version ---------------------
@@ -85,6 +87,12 @@ Task("Clean-Artifacts").Does(() =>
 });
 
 
+Task("Clean-TestResult").Does(() =>
+{
+    DeleteFile(testResultFilePath);
+});
+
+
 Task("Restore-NuGet-Packages").Does(() =>
 {
     var maxRetryCount = 3;
@@ -127,6 +135,7 @@ Task("Build")
 
 
 Task("Run-Tests")
+    .IsDependentOn("Clean-TestResult")
     .IsDependentOn("Build")
     .Does(() =>
 {
@@ -134,15 +143,15 @@ Task("Run-Tests")
 
     NUnit3(testAssemblies, new NUnit3Settings() {
         NoHeader = true,
-        NoResults = true
+        OutputFile = testResultFilePath
     });
 });
 
 
 Task("Copy-App-Artifacts")
+    .IsDependentOn("Clean-Artifacts")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Tests")
-    .IsDependentOn("Clean-Artifacts")
     .Does(() =>
 {
     CreateDirectory(artifactsSolverDir);
@@ -168,14 +177,25 @@ Task("Pack-Zip-Artifacts")
 //--- Targets ---------------------
 //---------------------------------
 
+Task("Clean-All")
+    .IsDependentOn("Clean-Build")
+    .IsDependentOn("Clean-Artifacts")
+    .IsDependentOn("Clean-TestResult")
+    .Does(() => { });
+
+
 Task("Pack-Artifacts")
     .IsDependentOn("Pack-Zip-Artifacts")
     .Does(() => { });
 
 
 Task("AppVeyor")
+  .IsDependentOn("Clean-All")
   .IsDependentOn("Pack-Artifacts")
   .Does(() => {
+        Information("Uploading test results: " + testResultFilePath);
+        BuildSystem.AppVeyor.UploadTestResults(testResultFilePath, AppVeyorTestResultsType.NUnit3);
+
         var artifacts = GetFiles(artifactsDir.Path + "/*.zip");
         foreach(var artifact in artifacts)
         {
@@ -186,6 +206,7 @@ Task("AppVeyor")
 
 
 Task("Default")
+  .IsDependentOn("Clean-All")
   .IsDependentOn("Pack-Artifacts")
   .Does(() => { });
 
