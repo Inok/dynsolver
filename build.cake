@@ -1,6 +1,9 @@
 #tool "nuget:https://dotnet.myget.org/F/nuget-build/?package=NuGet.CommandLine"
 #tool "nuget:?package=NUnit.ConsoleRunner"
-#addin nuget:?package=Cake.Git
+#addin "nuget:?package=Cake.Git"
+#addin "nuget:?package=Polly&version=4.2.0"
+
+using Polly;
 
 
 //---------------------------------
@@ -77,10 +80,26 @@ Task("Clean-Artifacts").Does(() =>
 
 Task("Restore-NuGet-Packages").Does(() =>
 {
-    NuGetRestore(solutionFilePath, new NuGetRestoreSettings() {
-        ToolPath = "./tools/NuGet.CommandLine/tools/NuGet.exe",
-        ToolTimeout = TimeSpan.FromMinutes(1)
-     });
+    var maxRetryCount = 3;
+    var timeout = 1d;
+    Policy
+        .Handle<Exception>()
+        .Retry(maxRetryCount, (exception, retryCount, context) => {
+            if (retryCount == maxRetryCount)
+            {
+                throw exception;
+            }
+            else
+            {
+                Information(exception.ToString());
+                timeout += 1;
+            }})
+        .Execute(()=> {
+                NuGetRestore(solutionFilePath, new NuGetRestoreSettings {
+                    ToolPath = "./tools/NuGet.CommandLine/tools/NuGet.exe",
+                    ToolTimeout = TimeSpan.FromMinutes(timeout)
+                });
+            });
 });
 
 
