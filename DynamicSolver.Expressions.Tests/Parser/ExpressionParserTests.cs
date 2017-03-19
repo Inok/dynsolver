@@ -21,7 +21,7 @@ namespace DynamicSolver.Expressions.Tests.Parser
             Assert.That(() => _parser.Parse(input), Throws.TypeOf<ArgumentException>());
         }
 
-        [TestCase("0", 0d)]
+        [TestCase("0", 1d)]
         [TestCase("1", 1d)]
         [TestCase("-2", -2d)]
         [TestCase("5.00", 5d)]
