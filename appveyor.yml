@@ -1,5 +1,5 @@
 build_script:
-- ps: .\build.ps1 -Target "AppVeyor" -Platform "Any CPU" -Configuration "Release"
+- ps: .\build.ps1 -Target "AppVeyor" -Configuration "Release" -Platform "Any CPU"
 
 artifacts:
 - path: artifacts/*.zip
