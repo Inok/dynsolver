@@ -19,14 +19,6 @@ var rootDir = Directory(".");
 var solutionFilePath = "./DynamicSolver.sln";
 var solutionInfoFile = "./SolutionInfo.cs";
 
-var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/" + configuration)
-                   + GetDirectories("./DynamicSolver.*/obj/" + configuration);
-
-var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/*.Tests.dll");
-
-var applicationArtifactsFiles = GetFiles("./DynamicSolver.GUI/bin/" + configuration + "/*.dll")
-                              + GetFiles("./DynamicSolver.GUI/bin/" + configuration + "/*.exe");
-
 var artifactsDir = Directory("./artifacts");
 var artifactsSolverDir = Directory(artifactsDir.Path + "/solver");
 
@@ -41,7 +33,6 @@ var semanticVersion = solutionInfo.AssemblyVersion;
 if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
 {
     semanticVersion += "-" + BuildSystem.AppVeyor.Environment.Repository.Branch + "-build" + EnvironmentVariable("APPVEYOR_BUILD_NUMBER");
-    BuildSystem.AppVeyor.UpdateBuildVersion(semanticVersion);
 }
 else
 {
@@ -59,6 +50,11 @@ Setup(context =>
 {
     Information("Building with configuration {0}|{1}", configuration, platform);
     Information("Current application version: " + semanticVersion);
+    if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
+    {
+        Information("Setting AppVeyor build version...");
+        BuildSystem.AppVeyor.UpdateBuildVersion(semanticVersion);
+    }
 });
 
 
@@ -69,6 +65,9 @@ Setup(context =>
 
 Task("Clean-Build").Does(() =>
 {
+    var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/" + configuration)
+                       + GetDirectories("./DynamicSolver.*/obj/" + configuration);
+
     CleanDirectories(buildFilesDirs);
 });
 
@@ -124,6 +123,8 @@ Task("Run-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
+    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/*.Tests.dll");
+
     NUnit3(testAssemblies, new NUnit3Settings() {
         NoHeader = true,
         NoResults = true
@@ -138,7 +139,10 @@ Task("Copy-App-Artifacts")
     .Does(() =>
 {
     CreateDirectory(artifactsSolverDir);
-    CopyFiles(applicationArtifactsFiles, artifactsSolverDir);
+
+    var artifacts = GetFiles("./DynamicSolver.GUI/bin/" + configuration + "/*.dll")
+                  + GetFiles("./DynamicSolver.GUI/bin/" + configuration + "/*.exe");
+    CopyFiles(artifacts, artifactsSolverDir);
 });
 
 
