@@ -6,13 +6,14 @@ using DynamicSolver.DynamicSystem.Solvers.Explicit;
 using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
 using DynamicSolver.DynamicSystem.Step;
 using DynamicSolver.Expressions.Execution.Compiler;
-using DynamicSolver.Expressions.Execution.Interpreter;
 using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests.Solvers
 {
     [TestFixture(typeof(ExplicitEulerSolver), 1)]
+    [TestFixture(typeof(EulerCromerSolver), 1)]
+
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2)]
 
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
@@ -80,7 +81,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
 
             Assert.That(actual.Count, Is.EqualTo(STEP_COUNT));
 
-            var accuracy = 2 * Math.Pow(STEP, _methodAccuracy);
+            var accuracy = 3 * Math.Pow(STEP, _methodAccuracy);
 
             int i = 0;
             foreach (var actualValue in actual)

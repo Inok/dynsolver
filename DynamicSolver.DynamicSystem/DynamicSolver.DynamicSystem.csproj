@@ -62,6 +62,7 @@
     <Compile Include="Solvers\Explicit\DormandPrince5DynamicSystemSolver.cs" />
     <Compile Include="Solvers\Explicit\DormandPrince7DynamicSystemSolver.cs" />
     <Compile Include="Solvers\Explicit\DormandPrince8DynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\EulerCromerSolver.cs" />
     <Compile Include="Solvers\Explicit\ExplicitEulerSolver.cs" />
     <Compile Include="Solvers\Explicit\ExplicitMiddlePointDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Extrapolation\ExtrapolationSolver.cs" />

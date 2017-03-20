@@ -46,6 +46,8 @@ namespace DynamicSolver.DynamicSystem
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 4)).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new ExplicitEulerSolver(), 8)).InSingletonScope();
 
+            Bind<IDynamicSystemSolver>().ToMethod(c => new EulerCromerSolver()).InSingletonScope();
+
             Bind<IDynamicSystemSolver>().ToMethod(c => new KDDynamicSystemSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 2)).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 3)).InSingletonScope();
