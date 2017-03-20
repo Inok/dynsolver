@@ -54,6 +54,7 @@
       <Link>SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="DerivativeAnalyzer.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="IExplicitOrdinaryDifferentialEquationSystem.cs" />
     <Compile Include="Solvers\DynamicSystemSolverDescription.cs" />
     <Compile Include="Solvers\DynamicSystemState.cs" />

@@ -21,11 +21,7 @@ namespace DynamicSolver.DynamicSystem.Solvers.Explicit
             {
                 var step = stepper.MoveNext();
 
-                var dependentVariables = new Dictionary<string, double>();
-                foreach (var pair in lastState.DependentVariables)
-                {
-                    dependentVariables[pair.Key] = pair.Value;
-                }
+                var dependentVariables = lastState.DependentVariables.Clone();
                 
                 foreach (var function in functions)
                 {
