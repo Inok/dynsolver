@@ -110,13 +110,13 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
             {
                 switch (functionCall.FunctionName.ToLowerInvariant())
                 {
-                    case "sin": return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Sin"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
-                    case "cos": return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Cos"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
-                    case "tg":  return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Tan"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
-                    case "ctg": return System.Linq.Expressions.Expression.Divide(System.Linq.Expressions.Expression.Constant(1d), System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Tan"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter)));
-                    case "exp": return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Exp"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
-                    case "ln":  return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Log", new [] {typeof(double)}), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
-                    case "lg":  return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Log10"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
+                    case "sin": return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Sin"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
+                    case "cos": return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Cos"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
+                    case "tg":  return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Tan"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
+                    case "ctg": return System.Linq.Expressions.Expression.Divide(System.Linq.Expressions.Expression.Constant(1d), System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Tan"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter)));
+                    case "exp": return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Exp"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
+                    case "ln":  return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Log", new [] {typeof(double)}), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
+                    case "lg":  return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Log10"), BuildExpression(functionCall.Argument, orderedArguments, argumentsParameter));
                     default:
                         throw new ArgumentException($"Expression contains not supported function call: {functionCall.FunctionName}");
                 }
@@ -127,18 +127,18 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
             {
                 var left = BuildExpression(binary.LeftOperand, orderedArguments, argumentsParameter);
                 var right = BuildExpression(binary.RightOperand, orderedArguments, argumentsParameter);
-                switch (binary.OperatorToken)
+                switch (binary)
                 {
-                    case "+":
+                    case AddBinaryOperator _:
                         return System.Linq.Expressions.Expression.Add(left, right);
-                    case "-":
+                    case SubtractBinaryOperator _:
                         return System.Linq.Expressions.Expression.Subtract(left, right);
-                    case "*":
+                    case MultiplyBinaryOperator _:
                         return System.Linq.Expressions.Expression.Multiply(left, right);
-                    case "/":
+                    case DivideBinaryOperator _:
                         return System.Linq.Expressions.Expression.Divide(left, right);
-                    case "^":
-                        return System.Linq.Expressions.Expression.Call(null, typeof(System.Math).GetMethod("Pow"), left, right);
+                    case PowBinaryOperator _:
+                        return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Pow"), left, right);
                     default:
                         throw new InvalidOperationException($"Unknown binary operator {expression} of type {expression.GetType().FullName}");
                 }

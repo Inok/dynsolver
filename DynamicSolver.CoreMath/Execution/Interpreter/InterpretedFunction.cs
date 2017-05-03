@@ -12,13 +12,13 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
     {
         private static readonly IDictionary<string, Func<double, double>> Functions = new Dictionary<string, Func<double, double>>
         {
-            ["sin"] = (d) => System.Math.Sin(d),
-            ["cos"] = (d) => System.Math.Cos(d),
-            ["tg"]  = (d) => System.Math.Tan(d),
-            ["ctg"] = (d) => 1.0 / System.Math.Tan(d),
-            ["exp"] = (d) => System.Math.Exp(d),
-            ["ln"]  = (d) => System.Math.Log(d),
-            ["lg"]  = (d) => System.Math.Log10(d),
+            ["sin"] = (d) => Math.Sin(d),
+            ["cos"] = (d) => Math.Cos(d),
+            ["tg"]  = (d) => Math.Tan(d),
+            ["ctg"] = (d) => 1.0 / Math.Tan(d),
+            ["exp"] = (d) => Math.Exp(d),
+            ["ln"]  = (d) => Math.Log(d),
+            ["lg"]  = (d) => Math.Log10(d),
         };
         
         [NotNull] private readonly IExpression _expression;
@@ -128,18 +128,18 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
             if (binary != null)
             {
                 Func<Func<double, double, double>, double> func = f => f(ExecuteInternal(binary.LeftOperand, arguments), ExecuteInternal(binary.RightOperand, arguments));
-                switch (binary.OperatorToken)
+                switch (binary)
                 {
-                    case "+":
+                    case AddBinaryOperator _:
                         return func((a, b) => a + b);
-                    case "-":
+                    case SubtractBinaryOperator _:
                         return func((a, b) => a - b);
-                    case "*":
+                    case MultiplyBinaryOperator _:
                         return func((a, b) => a * b);
-                    case "/":
+                    case DivideBinaryOperator _:
                         return func((a, b) => a / b);
-                    case "^":
-                        return func(System.Math.Pow);
+                    case PowBinaryOperator _:
+                        return func(Math.Pow);
                     default:
                         throw new InvalidOperationException($"Unknown binary operator {expression} of type {expression.GetType().FullName}");
                 }                
