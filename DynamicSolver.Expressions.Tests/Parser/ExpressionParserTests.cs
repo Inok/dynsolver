@@ -116,6 +116,7 @@ namespace DynamicSolver.Expressions.Tests.Parser
         [TestCase("fn(1")]
         [TestCase("fn (1)")]
         [TestCase("fn1)")]
+        [TestCase("fun(x=1)")]
         public void ParseFunctionCall_InvalidInput_ThrowsFormatException(string input)
         {
             Assert.That(() => _parser.Parse(input), Throws.TypeOf<FormatException>());

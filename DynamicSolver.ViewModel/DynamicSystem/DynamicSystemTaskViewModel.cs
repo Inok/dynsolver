@@ -9,6 +9,7 @@ using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.Expressions.Analysis;
 using DynamicSolver.Expressions.Parser;
 using DynamicSolver.ViewModel.Common.Edit;
+using DynamicSolver.ViewModel.Common.Select;
 using JetBrains.Annotations;
 using ReactiveUI;
 
@@ -27,6 +28,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         [NotNull, ItemNotNull]
         public IReactiveList<EditViewModel<double?>> Variables { get; }
+
+        [NotNull]
+        public SelectViewModel<IDynamicSystemSolver> SolverSelect { get; }
 
         public double Step
         {
@@ -49,9 +53,20 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         public DynamicSystemSolverInput TaskInput => _taskInput.Value;
 
 
-        public DynamicSystemTaskViewModel([NotNull] IExpressionParser parser)
+        public DynamicSystemTaskViewModel([NotNull] IExpressionParser parser, [NotNull] IEnumerable<IDynamicSystemSolver> solvers)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
+            if (solvers == null) throw new ArgumentNullException(nameof(solvers));
+
+            var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
+            foreach (var solver in solvers)
+            {
+                solverSelect.AddItem(solver.Description.Name, solver);
+            }
+
+            solverSelect.SelectedItem = solverSelect.Items.FirstOrDefault();
+
+            SolverSelect = solverSelect;
 
             EquationSystemInputViewModel = new ExplicitOrdinaryDifferentialEquationSystemViewModel(parser);
             Variables = new ReactiveList<EditViewModel<double?>>

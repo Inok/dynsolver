@@ -42,8 +42,6 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         public IReactiveCommand Calculate { get; }
 
-        public SelectViewModel<IDynamicSystemSolver> SolverSelect { get; }
-
         public PlotModel ValuePlotModel
         {
             get { return _valuePlotModel; }
@@ -63,31 +61,20 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         }
 
         public SystemSolverViewModel(
-            [NotNull] IScreen hostScreen, 
-            [NotNull] IEnumerable<IDynamicSystemSolver> solvers,
-            [NotNull] IExecutableFunctionFactory functionFactory)
+            [NotNull] IScreen hostScreen,
+            [NotNull] IExecutableFunctionFactory functionFactory,
+            [NotNull] IEnumerable<IDynamicSystemSolver> solvers)
         {
             if (hostScreen == null) throw new ArgumentNullException(nameof(hostScreen));
-            if (solvers == null) throw new ArgumentNullException(nameof(solvers));
             if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
-
+            if (solvers == null) throw new ArgumentNullException(nameof(solvers));
 
             HostScreen = hostScreen;
             _functionFactory = functionFactory;
 
-            var solverSelect = new SelectViewModel<IDynamicSystemSolver>(false);
-            foreach (var solver in solvers)
-            {
-                solverSelect.AddItem(solver.Description.Name, solver);
-            }
+            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser(), solvers);
 
-            solverSelect.SelectedItem = solverSelect.Items.FirstOrDefault();
-
-            SolverSelect = solverSelect;
-
-            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
-
-            var inputObservable = this.WhenAnyValue(m => m.TaskViewModel.TaskInput, m => m.SolverSelect.SelectedItem);
+            var inputObservable = this.WhenAnyValue(m => m.TaskViewModel.TaskInput, m => m.TaskViewModel.SolverSelect.SelectedItem);
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
         }
@@ -103,7 +90,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             {
                 try
                 {
-                    var solver = SolverSelect.SelectedItem.Value;
+                    var solver = TaskViewModel.SolverSelect.SelectedItem.Value;
                     var baselineSolver = new DormandPrince8DynamicSystemSolver();
 
                     var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
@@ -137,7 +124,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             var startValues = input.System.InitialState;
 
             var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.System.Equations, input.System.InitialState, _functionFactory);
-            
+
             var sw = new Stopwatch();
             sw.Start();
             var actual = startValues.Yield().Concat(solver.Solve(definition, new FixedStepStrategy(input.Step))).Take(itemsCount).ToList();
@@ -145,11 +132,11 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new FixedStepStrategy(input.Step / 10)).Skipping(9, 9)).Take(itemsCount);
 
-            var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b});
-            
+            var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b });
+
             var names = input.System.Equations.Select(e => e.LeadingDerivative.Variable.Name).ToList();
-            var lines = names.Select(n => new {name = n, value = new LineSeries {Title = n}, deviation = new LineSeries {Title = n}}).ToList();
-            
+            var lines = names.Select(n => new { name = n, value = new LineSeries { Title = n }, deviation = new LineSeries { Title = n } }).ToList();
+
             foreach (var point in solves)
             {
                 var time = point.actual.IndependentVariable;

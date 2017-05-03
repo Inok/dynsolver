@@ -184,7 +184,7 @@ namespace DynamicSolver.Expressions.Parser
 
             if (lexer.AdvanceToken('(', false))
             {
-                var childExpr = ParseAssignment(lexer);
+                var childExpr = ParseAddSubtract(lexer);
 
                 lexer.SkipLeadingWhitespaces();
                 if (!lexer.AdvanceToken(')'))

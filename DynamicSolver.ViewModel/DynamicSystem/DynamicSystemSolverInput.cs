@@ -19,6 +19,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             System = system;
             Step = step;
             Time = time;
+
+
         }
     }
 }
