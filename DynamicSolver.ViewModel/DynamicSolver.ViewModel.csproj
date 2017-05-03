@@ -122,9 +122,9 @@
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
       <Name>DynamicSolver.DynamicSystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
+    <ProjectReference Include="..\DynamicSolver.CoreMath\DynamicSolver.CoreMath.csproj">
       <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
-      <Name>DynamicSolver.Expressions</Name>
+      <Name>DynamicSolver.CoreMath</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using DynamicSolver.Expressions.Execution.Compiler;
-using DynamicSolver.Expressions.Execution.Interpreter;
-using DynamicSolver.Expressions.Parser;
+using DynamicSolver.CoreMath.Execution.Compiler;
+using DynamicSolver.CoreMath.Execution.Interpreter;
+using DynamicSolver.CoreMath.Parser;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests.Experiments

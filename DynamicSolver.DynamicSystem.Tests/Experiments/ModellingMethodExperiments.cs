@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.CoreMath.Execution.Compiler;
+using DynamicSolver.CoreMath.Parser;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;
 using DynamicSolver.DynamicSystem.Solvers.Extrapolation;
 using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
 using DynamicSolver.DynamicSystem.Step;
-using DynamicSolver.Expressions.Execution.Compiler;
-using DynamicSolver.Expressions.Parser;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests.Experiments

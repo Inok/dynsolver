@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.CoreMath.Derivation;
+using DynamicSolver.CoreMath.Expression;
 using DynamicSolver.DynamicSystem.Solvers;
-using DynamicSolver.Expressions.Derivation;
-using DynamicSolver.Expressions.Expression;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem

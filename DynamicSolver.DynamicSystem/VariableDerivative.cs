@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DynamicSolver.Expressions.Expression;
+using DynamicSolver.CoreMath.Expression;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem
