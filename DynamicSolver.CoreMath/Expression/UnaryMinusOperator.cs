@@ -33,6 +33,11 @@ namespace DynamicSolver.CoreMath.Expression
             return obj is UnaryMinusOperator && Equals((UnaryMinusOperator) obj);
         }
 
+        public bool Equals(IExpression other)
+        {
+            return this.Equals((object)other);
+        }
+
         public override int GetHashCode()
         {
             return Operand.GetHashCode();

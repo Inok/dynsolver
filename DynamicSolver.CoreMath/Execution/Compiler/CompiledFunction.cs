@@ -15,20 +15,20 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
         
         public IReadOnlyCollection<string> OrderedArguments { get; }
 
-        public CompiledFunction([NotNull] IStatement statement)
+        public CompiledFunction([NotNull] IExpression expression)
         {
-            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
 
-            var analyzer = new ExpressionAnalyzer(statement);
+            var analyzer = new ExpressionAnalyzer(expression);
 
             if (!analyzer.IsComputable)
             {
-                throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
+                throw new ArgumentException("Expression is invalid: it is not computable.", nameof(expression));
             }
 
             var arguments = analyzer.Variables.OrderBy(s => s).ToList();
 
-            _function = BuildFunction(statement.Expression, arguments);
+            _function = BuildFunction(expression, arguments);
             OrderedArguments = new ReadOnlyCollection<string>(arguments);
         }
 

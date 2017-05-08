@@ -37,6 +37,11 @@ namespace DynamicSolver.CoreMath.Expression
             return obj is FunctionCall && Equals((FunctionCall) obj);
         }
 
+        public bool Equals(IExpression other)
+        {
+            return this.Equals((object)other);
+        }
+
         public override int GetHashCode()
         {
             unchecked

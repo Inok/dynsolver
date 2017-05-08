@@ -94,7 +94,7 @@ namespace DynamicSolver.DynamicSystem
                     throw new FormatException("Order of equations should be equal to 1.");
                 }
 
-                var derivatives = new DerivativeAnalyzer(eq.Function.Expression).AllVariableDerivatives();
+                var derivatives = new DerivativeAnalyzer(eq.Function).AllVariableDerivatives();
                 foreach (var d in derivatives)
                 {
                     functionDerivatives.Add(d);

@@ -32,7 +32,7 @@ namespace DynamicSolver.DynamicSystem
         }
 
         [NotNull]
-        public IDictionary<string, IDictionary<string, IStatement>> ExpressNextStateVariableValueExpressions([NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        public IDictionary<string, IDictionary<string, IExpression>> ExpressNextStateVariableValueExpressions([NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
             
@@ -41,7 +41,7 @@ namespace DynamicSolver.DynamicSystem
                 throw new ArgumentException("Equation system contains leading derivatives with order greater than 1", nameof(equationSystem));
             }
 
-            var result = new Dictionary<string, IDictionary<string, IStatement>>();
+            var result = new Dictionary<string, IDictionary<string, IExpression>>();
 
             var derivationService = new SymbolicDerivationService();
 
@@ -49,7 +49,7 @@ namespace DynamicSolver.DynamicSystem
 
             foreach (var equation in equationSystem.Equations)
             {
-                var derivativeDictionary = new Dictionary<string, IStatement>();
+                var derivativeDictionary = new Dictionary<string, IExpression>();
 
                 foreach (var leading in leadingVariables)
                 {

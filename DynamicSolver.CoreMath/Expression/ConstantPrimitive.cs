@@ -34,6 +34,11 @@ namespace DynamicSolver.CoreMath.Expression
             return Equals((ConstantPrimitive) obj);
         }
 
+        public bool Equals(IExpression other)
+        {
+            return this.Equals((object)other);
+        }
+
         public override int GetHashCode()
         {
             return Constant.GetHashCode();

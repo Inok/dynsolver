@@ -5,7 +5,7 @@ namespace DynamicSolver.CoreMath.Parser
 {
     public class ExpressionParser : IExpressionParser
     {
-        public IStatement Parse(string inputExpression)
+        public IExpression Parse(string inputExpression)
         {
             if (string.IsNullOrWhiteSpace(inputExpression)) throw new ArgumentException("Argument is null or empty", nameof(inputExpression));
 
@@ -18,7 +18,7 @@ namespace DynamicSolver.CoreMath.Parser
                 throw new FormatException($"End of expression expected, but was {lexer.Input}");
             }
 
-            return new Statement(expression);
+            return expression;
         }
 
         private static IExpression ParseAssignment(Lexer lexer)

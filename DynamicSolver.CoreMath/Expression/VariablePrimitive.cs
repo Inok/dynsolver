@@ -19,9 +19,8 @@ namespace DynamicSolver.CoreMath.Expression
             return $"{Name}";
         }
 
-        public bool Equals([NotNull] VariablePrimitive other)
+        public bool Equals(VariablePrimitive other)
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (other == null) return false;
 
             return Name.Equals(other.Name, StringComparison.Ordinal);
@@ -33,6 +32,11 @@ namespace DynamicSolver.CoreMath.Expression
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
             return Equals((VariablePrimitive) obj);
+        }
+
+        public bool Equals(IExpression other)
+        {
+            return this.Equals((object)other);
         }
 
         public override int GetHashCode()

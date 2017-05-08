@@ -10,19 +10,7 @@ namespace DynamicSolver.CoreMath.Derivation
     public class SymbolicDerivationService
     {
         [NotNull]
-        public IStatement GetDerivative([NotNull] IStatement statement, [NotNull] string respectToVariableName)
-        {
-            if (statement == null) throw new ArgumentNullException(nameof(statement));
-            if (string.IsNullOrWhiteSpace(respectToVariableName))
-            {
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof(respectToVariableName));
-            }
-
-            return new Statement(GetDerivative(statement.Expression, respectToVariableName));
-        }
-
-        [NotNull]
-        private IExpression GetDerivative([NotNull] IExpression expression, [NotNull] string respectToVariableName)
+        public IExpression GetDerivative([NotNull] IExpression expression, [NotNull] string respectToVariableName)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (string.IsNullOrWhiteSpace(respectToVariableName))

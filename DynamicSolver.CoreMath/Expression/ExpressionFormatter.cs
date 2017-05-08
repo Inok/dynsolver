@@ -72,8 +72,8 @@ namespace DynamicSolver.CoreMath.Expression
         private static string FormatNode(IFunctionCall fun) => $"{fun.FunctionName}({InternalFormat(fun.Argument)})";
 
         private static string FormatNode(IBinaryOperator binary)
-        { 
-            return $"{FormatBinary(binary, binary.LeftOperand)} {binary.OperatorToken} {FormatBinary(binary, binary.RightOperand)}";
+        {
+            return $"{FormatBinary(binary, binary.LeftOperand)} {GetBinaryOperatorToken(binary)} {FormatBinary(binary, binary.RightOperand)}";
         }
 
         private static string FormatBinary(IBinaryOperator _this, IExpression operand)
@@ -115,6 +115,20 @@ namespace DynamicSolver.CoreMath.Expression
             }
 
             return InternalFormat(operand);
+        }
+
+        private static string GetBinaryOperatorToken(IBinaryOperator binaryOperator)
+        {
+            switch (binaryOperator)
+            {
+                case AddBinaryOperator _: return "+";
+                case SubtractBinaryOperator _: return "-";
+                case MultiplyBinaryOperator _: return "*";
+                case DivideBinaryOperator _: return "/";
+                case PowBinaryOperator _: return "^";
+                case AssignmentBinaryOperator _: return "=";
+                default: throw new ArgumentOutOfRangeException(nameof(binaryOperator), binaryOperator.GetType().FullName, "OperatorToken is not found.");
+            }
         }
     }
 }

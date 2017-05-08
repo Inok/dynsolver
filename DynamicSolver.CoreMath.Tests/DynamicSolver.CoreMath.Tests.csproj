@@ -59,7 +59,7 @@
     </Compile>
     <Compile Include="Derivation\SymbolicDerivationServiceTests.cs" />
     <Compile Include="Expression\BinaryOperatorsPriorityComparerTests.cs" />
-    <Compile Include="Expression\ExpressionPrintingTests.cs" />
+    <Compile Include="Expression\ExpressionFormatterTests.cs" />
     <Compile Include="Execution\ExecutableFunctionTests.cs" />
     <Compile Include="Parser\ExpressionParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

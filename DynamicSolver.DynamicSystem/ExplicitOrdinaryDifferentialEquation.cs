@@ -8,17 +8,17 @@ namespace DynamicSolver.DynamicSystem
 {
     public class ExplicitOrdinaryDifferentialEquation
     {
-        private readonly IStatement _originalStatement;
+        private readonly IExpression _originalExpression;
 
         [NotNull]
         private static readonly ExpressionFormatter Formatter = new ExpressionFormatter();
 
         public VariableDerivative LeadingDerivative { get; }
-        public IStatement Function { get; }
+        public IExpression Function { get; }
 
-        private ExplicitOrdinaryDifferentialEquation(IStatement originalStatement, VariableDerivative leadingDerivative, IStatement function)
+        private ExplicitOrdinaryDifferentialEquation(IExpression originalExpression, VariableDerivative leadingDerivative, IExpression function)
         {
-            _originalStatement = originalStatement;
+            _originalExpression = originalExpression;
 
             LeadingDerivative = leadingDerivative;
             Function = function;
@@ -26,26 +26,27 @@ namespace DynamicSolver.DynamicSystem
 
         public override string ToString()
         {
-            return Formatter.Format(_originalStatement.Expression);
+            return Formatter.Format(_originalExpression);
         }
 
-        public static ExplicitOrdinaryDifferentialEquation FromStatement([NotNull] IStatement statement)
+        public static ExplicitOrdinaryDifferentialEquation FromExpression([NotNull] IExpression expression)
         {
-            if (statement == null) throw new ArgumentNullException(nameof(statement));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
             
-            if (!new ExpressionAnalyzer(statement).IsSimpleAssignment)
+            if (!new ExpressionAnalyzer(expression).IsSimpleAssignment)
             {
                 throw new FormatException("Statement is not simple assignment.");
             }
 
-            var assignmentOperator = (AssignmentBinaryOperator) statement.Expression;
+            var assignmentOperator = (AssignmentBinaryOperator) expression;
 
             var leftOperand = assignmentOperator.LeftOperand;
             var leftDerivativeAnalyzer = new DerivativeAnalyzer(leftOperand);
 
             if (!leftDerivativeAnalyzer.IsVariableDerivative)
             {
-                throw new FormatException($"Variable derivative expected at left side of statement, but was {new Statement(leftOperand)}.");
+                var formatter = new ExpressionFormatter();
+                throw new FormatException($"Variable derivative expected at left side of expression, but was {formatter.Format(leftOperand)}.");
             }
             var leadingDerivative = leftDerivativeAnalyzer.AsVariableDerivative();
 
@@ -54,7 +55,7 @@ namespace DynamicSolver.DynamicSystem
 
             if(!rightDerivativeAnalyzer.HasVariableDerivativesOnly)
             {
-                throw new FormatException("Right side of statement should have only derivatives of variables.");
+                throw new FormatException("Right side of expression should have only derivatives of variables.");
             }
 
             var derivatives = rightDerivativeAnalyzer.AllVariableDerivatives();
@@ -64,7 +65,7 @@ namespace DynamicSolver.DynamicSystem
                 throw new FormatException($"Expression contains derivative that has order greater than or equal to leading derivative order: {invalidDerivative}");
             }
 
-            return new ExplicitOrdinaryDifferentialEquation(statement, leadingDerivative, new Statement(rightOperand));
+            return new ExplicitOrdinaryDifferentialEquation(expression, leadingDerivative, rightOperand);
         }
     }
 }

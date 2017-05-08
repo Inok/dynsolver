@@ -14,12 +14,6 @@ namespace DynamicSolver.CoreMath.Analysis
 
         public IReadOnlyCollection<string> Variables => _variables ?? (_variables = (IReadOnlyCollection<string>) GetVariablesSet());
 
-        public ExpressionAnalyzer([NotNull] IStatement statement)
-        {
-            if (statement == null) throw new ArgumentNullException(nameof(statement));
-            _expression = statement.Expression;
-        }
-
         public ExpressionAnalyzer([NotNull] IExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));

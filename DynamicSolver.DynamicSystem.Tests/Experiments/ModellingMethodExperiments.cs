@@ -27,9 +27,9 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
 
             _equationSystem = new ExplicitOrdinaryDifferentialEquationSystem(new[]
                 {
-                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("x'= x*(2 + 0,456 - 10*(x^2 + y^2)) + z^2 + y^2 + 2*y")),
-                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("y'= -z^3 - (1 + y)*(z^2 + y^2 + 2*y) -4*x + 0,456*y")),
-                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("z' = (1+y)*z^2 + x^2 - 0,0357")),
+                    ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x'= x*(2 + 0,456 - 10*(x^2 + y^2)) + z^2 + y^2 + 2*y")),
+                    ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("y'= -z^3 - (1 + y)*(z^2 + y^2 + 2*y) -4*x + 0,456*y")),
+                    ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("z' = (1+y)*z^2 + x^2 - 0,0357")),
                 },
                 new DynamicSystemState(0, new Dictionary<string, double>() {["x"] = 0.1, ["y"] = 0, ["z"] = -0.1}),
                 new CompiledFunctionFactory());

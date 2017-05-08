@@ -19,7 +19,7 @@ namespace DynamicSolver.CoreMath.Tests.Execution
     {
         [NotNull] private readonly ExpressionParser _parser = new ExpressionParser();
 
-        private static IExecutableFunction CreateFunction(IStatement statement)
+        private static IExecutableFunction CreateFunction(IExpression statement)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace DynamicSolver.CoreMath.Tests.Execution
         [Test]
         public void Constructor_UnknownFunctionCall_Throws()
         {
-            Assert.That(() => CreateFunction(new Statement(new UnaryMinusOperator(new FunctionCall("foo", new NumericPrimitive("0"))))), Throws.ArgumentException);
+            Assert.That(() => CreateFunction(new UnaryMinusOperator(new FunctionCall("foo", new NumericPrimitive("0")))), Throws.ArgumentException);
         }
 
 

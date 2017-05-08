@@ -42,6 +42,13 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             _proportionTolerance = 1;
         }
 
+        public DynamicSystemSolverTests(Type solverType, int methodAccuracy, bool canReturnValuesOutOfFixedStepPoints)
+        {
+            _solver = (IDynamicSystemSolver)Activator.CreateInstance(solverType);
+            _methodAccuracy = methodAccuracy;
+            _proportionTolerance = 1;
+        }
+
         public DynamicSystemSolverTests(IDynamicSystemSolver solver, int methodAccuracy, float tolerance)
         {
             _solver = solver;
@@ -57,10 +64,10 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             _equationSystem = new ExplicitOrdinaryDifferentialEquationSystem(
                 new[]
                 {
-                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("x1'= -x1 - 2*x2 ")),
-                    ExplicitOrdinaryDifferentialEquation.FromStatement(parser.Parse("x2'= 3*x1 - 4*x2"))
+                    ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x1'= -x1 - 2*x2 ")),
+                    ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x2'= 3*x1 - 4*x2"))
                 },
-                new DynamicSystemState(0, new Dictionary<string, double>() {["x1"] = 1, ["x2"] = 2}),
+                new DynamicSystemState(0, new Dictionary<string, double>() { ["x1"] = 1, ["x2"] = 2 }),
                 new CompiledFunctionFactory()
             );
 
@@ -89,8 +96,14 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
                 double t = STEP * ++i;
                 Assert.That(actualValue.IndependentVariable, Is.EqualTo(t).Within(STEP * 10e-7));
                 Assert.That(actualValue.DependentVariables.Keys, Is.EquivalentTo(new[] { "x1", "x2" }));
-                Assert.That(actualValue.DependentVariables["x1"], Is.EqualTo(_expectedX1(t)).Within(accuracy), $"t = {t}, error = {_expectedX1(t) - actualValue.DependentVariables["x1"]}");
-                Assert.That(actualValue.DependentVariables["x2"], Is.EqualTo(_expectedX2(t)).Within(accuracy), $"t = {t}, error = {_expectedX2(t) - actualValue.DependentVariables["x2"]}");
+                Assert.That(
+                    actualValue.DependentVariables["x1"],
+                    Is.EqualTo(_expectedX1(t)).Within(accuracy),
+                    $"t = {t}, error = {_expectedX1(t) - actualValue.DependentVariables["x1"]}");
+                Assert.That(
+                    actualValue.DependentVariables["x2"],
+                    Is.EqualTo(_expectedX2(t)).Within(accuracy),
+                    $"t = {t}, error = {_expectedX2(t) - actualValue.DependentVariables["x2"]}");
             }
         }
 
@@ -109,7 +122,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             }
 
             const double step2 = STEP * 2;
-            var actual2 = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP*2)).Take(STEP_COUNT / 2).ToList();
+            var actual2 = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP * 2)).Take(STEP_COUNT / 2).ToList();
             double error2 = 0;
             for (var i = 0; i < actual2.Count; i++)
             {

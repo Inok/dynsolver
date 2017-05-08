@@ -5,8 +5,8 @@ namespace DynamicSolver.CoreMath.Expression
 {
     public abstract class BinaryOperator : IBinaryOperator, IEquatable<IBinaryOperator>
     {
-        public abstract string OperatorToken { get; }
-        
+        protected abstract string OperatorToken { get; }
+
         public IExpression LeftOperand { get; }
         public IExpression RightOperand { get; }
 
@@ -28,7 +28,7 @@ namespace DynamicSolver.CoreMath.Expression
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return string.Equals(OperatorToken, other.OperatorToken, StringComparison.Ordinal)
+            return this.GetType() == other.GetType()
                    && LeftOperand.Equals(other.LeftOperand)
                    && RightOperand.Equals(other.RightOperand);
         }
@@ -41,11 +41,16 @@ namespace DynamicSolver.CoreMath.Expression
             return other != null && Equals(other);
         }
 
+        public bool Equals(IExpression other)
+        {
+            return this.Equals((object)other);
+        }
+
         public override int GetHashCode()
         {
             unchecked
             {
-                return (OperatorToken.GetHashCode()*397 ^ LeftOperand.GetHashCode())*397 ^ RightOperand.GetHashCode();
+                return (OperatorToken.GetHashCode() * 397 ^ LeftOperand.GetHashCode()) * 397 ^ RightOperand.GetHashCode();
             }
         }
     }

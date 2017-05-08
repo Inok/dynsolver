@@ -1,6 +1,8 @@
-﻿namespace DynamicSolver.CoreMath.Expression
+﻿using System;
+
+namespace DynamicSolver.CoreMath.Expression
 {
-    public interface IExpression
+    public interface IExpression : IEquatable<IExpression>
     {
         
     }

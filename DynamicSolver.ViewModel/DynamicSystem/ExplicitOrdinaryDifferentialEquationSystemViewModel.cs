@@ -56,7 +56,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             {
                 try
                 {
-                    equations.Add(ExplicitOrdinaryDifferentialEquation.FromStatement(_parser.Parse(pair.line)));
+                    equations.Add(ExplicitOrdinaryDifferentialEquation.FromExpression(_parser.Parse(pair.line)));
                 }
                 catch (FormatException e)
                 {

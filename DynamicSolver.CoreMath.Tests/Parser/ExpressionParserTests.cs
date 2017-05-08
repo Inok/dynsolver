@@ -31,9 +31,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse(input);
 
-            Assert.That(actual.Expression, Is.InstanceOf<NumericPrimitive>());
+            Assert.That(actual, Is.InstanceOf<NumericPrimitive>());
 
-            var numeric = (NumericPrimitive)actual.Expression;
+            var numeric = (NumericPrimitive)actual;
             Assert.That(numeric.Token, Is.EqualTo(input));
             Assert.That(numeric.Value, Is.EqualTo(expectedValue));
         }
@@ -44,20 +44,20 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         [TestCase("1.3.1")]
         public void ParseNumeric_InvalidInput_ThrowsFormatException(string input)
         {
-            Assert.That(() => _parser.Parse(input), Throws.TypeOf<FormatException>());            
+            Assert.That(() => _parser.Parse(input), Throws.TypeOf<FormatException>());
         }
 
-        
+
         [TestCase("pi")]
         [TestCase("PI")]
         public void ParsePiConstant_ReturnsCorrectStatement(string input)
         {
             var actual = _parser.Parse(input);
 
-            Assert.That(actual.Expression, Is.InstanceOf<ConstantPrimitive>());
+            Assert.That(actual, Is.InstanceOf<ConstantPrimitive>());
 
-            var constant = (ConstantPrimitive)actual.Expression;
-            Assert.That(constant.Constant, Is.EqualTo(Constant.Pi));          
+            var constant = (ConstantPrimitive)actual;
+            Assert.That(constant.Constant, Is.EqualTo(Constant.Pi));
         }
 
         [TestCase("e")]
@@ -66,10 +66,10 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse(input);
 
-            Assert.That(actual.Expression, Is.InstanceOf<ConstantPrimitive>());
+            Assert.That(actual, Is.InstanceOf<ConstantPrimitive>());
 
-            var constant = (ConstantPrimitive)actual.Expression;
-            Assert.That(constant.Constant, Is.EqualTo(Constant.E));          
+            var constant = (ConstantPrimitive)actual;
+            Assert.That(constant.Constant, Is.EqualTo(Constant.E));
         }
 
         [TestCase("cos(1.5)", "cos", "1.5")]
@@ -85,13 +85,13 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse(input);
 
-            Assert.That(actual.Expression, Is.InstanceOf<FunctionCall>());
+            Assert.That(actual, Is.InstanceOf<FunctionCall>());
 
-            var function = (FunctionCall)actual.Expression;
+            var function = (FunctionCall)actual;
             Assert.That(function.FunctionName, Is.EqualTo(expectedFunctionName));
             Assert.That(function.Argument, Is.InstanceOf<NumericPrimitive>());
             Assert.That(((NumericPrimitive)function.Argument).Token, Is.EqualTo(expectedArgumentToken));
-            Assert.That(((NumericPrimitive)function.Argument).Value, Is.EqualTo(double.Parse(expectedArgumentToken, new NumberFormatInfo {NumberDecimalSeparator = "."})));
+            Assert.That(((NumericPrimitive)function.Argument).Value, Is.EqualTo(double.Parse(expectedArgumentToken, new NumberFormatInfo { NumberDecimalSeparator = "." })));
         }
 
         [Test]
@@ -99,16 +99,16 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse("sin(cos(pi))");
 
-            Assert.That(actual.Expression, Is.InstanceOf<FunctionCall>());
+            Assert.That(actual, Is.InstanceOf<FunctionCall>());
 
-            var function = (FunctionCall)actual.Expression;
+            var function = (FunctionCall)actual;
             Assert.That(function.FunctionName, Is.EqualTo("sin"));
             Assert.That(function.Argument, Is.InstanceOf<FunctionCall>());
 
             var nestedFunction = (FunctionCall)function.Argument;
             Assert.That(nestedFunction.FunctionName, Is.EqualTo("cos"));
             Assert.That(nestedFunction.Argument, Is.InstanceOf<ConstantPrimitive>());
-            Assert.That(((ConstantPrimitive)nestedFunction.Argument).Constant, Is.EqualTo(Constant.Pi));            
+            Assert.That(((ConstantPrimitive)nestedFunction.Argument).Constant, Is.EqualTo(Constant.Pi));
         }
 
         [TestCase("cos()")]
@@ -132,9 +132,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse(input);
 
-            Assert.That(actual.Expression, Is.InstanceOf<VariablePrimitive>());
+            Assert.That(actual, Is.InstanceOf<VariablePrimitive>());
 
-            var variable = (VariablePrimitive) actual.Expression;
+            var variable = (VariablePrimitive)actual;
             Assert.That(variable.Name, Is.EqualTo(input.Trim()));
         }
 
@@ -143,9 +143,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse("x''");
 
-            Assert.That(actual.Expression, Is.InstanceOf<DeriveUnaryOperator>());
+            Assert.That(actual, Is.InstanceOf<DeriveUnaryOperator>());
 
-            var derive = (DeriveUnaryOperator)actual.Expression;
+            var derive = (DeriveUnaryOperator)actual;
             Assert.That(derive.Operand, Is.InstanceOf<DeriveUnaryOperator>());
 
             derive = (DeriveUnaryOperator)derive.Operand;
@@ -153,7 +153,7 @@ namespace DynamicSolver.CoreMath.Tests.Parser
 
             Assert.That(derive.Operand, Is.InstanceOf<VariablePrimitive>());
 
-            var variable = (VariablePrimitive) derive.Operand;
+            var variable = (VariablePrimitive)derive.Operand;
             Assert.That(variable.Name, Is.EqualTo("x"));
         }
 
@@ -162,9 +162,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse("-(-(-10))");
 
-            Assert.That(actual.Expression, Is.InstanceOf<UnaryMinusOperator>());
+            Assert.That(actual, Is.InstanceOf<UnaryMinusOperator>());
 
-            var op1 = ((UnaryMinusOperator)actual.Expression).Operand;
+            var op1 = ((UnaryMinusOperator)actual).Operand;
             Assert.That(op1, Is.InstanceOf<UnaryMinusOperator>());
 
             var op2 = ((UnaryMinusOperator)op1).Operand;
@@ -202,9 +202,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse("-pi");
 
-            Assert.That(actual.Expression, Is.InstanceOf<UnaryMinusOperator>());
+            Assert.That(actual, Is.InstanceOf<UnaryMinusOperator>());
 
-            var minus = (UnaryMinusOperator) actual.Expression;
+            var minus = (UnaryMinusOperator)actual;
             Assert.That(minus.Operand, Is.InstanceOf<ConstantPrimitive>());
 
             var constant = (ConstantPrimitive)minus.Operand;
@@ -221,9 +221,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse($"cos(1){op}ln(t)");
 
-            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+            Assert.That(actual, Is.InstanceOf(operatorType));
 
-            var multiply = (BinaryOperator)actual.Expression;
+            var multiply = (BinaryOperator)actual;
             Assert.That(multiply.LeftOperand, Is.InstanceOf<FunctionCall>());
             Assert.That(((FunctionCall)multiply.LeftOperand).FunctionName, Is.EqualTo("cos"));
             Assert.That(((FunctionCall)multiply.LeftOperand).Argument, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("1"));
@@ -243,11 +243,11 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse($"x{op}2");
 
-            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+            Assert.That(actual, Is.InstanceOf(operatorType));
 
-            var pow = (BinaryOperator) actual.Expression;
+            var pow = (BinaryOperator)actual;
             Assert.That(pow.LeftOperand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("x"));
-            Assert.That(pow.RightOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("2"));            
+            Assert.That(pow.RightOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("2"));
         }
 
         [TestCase("=", typeof(AssignmentBinaryOperator))]
@@ -260,9 +260,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse($"(5){op}(y)");
 
-            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+            Assert.That(actual, Is.InstanceOf(operatorType));
 
-            var pow = (BinaryOperator) actual.Expression;
+            var pow = (BinaryOperator)actual;
             Assert.That(pow.LeftOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("5"));
             Assert.That(pow.RightOperand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("y"));
         }
@@ -277,9 +277,9 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         {
             var actual = _parser.Parse($"-x {op} -2");
 
-            Assert.That(actual.Expression, Is.InstanceOf(operatorType));
+            Assert.That(actual, Is.InstanceOf(operatorType));
 
-            var pow = (BinaryOperator) actual.Expression;
+            var pow = (BinaryOperator)actual;
             Assert.That(pow.LeftOperand, Is.InstanceOf<UnaryMinusOperator>());
             Assert.That(((UnaryMinusOperator)pow.LeftOperand).Operand, Is.InstanceOf<VariablePrimitive>().With.Property(nameof(VariablePrimitive.Name)).EqualTo("x"));
             Assert.That(pow.RightOperand, Is.InstanceOf<NumericPrimitive>().With.Property(nameof(NumericPrimitive.Token)).EqualTo("-2"));
@@ -289,18 +289,18 @@ namespace DynamicSolver.CoreMath.Tests.Parser
 
         private static IEnumerable<object[]> InvalidBinaryCases()
         {
-            var samples = new[] {"5#", "4# ", "#3", " #2", "1##0"};
-            var operators = new[] {"^", "*", "/", " +", "="};
+            var samples = new[] { "5#", "4# ", "#3", " #2", "1##0" };
+            var operators = new[] { "^", "*", "/", " +", "=" };
             foreach (var sample in samples)
             {
                 foreach (var op in operators)
                 {
-                    yield return new object[] {sample.Replace("#", op)};
+                    yield return new object[] { sample.Replace("#", op) };
                 }
             }
 
-            yield return new object[] {"5-"};
-            yield return new object[] {"4- "};            
+            yield return new object[] { "5-" };
+            yield return new object[] { "4- " };
         }
 
         [TestCaseSource(nameof(InvalidBinaryCases))]
@@ -312,7 +312,7 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         [Test]
         public void ParseComplexExpression_ReturnsCorrectStatement()
         {
-            IStatement expected = new Statement(
+            IExpression expected =
                 new AssignmentBinaryOperator(
                     new VariablePrimitive("y"),
                     new DivideBinaryOperator(
@@ -331,12 +331,14 @@ namespace DynamicSolver.CoreMath.Tests.Parser
                                         new MultiplyBinaryOperator(
                                             new VariablePrimitive("x"),
                                             new ConstantPrimitive(Constant.E))
-                                        ),
+                                    ),
                                     new ConstantPrimitive(Constant.Pi))
-                                ))))
-                );
+                            ))));
 
-            Assert.That(_parser.Parse("y = cos(-x * pi) / -((-1.5 - ln(x)) ^ (1 + x * e - pi))").Dump(), Is.EqualTo(expected.Dump()));
+            var actual = _parser.Parse("y = cos(-x * pi) / -((-1.5 - ln(x)) ^ (1 + x * e - pi))");
+
+            Assert.That(actual, Is.EqualTo(expected));
+            Assert.That(actual.Dump(), Is.EqualTo(expected.Dump()));
         }
     }
 }

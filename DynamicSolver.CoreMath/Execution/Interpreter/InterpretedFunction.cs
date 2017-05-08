@@ -25,12 +25,12 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
 
         public IReadOnlyCollection<string> OrderedArguments { get; }
 
-        public InterpretedFunction([NotNull] IStatement statement)
+        public InterpretedFunction([NotNull] IExpression expression)
         {
-            if (statement == null) throw new ArgumentNullException(nameof(statement));
-            if (!new ExpressionAnalyzer(statement).IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(statement));
+            if (expression == null) throw new ArgumentNullException(nameof(expression));
+            if (!new ExpressionAnalyzer(expression).IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(expression));
 
-            _expression = statement.Expression;
+            _expression = expression;
 
             var list = new List<string>();
 
