@@ -66,7 +66,9 @@
     <Compile Include="Solvers\Explicit\EulerCromerSolver.cs" />
     <Compile Include="Solvers\Explicit\ExplicitEulerSolver.cs" />
     <Compile Include="Solvers\Explicit\ExplicitMiddlePointDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\Explicit\ExplicitMiddlePointExtrapolationDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Extrapolation\ExtrapolationSolver.cs" />
+    <Compile Include="Solvers\Extrapolation\SymmetricExplicitMiddlePointExtrapolationSolver.cs" />
     <Compile Include="Solvers\SemiImplicit\KDDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Explicit\RungeKutta4DynamicSystemSolver.cs" />
     <Compile Include="Solvers\IDynamicSystemSolver.cs" />

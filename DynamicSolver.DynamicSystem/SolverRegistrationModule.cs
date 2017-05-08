@@ -53,6 +53,10 @@ namespace DynamicSolver.DynamicSystem
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 3)).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExtrapolationSolver(new KDDynamicSystemSolver(), 4)).InSingletonScope();
 
+            Bind<IDynamicSystemSolver>().ToMethod(c => new SymmetricExplicitMiddlePointExtrapolationSolver(2)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new SymmetricExplicitMiddlePointExtrapolationSolver(3)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new SymmetricExplicitMiddlePointExtrapolationSolver(4)).InSingletonScope();
+
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new RungeKutta4DynamicSystemSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince5DynamicSystemSolver()).InSingletonScope();
