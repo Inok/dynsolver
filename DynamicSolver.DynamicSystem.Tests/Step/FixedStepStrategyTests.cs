@@ -9,9 +9,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Step
         [Test]
         public void Factory_CreatesStepStrategyWithCorrectCurrentValue([Range(-3d, 3d, 0.5d)] double startValue)
         {
-            var factory = new FixedStepStrategy(0.1);
-
-            var stepper = factory.Create(startValue);
+            var stepper = new FixedStepStepper(0.1, startValue);
 
             Assert.That(stepper.CurrentStep, Is.Not.Null);
             Assert.That(stepper.CurrentStep.AbsoluteValue, Is.EqualTo(startValue));
@@ -24,9 +22,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Step
             [Range(0.1d, 1.5d, 0.3d)] double stepSize
         )
         {
-            var factory = new FixedStepStrategy(stepSize);
-
-            var stepper = factory.Create(startValue);
+            var stepper = new FixedStepStepper(stepSize, startValue);
 
             var newValue = stepper.MoveNext();
 
@@ -43,8 +39,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Step
             const double stepSize = 0.2;
             const double startValue = 1;
 
-            var factory = new FixedStepStrategy(stepSize);
-            var stepper = factory.Create(startValue);
+            var stepper = new FixedStepStepper(stepSize, startValue);
 
             var expectedValue = startValue;
             for (var i = 1; i <= 10; i++)

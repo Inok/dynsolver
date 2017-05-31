@@ -138,7 +138,7 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
                     case DivideBinaryOperator _:
                         return System.Linq.Expressions.Expression.Divide(left, right);
                     case PowBinaryOperator _:
-                        return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod("Pow"), left, right);
+                        return System.Linq.Expressions.Expression.Call(null, typeof(Math).GetMethod(nameof(Math.Pow)), left, right);
                     default:
                         throw new InvalidOperationException($"Unknown binary operator {expression} of type {expression.GetType().FullName}");
                 }

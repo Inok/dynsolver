@@ -13,13 +13,13 @@ namespace DynamicSolver.DynamicSystem.Solvers.Explicit
         protected abstract double[] B { get; }
 
 
-        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, IIndependentVariableStepStrategy stepStrategy)
+        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, ModellingTaskParameters parameters)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
-            if (stepStrategy == null) throw new ArgumentNullException(nameof(stepStrategy));
+            if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
             var functions = equationSystem.ExecutableFunctions;
-            var stepper = stepStrategy.Create(equationSystem.InitialState.IndependentVariable);
+            var stepper = new FixedStepStepper(parameters.Step, equationSystem.InitialState.IndependentVariable);
 
             var functionNameToIndex = functions.Select((f, i) => new { f, i }).ToDictionary(p => p.f.Name, p => p.i);
 

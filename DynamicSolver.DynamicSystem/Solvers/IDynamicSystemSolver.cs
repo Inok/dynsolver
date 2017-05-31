@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DynamicSolver.DynamicSystem.Step;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem.Solvers
@@ -12,7 +11,7 @@ namespace DynamicSolver.DynamicSystem.Solvers
         [NotNull, ItemNotNull]
         IEnumerable<DynamicSystemState> Solve(
             [NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem,
-            [NotNull] IIndependentVariableStepStrategy stepStrategy
+            [NotNull] ModellingTaskParameters parameters
         );
     }
 }

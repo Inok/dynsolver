@@ -28,7 +28,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
 
             var elapsed = TimeSpan.FromTicks(_sw.Elapsed.Ticks / _iterationCount);
 
-            Console.WriteLine($"{_title}: avg. of {_iterationCount, 2} runs is {elapsed} ({elapsed.Ticks} ticks)");
+            Console.WriteLine($"{elapsed} ({elapsed.Ticks, 10} ticks): avg. of {_iterationCount, 2} runs of {_title}");
         }
     }
 }

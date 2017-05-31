@@ -29,6 +29,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private PlotModel _valuePlotModel;
         private PlotModel _errorPlotModel;
         private TimeSpan? _elapsedTime;
+        private bool _showAbsoluteError = false;
 
         public DynamicSystemTaskViewModel TaskViewModel { get; }
 
@@ -38,6 +39,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         [NotNull]
         public BusyIndicatorViewModel BusyViewModel { get; } = new BusyIndicatorViewModel();
 
+
+        public bool ShowAbsoluteError
+        {
+            get { return _showAbsoluteError; }
+            set { this.RaiseAndSetIfChanged(ref _showAbsoluteError, value); }
+        }
 
         public IReactiveCommand Calculate { get; }
 
@@ -73,7 +80,11 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser(), solvers);
 
-            var inputObservable = this.WhenAnyValue(m => m.TaskViewModel.TaskInput, m => m.TaskViewModel.SolverSelect.SelectedItem);
+            var inputObservable = this.WhenAnyValue(
+                m => m.TaskViewModel.TaskInput,
+                m => m.TaskViewModel.SolverSelect.SelectedItem,
+                m => m.ShowAbsoluteError
+                );
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
         }
@@ -92,7 +103,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                     var solver = TaskViewModel.SolverSelect.SelectedItem.Value;
                     var baselineSolver = new DormandPrince8DynamicSystemSolver();
 
-                    var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver), token);
+                    var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver, ShowAbsoluteError), token);
 
                     ValuePlotModel = plotters.Item1;
                     ErrorPlotModel = plotters.Item2;
@@ -113,7 +124,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
         }
 
-        private Tuple<PlotModel, PlotModel, TimeSpan> FillPlotters([NotNull] DynamicSystemSolverInput input, [NotNull] IDynamicSystemSolver solver, [NotNull] IDynamicSystemSolver baselineSolver)
+        private Tuple<PlotModel, PlotModel, TimeSpan> FillPlotters([NotNull] DynamicSystemSolverInput input, [NotNull] IDynamicSystemSolver solver, [NotNull] IDynamicSystemSolver baselineSolver, bool showAbsoluteError)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
             if (solver == null) throw new ArgumentNullException(nameof(solver));
@@ -126,15 +137,15 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             var sw = new Stopwatch();
             sw.Start();
-            var actual = startValues.Yield().Concat(solver.Solve(definition, new FixedStepStrategy(input.Step))).Take(itemsCount).ToList();
+            var actual = startValues.Yield().Concat(solver.Solve(definition, new ModellingTaskParameters(input.Step))).Take(itemsCount).ToList();
             sw.Stop();
 
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new FixedStepStrategy(input.Step / 10)).Skipping(9, 9)).Take(itemsCount);
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new ModellingTaskParameters(input.Step / 10)).Skipping(9, 9)).Take(itemsCount);
 
             var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b });
 
             var names = input.System.Equations.Select(e => e.LeadingDerivative.Variable.Name).ToList();
-            var lines = names.Select(n => new { name = n, value = new LineSeries { Title = n }, deviation = new LineSeries { Title = n } }).ToList();
+            var lines = names.Select(n => new { name = n, value = new LineSeries { Title = n }, error = new LineSeries { Title = n } }).ToList();
 
             foreach (var point in solves)
             {
@@ -143,7 +154,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 {
                     var val = point.actual.DependentVariables[line.name];
                     line.value.Points.Add(new DataPoint(time, val));
-                    line.deviation.Points.Add(new DataPoint(time, point.baseline.DependentVariables[line.name] - val));
+
+                    var error = point.baseline.DependentVariables[line.name] - val;
+                    line.error.Points.Add(new DataPoint(time, showAbsoluteError ? Math.Abs(error) : error));
                 }
             }
 
@@ -158,7 +171,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             foreach (var lineSeries in lines)
             {
                 actualPlot.Series.Add(lineSeries.value);
-                errorPlot.Series.Add(lineSeries.deviation);
+                errorPlot.Series.Add(lineSeries.error);
             }
 
             return new Tuple<PlotModel, PlotModel, TimeSpan>(actualPlot, errorPlot, sw.Elapsed);

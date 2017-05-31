@@ -6,7 +6,6 @@ using DynamicSolver.CoreMath.Parser;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;
 using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
-using DynamicSolver.DynamicSystem.Step;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests.Solvers
@@ -15,19 +14,21 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(EulerCromerSolver), 1)]
 
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2)]
-
+    
     [TestFixture(typeof(RungeKutta4DynamicSystemSolver), 4)]
     [TestFixture(typeof(DormandPrince5DynamicSystemSolver), 5)]
     [TestFixture(typeof(DormandPrince7DynamicSystemSolver), 7)]
     [TestFixture(typeof(DormandPrince8DynamicSystemSolver), 8)]
 
-    [TestFixture(typeof(KDDynamicSystemSolver), 2)]
+    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 2)]
+    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 2)]    
     public class DynamicSystemSolverTests
     {
         private const double STEP = 0.1;
         private const int STEP_COUNT = (int)(100d / STEP);
         private readonly int _methodAccuracy;
         private readonly double _proportionTolerance;
+        private readonly double _absoluteErrorTolerance;
 
         private readonly IDynamicSystemSolver _solver;
 
@@ -36,26 +37,28 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         private Func<double, double> _expectedX2;
 
         public DynamicSystemSolverTests(Type solverType, int methodAccuracy)
+            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, null, null)
         {
-            _solver = (IDynamicSystemSolver)Activator.CreateInstance(solverType);
-            _methodAccuracy = methodAccuracy;
-            _proportionTolerance = 1;
+            
         }
 
-        public DynamicSystemSolverTests(Type solverType, int methodAccuracy, bool canReturnValuesOutOfFixedStepPoints)
+        public DynamicSystemSolverTests(Type solverType, int methodAccuracy, double absoluteErrorTolerance)
+            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, absoluteErrorTolerance, null)
         {
-            _solver = (IDynamicSystemSolver)Activator.CreateInstance(solverType);
-            _methodAccuracy = methodAccuracy;
-            _proportionTolerance = 1;
         }
 
-        public DynamicSystemSolverTests(IDynamicSystemSolver solver, int methodAccuracy, float tolerance)
+        protected DynamicSystemSolverTests(
+            IDynamicSystemSolver solver,
+            int methodAccuracy,
+            double? absoluteErrorTolerance = null,
+            float? proportionTolerance = null)
         {
             _solver = solver;
             _methodAccuracy = methodAccuracy;
-            _proportionTolerance = tolerance;
+            _absoluteErrorTolerance = absoluteErrorTolerance ?? (3 * Math.Pow(STEP, methodAccuracy));
+            _proportionTolerance = proportionTolerance ?? 1;
         }
-
+        
         [SetUp]
         public void Setup()
         {
@@ -84,11 +87,9 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         [Test]
         public void Solve_ReturnsResultEqualToSystemSolution()
         {
-            var actual = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP)).Take(STEP_COUNT).ToList();
+            var actual = _solver.Solve(_equationSystem, new ModellingTaskParameters(STEP)).Take(STEP_COUNT).ToList();
 
             Assert.That(actual.Count, Is.EqualTo(STEP_COUNT));
-
-            var accuracy = 3 * Math.Pow(STEP, _methodAccuracy);
 
             int i = 0;
             foreach (var actualValue in actual)
@@ -98,11 +99,11 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
                 Assert.That(actualValue.DependentVariables.Keys, Is.EquivalentTo(new[] { "x1", "x2" }));
                 Assert.That(
                     actualValue.DependentVariables["x1"],
-                    Is.EqualTo(_expectedX1(t)).Within(accuracy),
+                    Is.EqualTo(_expectedX1(t)).Within(_absoluteErrorTolerance),
                     $"t = {t}, error = {_expectedX1(t) - actualValue.DependentVariables["x1"]}");
                 Assert.That(
                     actualValue.DependentVariables["x2"],
-                    Is.EqualTo(_expectedX2(t)).Within(accuracy),
+                    Is.EqualTo(_expectedX2(t)).Within(_absoluteErrorTolerance),
                     $"t = {t}, error = {_expectedX2(t) - actualValue.DependentVariables["x2"]}");
             }
         }
@@ -110,27 +111,19 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         [Test]
         public void Solve_WithProportionalStep_ErrorsHasProportionalValue()
         {
-            var actual1 = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP)).Take(STEP_COUNT).ToList();
             double error1 = 0;
-            for (var i = 0; i < actual1.Count; i++)
+            foreach (var state in _solver.Solve(_equationSystem, new ModellingTaskParameters(STEP)).Take(STEP_COUNT))
             {
-                var t = STEP * (i + 1);
-
-                var err1 = Math.Abs(actual1[i].DependentVariables["x1"] - _expectedX1(t));
-                var err2 = Math.Abs(actual1[i].DependentVariables["x2"] - _expectedX2(t));
+                var err1 = Math.Abs(state.DependentVariables["x1"] - _expectedX1(state.IndependentVariable));
+                var err2 = Math.Abs(state.DependentVariables["x2"] - _expectedX2(state.IndependentVariable));
                 error1 = Math.Max(Math.Max(err1, err2), error1);
             }
 
-            const double step2 = STEP * 2;
-            var actual2 = _solver.Solve(_equationSystem, new FixedStepStrategy(STEP * 2)).Take(STEP_COUNT / 2).ToList();
             double error2 = 0;
-            for (var i = 0; i < actual2.Count; i++)
+            foreach (var state in _solver.Solve(_equationSystem, new ModellingTaskParameters(STEP*2)).Take(STEP_COUNT / 2))
             {
-                var t = step2 * (i + 1);
-
-                var err1 = Math.Abs(actual2[i].DependentVariables["x1"] - _expectedX1(t));
-                var err2 = Math.Abs(actual2[i].DependentVariables["x2"] - _expectedX2(t));
-
+                var err1 = Math.Abs(state.DependentVariables["x1"] - _expectedX1(state.IndependentVariable));
+                var err2 = Math.Abs(state.DependentVariables["x2"] - _expectedX2(state.IndependentVariable));
                 error2 = Math.Max(Math.Max(err1, err2), error2);
             }
 

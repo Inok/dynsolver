@@ -11,13 +11,13 @@ namespace DynamicSolver.DynamicSystem
     public class ExplicitOrdinaryDifferentialEquationSystem : IExplicitOrdinaryDifferentialEquationSystem
     {
         [NotNull]
-        public IExecutableFunctionFactory FunctionFactory { get; private set; }
+        public IExecutableFunctionFactory FunctionFactory { get; }
 
         [NotNull]
-        public IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> Equations { get; private set; }
+        public IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> Equations { get; }
 
         [NotNull]
-        public DynamicSystemState InitialState { get; private set; }
+        public DynamicSystemState InitialState { get; }
 
         private IReadOnlyList<ExecutableFunctionInfo> _executableFunctions;
         [NotNull] public IReadOnlyList<ExecutableFunctionInfo> ExecutableFunctions
@@ -56,7 +56,6 @@ namespace DynamicSolver.DynamicSystem
             if (equations == null) throw new ArgumentNullException(nameof(equations));
             if (initialState == null) throw new ArgumentNullException(nameof(initialState));
             if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
-
 
             var equationList = equations.ToList();
             ValidateEquationsSystem(equationList);

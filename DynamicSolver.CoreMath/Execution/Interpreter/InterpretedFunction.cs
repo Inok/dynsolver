@@ -127,19 +127,21 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
             var binary = expression as IBinaryOperator;
             if (binary != null)
             {
-                Func<Func<double, double, double>, double> func = f => f(ExecuteInternal(binary.LeftOperand, arguments), ExecuteInternal(binary.RightOperand, arguments));
+                var leftValue = ExecuteInternal(binary.LeftOperand, arguments);
+                var rightValue = ExecuteInternal(binary.RightOperand, arguments);
+
                 switch (binary)
                 {
                     case AddBinaryOperator _:
-                        return func((a, b) => a + b);
+                        return leftValue + rightValue;
                     case SubtractBinaryOperator _:
-                        return func((a, b) => a - b);
+                        return leftValue - rightValue;
                     case MultiplyBinaryOperator _:
-                        return func((a, b) => a * b);
+                        return leftValue * rightValue;
                     case DivideBinaryOperator _:
-                        return func((a, b) => a / b);
+                        return leftValue / rightValue;
                     case PowBinaryOperator _:
-                        return func(Math.Pow);
+                        return Math.Pow(leftValue, rightValue);
                     default:
                         throw new InvalidOperationException($"Unknown binary operator {expression} of type {expression.GetType().FullName}");
                 }                
