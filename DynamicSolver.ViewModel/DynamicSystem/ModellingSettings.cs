@@ -1,26 +1,26 @@
 ﻿using System;
+using DynamicSolver.DynamicSystem.Solvers;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.ViewModel.DynamicSystem
 {
-    public class DynamicSystemSolverInput
+    public class ModellingSettings
     {
-        public ExplicitOrdinaryDifferentialEquationSystemDefinition System { get; }
+        public IDynamicSystemSolver Solver { get; }
 
         public double Step { get; }
+
         public double Time { get; }
 
-        public DynamicSystemSolverInput([NotNull] ExplicitOrdinaryDifferentialEquationSystemDefinition system, double step, double time)
+        public ModellingSettings([NotNull] IDynamicSystemSolver solver, double step, double time)
         {
-            if (system == null) throw new ArgumentNullException(nameof(system));
+            if (solver == null) throw new ArgumentNullException(nameof(solver));
             if (step <= 0) throw new ArgumentOutOfRangeException(nameof(step));
             if (time <= 0) throw new ArgumentOutOfRangeException(nameof(time));
 
-            System = system;
+            Solver = solver;
             Step = step;
             Time = time;
-
-
         }
     }
 }

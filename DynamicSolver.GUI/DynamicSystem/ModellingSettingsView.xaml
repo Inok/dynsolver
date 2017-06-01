@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="DynamicSolver.GUI.DynamicSystem.ModellingSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             x:Name="UserControl" mc:Ignorable="d">
+    
+    <WrapPanel DataContext="{Binding ViewModel,  ElementName=UserControl}" Margin="5,0">
+        <WrapPanel.Resources>
+            <Style TargetType="xctk:DoubleUpDown">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="MinWidth" Value="100" />
+                <Setter Property="Margin" Value="5,2" />
+                <Setter Property="Padding" Value="0,1" />
+                <Setter Property="AllowInputSpecialValues" Value="None" />
+            </Style>
+        </WrapPanel.Resources>
+
+        <StackPanel>
+            <Label Content="Solver:"></Label>
+            <ComboBox ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
+                      DisplayMemberPath="Name" MinWidth="150" VerticalAlignment="Bottom" Margin="0,2"/>
+        </StackPanel>
+
+        <StackPanel>
+            <Label Content="Extrapolation:" />
+            <ComboBox ItemsSource="{Binding ExtrapolationStagesSelect.Items}" SelectedItem="{Binding ExtrapolationStagesSelect.SelectedItem, Mode=TwoWay}"
+                      DisplayMemberPath="Name" MinWidth="100" VerticalAlignment="Bottom" Margin="5,2" />
+        </StackPanel>
+
+        <StackPanel>
+            <Label Content="Step:"></Label>
+            <xctk:DoubleUpDown Value="{Binding Step, Mode=TwoWay}" Minimum="0.0001" Increment="0.1" FormatString="0.00###" />
+        </StackPanel>
+
+        <StackPanel>
+            <Label Content="Time:"></Label>
+            <xctk:DoubleUpDown Value="{Binding Time, Mode=TwoWay}" Minimum="0.1" Increment="1" FormatString="0.0###" />
+        </StackPanel>
+
+    </WrapPanel>
+
+
+</UserControl>

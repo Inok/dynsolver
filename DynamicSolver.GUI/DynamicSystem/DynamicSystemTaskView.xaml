@@ -37,40 +37,5 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-
-        <WrapPanel Margin="5,0">
-            <WrapPanel.Resources>
-                <Style TargetType="xctk:DoubleUpDown">
-                    <Setter Property="HorizontalAlignment" Value="Left" />
-                    <Setter Property="MinWidth" Value="100" />
-                    <Setter Property="Margin" Value="5,2" />
-                    <Setter Property="Padding" Value="0,1" />
-                    <Setter Property="AllowInputSpecialValues" Value="None" />
-                </Style>
-            </WrapPanel.Resources>
-
-            <StackPanel>
-                <Label Content="Solver:"></Label>
-                <ComboBox ItemsSource="{Binding SolverSelect.Items}" SelectedItem="{Binding SolverSelect.SelectedItem, Mode=TwoWay}"
-                          DisplayMemberPath="Name" MinWidth="150" VerticalAlignment="Bottom" Margin="0,2"/>
-            </StackPanel>
-
-            <StackPanel>
-                <Label Content="Step:"></Label>
-                <xctk:DoubleUpDown Value="{Binding Step, Mode=TwoWay}" Minimum="0.0001" Increment="0.1" FormatString="0.00###" />
-            </StackPanel>
-
-            <StackPanel>
-                <Label Content="Time:"></Label>
-                <xctk:DoubleUpDown Value="{Binding Time, Mode=TwoWay}" Minimum="0.1" Increment="1" FormatString="0.0###" />
-            </StackPanel>
-
-            <StackPanel>
-                <Label Content="Initial time:"></Label>
-                <xctk:DoubleUpDown Value="{Binding InitialTime, Mode=TwoWay}" Increment="1" FormatString="0.0###" />
-            </StackPanel>
-
-        </WrapPanel>
-
     </StackPanel>
 </UserControl>

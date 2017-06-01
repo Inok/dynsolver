@@ -10,10 +10,8 @@ using DynamicSolver.CoreMath.Parser;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;
-using DynamicSolver.DynamicSystem.Step;
 using DynamicSolver.ViewModel.Common.Busy;
 using DynamicSolver.ViewModel.Common.ErrorList;
-using DynamicSolver.ViewModel.Common.Select;
 using Inok.Tools.Linq;
 using JetBrains.Annotations;
 using OxyPlot;
@@ -32,6 +30,8 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private bool _showAbsoluteError = false;
 
         public DynamicSystemTaskViewModel TaskViewModel { get; }
+        
+        public ModellingSettingsViewModel ModellingSettingsViewModel { get; }
 
         [NotNull]
         public ErrorListViewModel ErrorListViewModel { get; } = new ErrorListViewModel();
@@ -78,20 +78,21 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             HostScreen = hostScreen;
             _functionFactory = functionFactory;
 
-            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser(), solvers);
+            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
+            ModellingSettingsViewModel = new ModellingSettingsViewModel(solvers);
 
             var inputObservable = this.WhenAnyValue(
-                m => m.TaskViewModel.TaskInput,
-                m => m.TaskViewModel.SolverSelect.SelectedItem,
+                m => m.TaskViewModel.EquationSystem,
+                m => m.ModellingSettingsViewModel.ModellingSettings,
                 m => m.ShowAbsoluteError
-                );
+            );
             Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
             inputObservable.InvokeCommand(this, m => m.Calculate);
         }
 
         private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
         {
-            var input = TaskViewModel.TaskInput;
+            var input = TaskViewModel.EquationSystem;
             if (input == null) return;
 
             ErrorListViewModel.Errors.Clear();
@@ -100,10 +101,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             {
                 try
                 {
-                    var solver = TaskViewModel.SolverSelect.SelectedItem.Value;
-                    var baselineSolver = new DormandPrince8DynamicSystemSolver();
-
-                    var plotters = await Task.Run(() => FillPlotters(input, solver, baselineSolver, ShowAbsoluteError), token);
+                    var plotters = await Task.Run(() => FillPlotters(input, ModellingSettingsViewModel.ModellingSettings, ShowAbsoluteError), token);
 
                     ValuePlotModel = plotters.Item1;
                     ErrorPlotModel = plotters.Item2;
@@ -124,27 +122,32 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
         }
 
-        private Tuple<PlotModel, PlotModel, TimeSpan> FillPlotters([NotNull] DynamicSystemSolverInput input, [NotNull] IDynamicSystemSolver solver, [NotNull] IDynamicSystemSolver baselineSolver, bool showAbsoluteError)
+        private Tuple<PlotModel, PlotModel, TimeSpan> FillPlotters(
+            [NotNull] ExplicitOrdinaryDifferentialEquationSystemDefinition input,
+            [NotNull] ModellingSettings modellingSettings,
+            bool showAbsoluteError)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
-            if (solver == null) throw new ArgumentNullException(nameof(solver));
-            if (baselineSolver == null) throw new ArgumentNullException(nameof(baselineSolver));
+            if (modellingSettings == null) throw new ArgumentNullException(nameof(modellingSettings));
 
-            var itemsCount = (int)(input.Time / input.Step);
-            var startValues = input.System.InitialState;
+            var solver = modellingSettings.Solver;
+            var baselineSolver = new DormandPrince8DynamicSystemSolver();
+            
+            var itemsCount = (int)(modellingSettings.Time / modellingSettings.Step);
+            var startValues = input.InitialState;
 
-            var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.System.Equations, input.System.InitialState, _functionFactory);
+            var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.Equations, input.InitialState, _functionFactory);
 
             var sw = new Stopwatch();
             sw.Start();
-            var actual = startValues.Yield().Concat(solver.Solve(definition, new ModellingTaskParameters(input.Step))).Take(itemsCount).ToList();
+            var actual = startValues.Yield().Concat(solver.Solve(definition, new ModellingTaskParameters(modellingSettings.Step))).Take(itemsCount).ToList();
             sw.Stop();
 
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new ModellingTaskParameters(input.Step / 10)).Skipping(9, 9)).Take(itemsCount);
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new ModellingTaskParameters(modellingSettings.Step / 10)).Skipping(9, 9)).Take(itemsCount);
 
             var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b });
 
-            var names = input.System.Equations.Select(e => e.LeadingDerivative.Variable.Name).ToList();
+            var names = input.Equations.Select(e => e.LeadingDerivative.Variable.Name).ToList();
             var lines = names.Select(n => new { name = n, value = new LineSeries { Title = n }, error = new LineSeries { Title = n } }).ToList();
 
             foreach (var point in solves)

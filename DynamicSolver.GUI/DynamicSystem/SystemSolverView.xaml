@@ -11,12 +11,14 @@
     <Grid DataContext="{Binding ViewModel,  ElementName=UserControl}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <dynamicSystem:DynamicSystemTaskView ViewModel="{Binding TaskViewModel}" />
+        <dynamicSystem:ModellingSettingsView Grid.Row="1" ViewModel="{Binding ModellingSettingsViewModel}" />
 
-        <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding BusyViewModel.IsBusy}">
+        <xctk:BusyIndicator Grid.Row="2" IsBusy="{Binding BusyViewModel.IsBusy}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" MinHeight="25" />

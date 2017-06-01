@@ -111,6 +111,9 @@
     <Compile Include="Common\ErrorListView.xaml.cs">
       <DependentUpon>ErrorListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DynamicSystem\ModellingSettingsView.xaml.cs">
+      <DependentUpon>ModellingSettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DynamicSystem\SystemSolverView.xaml.cs">
       <DependentUpon>SystemSolverView.xaml</DependentUpon>
     </Compile>
@@ -122,6 +125,10 @@
     <Page Include="Common\ErrorListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DynamicSystem\ModellingSettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="DynamicSystem\SystemSolverView.xaml">
       <Generator>MSBuild:Compile</Generator>
