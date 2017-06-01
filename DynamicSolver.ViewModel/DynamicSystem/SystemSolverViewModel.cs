@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -46,7 +47,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _showAbsoluteError, value); }
         }
 
-        public IReactiveCommand Calculate { get; }
+        public ReactiveCommand Calculate { get; }
 
         public PlotModel ValuePlotModel
         {
@@ -86,11 +87,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 m => m.ModellingSettingsViewModel.ModellingSettings,
                 m => m.ShowAbsoluteError
             );
-            Calculate = ReactiveCommand.CreateAsyncTask(inputObservable.Select(input => input.Item1 != null && input.Item2 != null), CalculateAsync);
-            inputObservable.InvokeCommand(this, m => m.Calculate);
+            
+            Calculate = ReactiveCommand.CreateFromTask(CalculateAsync, inputObservable.Select(input => input.Item1 != null && input.Item2 != null));
+            inputObservable.Select(_ => Unit.Default).InvokeCommand(this, m => m.Calculate);
         }
 
-        private async Task CalculateAsync(object obj, CancellationToken token = default(CancellationToken))
+        private async Task CalculateAsync(CancellationToken token = default(CancellationToken))
         {
             var input = TaskViewModel.EquationSystem;
             if (input == null) return;
