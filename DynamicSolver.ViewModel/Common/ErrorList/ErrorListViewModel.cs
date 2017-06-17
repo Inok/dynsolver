@@ -1,4 +1,5 @@
-﻿using System.Reactive.Linq;
+﻿using System.Reactive;
+using System.Reactive.Linq;
 using JetBrains.Annotations;
 using ReactiveUI;
 
@@ -11,7 +12,6 @@ namespace DynamicSolver.ViewModel.Common.ErrorList
 
         private readonly ObservableAsPropertyHelper<bool> _hasErrors;
         public bool HasErrors => _hasErrors.Value;
-
 
         public ErrorListViewModel()
         {

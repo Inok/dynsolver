@@ -30,26 +30,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb">
+      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NextStateVariableValueCalculationServiceTests.cs" />
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Experiments\ExecutionStrategyExperiments.cs" />
+    <Compile Include="Experiments\ExecutionTimeAnalyzer.cs" />
+    <Compile Include="Experiments\ModellingMethodExperiments.cs" />
+    <Compile Include="Solvers\DynamicSystemSolverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DynamicSystemSolverTests.cs" />
+    <Compile Include="Solvers\ExtrapolationDynamicSystemSolverTests.cs" />
+    <Compile Include="Step\FixedStepStrategyTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj">
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
       <Name>DynamicSolver.DynamicSystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.Expressions\DynamicSolver.Expressions.csproj">
+    <ProjectReference Include="..\DynamicSolver.CoreMath\DynamicSolver.CoreMath.csproj">
       <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
-      <Name>DynamicSolver.Expressions</Name>
+      <Name>DynamicSolver.CoreMath</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

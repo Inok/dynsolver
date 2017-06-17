@@ -11,8 +11,8 @@ namespace DynamicSolver.GUI.DynamicSystem
 
         public DynamicSystemTaskViewModel ViewModel
         {
-            get { return (DynamicSystemTaskViewModel) GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (DynamicSystemTaskViewModel) GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         public DynamicSystemTaskView()
@@ -22,8 +22,8 @@ namespace DynamicSolver.GUI.DynamicSystem
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (DynamicSystemTaskViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (DynamicSystemTaskViewModel) value;
         }
     }
 }

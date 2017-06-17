@@ -12,14 +12,14 @@ namespace DynamicSolver.GUI.DynamicSystem
 
         public SystemSolverViewModel ViewModel
         {
-            get { return (SystemSolverViewModel) GetValue(ViewModelProperty); }
-            set { SetValue(ViewModelProperty, value); }
+            get => (SystemSolverViewModel) GetValue(ViewModelProperty);
+            set => SetValue(ViewModelProperty, value);
         }
 
         object IViewFor.ViewModel
         {
-            get { return ViewModel; }
-            set { ViewModel = (SystemSolverViewModel) value; }
+            get => ViewModel;
+            set => ViewModel = (SystemSolverViewModel) value;
         }
 
         public SystemSolverView()

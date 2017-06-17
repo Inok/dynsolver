@@ -1,11 +1,11 @@
 ﻿using System;
-using DynamicSolver.DynamicSystem.Solver;
-using DynamicSolver.Expressions.Execution;
-using DynamicSolver.Expressions.Execution.Compiler;
-using DynamicSolver.Expressions.Execution.Interpreter;
-using DynamicSolver.Expressions.Parser;
+using DynamicSolver.CoreMath.Execution;
+using DynamicSolver.CoreMath.Execution.Compiler;
+using DynamicSolver.CoreMath.Execution.Interpreter;
+using DynamicSolver.DynamicSystem.Solvers;
+using DynamicSolver.DynamicSystem.Solvers.Explicit;
+using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
 using Ninject.Modules;
-using Ninject.Parameters;
 
 namespace DynamicSolver.DynamicSystem
 {
@@ -26,7 +26,6 @@ namespace DynamicSolver.DynamicSystem
 
         public override void Load()
         {
-            Bind<IExpressionParser>().To<ExpressionParser>();
             switch (_factoryType)
             {
                 case FunctionFactoryType.Compiled:
@@ -39,14 +38,19 @@ namespace DynamicSolver.DynamicSystem
                     throw new ArgumentOutOfRangeException();
             }
 
-            Bind<IDynamicSystemSolver>().To<EulerDynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 3));
-            Bind<IDynamicSystemSolver>().To<ExtrapolationEulerDynamicSystemSolver>().WithParameter(new ConstructorArgument("extrapolationStageCount", 4));
-            Bind<IDynamicSystemSolver>().To<RungeKutta4DynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<KDDynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<DormandPrince5DynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<DormandPrince7DynamicSystemSolver>();
-            Bind<IDynamicSystemSolver>().To<DormandPrince8DynamicSystemSolver>();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitEulerSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new EulerCromerSolver()).InSingletonScope();
+
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFirstExplicitDynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFirstImplicitDynamicSystemSolver()).InSingletonScope();
+            
+            Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new SymmetricExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
+            
+            Bind<IDynamicSystemSolver>().ToMethod(c => new RungeKutta4DynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince5DynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince7DynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new DormandPrince8DynamicSystemSolver()).InSingletonScope();
         }
     }
 }

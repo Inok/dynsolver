@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.CoreMath.Parser;
 using DynamicSolver.DynamicSystem;
-using DynamicSolver.Expressions.Parser;
 using DynamicSolver.ViewModel.Common.ErrorList;
 using JetBrains.Annotations;
 using ReactiveUI;
@@ -14,7 +14,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private readonly IExpressionParser _parser;
 
         private string _input;
-        private ExplicitOrdinaryDifferentialEquationSystem _equationSystem;
+        private IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> _equationSystem;
 
         [CanBeNull]
         public string Input
@@ -27,7 +27,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         public ErrorListViewModel ErrorListViewModel { get; }
 
         [CanBeNull]
-        public ExplicitOrdinaryDifferentialEquationSystem EquationSystem
+        public IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> EquationSystem
         {
             get { return _equationSystem; }
             set { this.RaiseAndSetIfChanged(ref _equationSystem, value); }
@@ -56,7 +56,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             {
                 try
                 {
-                    equations.Add(ExplicitOrdinaryDifferentialEquation.FromStatement(_parser.Parse(pair.line)));
+                    equations.Add(ExplicitOrdinaryDifferentialEquation.FromExpression(_parser.Parse(pair.line)));
                 }
                 catch (FormatException e)
                 {
@@ -69,23 +69,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 }
             }
 
-            if (ErrorListViewModel.HasErrors || equations.Count == 0)
+            if (ErrorListViewModel.HasErrors)
             {
                 return;
             }
 
-            try
-            {
-                EquationSystem = new ExplicitOrdinaryDifferentialEquationSystem(equations);
-            }
-            catch (FormatException e)
-            {
-                ErrorListViewModel.Errors.Add(new ErrorViewModel()
-                {
-                    Level = ErrorLevel.Error,
-                    Message = e.Message
-                });
-            }
+            EquationSystem = equations;
         }
 
     }
