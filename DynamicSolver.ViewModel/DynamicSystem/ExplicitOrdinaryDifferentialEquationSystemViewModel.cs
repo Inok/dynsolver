@@ -69,23 +69,12 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 }
             }
 
-            if (ErrorListViewModel.HasErrors || equations.Count == 0)
+            if (ErrorListViewModel.HasErrors)
             {
                 return;
             }
 
-            try
-            {
-                EquationSystem = equations;
-            }
-            catch (FormatException e)
-            {
-                ErrorListViewModel.Errors.Add(new ErrorViewModel()
-                {
-                    Level = ErrorLevel.Error,
-                    Message = e.Message
-                });
-            }
+            EquationSystem = equations;
         }
 
     }

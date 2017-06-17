@@ -6,9 +6,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="150" d:DesignWidth="300"
              x:Name="UserControl">
-    <ListBox DataContext="{Binding ViewModel, ElementName=UserControl}" ItemsSource="{Binding Errors}">
-        <ListBox.Style>
-            <Style TargetType="ListBox">
+    <ItemsControl DataContext="{Binding ViewModel, ElementName=UserControl}" ItemsSource="{Binding Errors}">
+        <ItemsControl.Style>
+            <Style TargetType="ItemsControl">
                 <Setter Property="Visibility" Value="Visible" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding HasErrors}" Value="False">
@@ -16,11 +16,11 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
-        </ListBox.Style>
-        <ListBox.ItemTemplate>
+        </ItemsControl.Style>
+        <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <TextBlock Text="{Binding FullMessage}" Foreground="Red"/>
             </DataTemplate>
-        </ListBox.ItemTemplate>
-    </ListBox>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

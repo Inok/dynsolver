@@ -59,19 +59,21 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 return;
             }
 
-            var actualVariables = system.SelectMany(e => new ExpressionAnalyzer(e.Function).Variables)
-                .Concat(system.Select(e => e.LeadingDerivative.Variable.Name))
+            var vars = system.Select(e => e.LeadingDerivative.Variable.Name)
+                .Concat(system.SelectMany(e => new ExpressionAnalyzer(e.Function).Variables))
                 .Distinct(StringComparer.Ordinal)
-                .ToList();
+                .Select(v => new
+                {
+                    name = v,
+                    value = Variables.FirstOrDefault(a => a.Name.Equals(v, StringComparison.Ordinal))?.Value
+                });
+            
+            Variables.Clear();
 
-            Variables.RemoveAll(Variables.Where(v => !actualVariables.Contains(v.Name)).ToList());
-
-            foreach (var variable in actualVariables.Except(Variables.Select(v => v.Name).ToList(), StringComparer.Ordinal))
+            foreach (var variable in vars)
             {
-                Variables.Add(new EditViewModel<double?>(variable, null));
+                Variables.Add(new EditViewModel<double?>(variable.name, variable.value));
             }
-
-            Variables.Sort(Comparer<EditViewModel<double?>>.Create((v1, v2) => StringComparer.Ordinal.Compare(v1.Name, v2.Name)));
         }
 
         private ExplicitOrdinaryDifferentialEquationSystemDefinition GetTaskInput()

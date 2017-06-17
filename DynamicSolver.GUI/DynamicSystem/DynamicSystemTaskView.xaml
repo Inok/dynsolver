@@ -6,14 +6,29 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
              xmlns:common="clr-namespace:DynamicSolver.GUI.Common"
              x:Name="UserControl" mc:Ignorable="d">
-    <StackPanel DataContext="{Binding ViewModel,  ElementName=UserControl}">
-        <Label>System:</Label>
-        <TextBox Text="{Binding  EquationSystemInputViewModel.Input, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" 
-                 MinLines="2" FontSize="14"/>
+    <Grid DataContext="{Binding ViewModel,  ElementName=UserControl}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5px" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-        <common:ErrorListView ViewModel="{Binding EquationSystemInputViewModel.ErrorListViewModel}" Margin="0,5"/>
+        <Label Grid.Column="0" Grid.Row="0">System:</Label>
+        <TextBox Grid.Column="0" Grid.Row="1"
+                 Text="{Binding  EquationSystemInputViewModel.Input, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 AcceptsReturn="True"
+                 MinLines="2" FontSize="16" />
 
-        <ListBox ItemsSource="{Binding Variables}" Margin="0,5,0,0">
+        <common:ErrorListView Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"
+                              ViewModel="{Binding EquationSystemInputViewModel.ErrorListViewModel}" Margin="0,5" />
+
+        <Label Grid.Column="2" Grid.Row="0">Initial values:</Label>
+        <ListBox Grid.Column="2" Grid.Row="1" ItemsSource="{Binding Variables}" BorderThickness="0" Margin="0">
             <ListBox.Style>
                 <Style TargetType="ListBox">
                     <Setter Property="Visibility" Value="Visible" />
@@ -28,14 +43,16 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" MinWidth="40" />
-                            <ColumnDefinition Width="Auto" MinWidth="100" />
+                            <ColumnDefinition Width="Auto" MinWidth="30" />
+                            <ColumnDefinition Width="Auto" MinWidth="80" />
                         </Grid.ColumnDefinitions>
-                        <Label Content="{Binding Name}" />
-                        <xctk:DoubleUpDown Grid.Column="1" Value="{Binding Value, Mode=TwoWay}" Increment="0.1" AllowInputSpecialValues="None" FormatString="0.0##" />
+                        <Label Content="{Binding Name}" Padding="0" HorizontalAlignment="Left"/>
+                        <xctk:DoubleUpDown Grid.Column="1" Value="{Binding Value, Mode=TwoWay}" Increment="0.1"
+                                           AllowInputSpecialValues="None" FormatString="0.0##" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-    </StackPanel>
+
+    </Grid>
 </UserControl>
