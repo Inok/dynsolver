@@ -41,9 +41,9 @@ namespace DynamicSolver.DynamicSystem
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitEulerSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new EulerCromerSolver()).InSingletonScope();
 
-            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFirstExplicitDynamicSystemSolver()).InSingletonScope();
-            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFirstImplicitDynamicSystemSolver()).InSingletonScope();
-            
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDNewtonBasedDynamicSystemSolver()).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastImplicitDynamicSystemSolver()).InSingletonScope();
+
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new SymmetricExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
             

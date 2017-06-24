@@ -67,8 +67,8 @@
     <Compile Include="Solvers\Explicit\SymmetricExplicitMiddlePointDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Extrapolation\ExtrapolationSolver.cs" />
     <Compile Include="Solvers\ModellingTaskParameters.cs" />
-    <Compile Include="Solvers\SemiImplicit\KDFirstImplicitDynamicSystemSolver.cs" />
-    <Compile Include="Solvers\SemiImplicit\KDFirstExplicitDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\SemiImplicit\KDFastImplicitDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\SemiImplicit\KDNewtonBasedDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Explicit\RungeKutta4DynamicSystemSolver.cs" />
     <Compile Include="Solvers\IDynamicSystemSolver.cs" />
     <Compile Include="Step\FixedStepStepper.cs" />

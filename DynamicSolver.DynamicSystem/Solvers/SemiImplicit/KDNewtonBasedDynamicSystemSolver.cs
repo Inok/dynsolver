@@ -4,9 +4,9 @@ using DynamicSolver.DynamicSystem.Step;
 
 namespace DynamicSolver.DynamicSystem.Solvers.SemiImplicit
 {
-    public class KDFirstImplicitDynamicSystemSolver : IDynamicSystemSolver
+    public class KDNewtonBasedDynamicSystemSolver : IDynamicSystemSolver
     {
-        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (I,E)", 2, true);
+        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (Newton)", 2, true);
 
         public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, ModellingTaskParameters parameters)
         {

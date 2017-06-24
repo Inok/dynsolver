@@ -78,8 +78,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
 
                 new RungeKutta4DynamicSystemSolver(),
                 new ExtrapolationSolver(new ExplicitEulerSolver(), 4),
-                new ExtrapolationSolver(new SymmetricExplicitMiddlePointDynamicSystemSolver(), 2),
-                new ExtrapolationSolver(new KDFirstExplicitDynamicSystemSolver(), 2),
+                new ExtrapolationSolver(new SymmetricExplicitMiddlePointDynamicSystemSolver(), 2)
 
 
             };
@@ -118,7 +117,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
             {
                 new ExtrapolationSolver(new ExplicitEulerSolver(), 6),
                 new ExtrapolationSolver(new SymmetricExplicitMiddlePointDynamicSystemSolver(), 3),
-                new ExtrapolationSolver(new KDFirstImplicitDynamicSystemSolver(), 3)
+                new ExtrapolationSolver(new KDNewtonBasedDynamicSystemSolver(), 3)
             };
 
 
@@ -170,7 +169,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
             {
                 new ExtrapolationSolver(new ExplicitEulerSolver(), 6),
                 new ExtrapolationSolver(new SymmetricExplicitMiddlePointDynamicSystemSolver(), 3),
-                new ExtrapolationSolver(new KDFirstImplicitDynamicSystemSolver(), 3)
+                new ExtrapolationSolver(new KDNewtonBasedDynamicSystemSolver(), 3)
             };
 
 

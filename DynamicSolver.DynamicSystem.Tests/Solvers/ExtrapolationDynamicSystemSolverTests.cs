@@ -14,15 +14,15 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(ExplicitEulerSolver), 8, 8)]
     [TestFixture(typeof(ExplicitEulerSolver), 8, 8)]
 
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 1, 2)]
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 2, 4, 90)]
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 3, 6, 90)]
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 4, 8, 85)]
-
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 1, 2)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 2, 4, 95)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 3, 6, 90)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 4, 8, 85)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 1, 2)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 2, 4, 95)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 3, 6, 90)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 4, 8, 85)]
+    
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 1, 2)]
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2, 4)]
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 3, 6)]
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 4, 8)]
 
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 1, 2)]
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2, 3)]

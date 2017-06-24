@@ -20,8 +20,8 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(DormandPrince7DynamicSystemSolver), 7)]
     [TestFixture(typeof(DormandPrince8DynamicSystemSolver), 8)]
 
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 2)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 2)]    
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 2)]    
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2)]    
     public class DynamicSystemSolverTests
     {
         private const double STEP = 0.1;
