@@ -9,6 +9,9 @@ namespace DynamicSolver.CoreMath.Semantic.Model
 
         public Constant(double value)
         {
+            if (double.IsNaN(value)) throw new ArgumentException("Value should represent an actual number.");
+            if (double.IsInfinity(value)) throw new ArgumentException("Value should be finite.");
+
             Value = value;
         }
         

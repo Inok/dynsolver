@@ -61,6 +61,7 @@
     <Compile Include="Execution\ExecutableFunctionTests.cs" />
     <Compile Include="Parser\ExpressionParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Semantic\Print\SemanticPrinterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -71,9 +72,6 @@
       <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
       <Name>DynamicSolver.CoreMath</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Semantic" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
