@@ -75,6 +75,22 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Analysis\ExpressionAnalyzer.cs" />
     <Compile Include="Analysis\ExpressionVisitor.cs" />
+    <Compile Include="Semantic\ISemanticElement.cs" />
+    <Compile Include="Semantic\ISemanticVisitor.cs" />
+    <Compile Include="Semantic\Model\AddOperation.cs" />
+    <Compile Include="Semantic\Model\AssignStatement.cs" />
+    <Compile Include="Semantic\Model\Constant.cs" />
+    <Compile Include="Semantic\Model\DivideOperation.cs" />
+    <Compile Include="Semantic\Model\Function.cs" />
+    <Compile Include="Semantic\Model\FunctionCallOperation.cs" />
+    <Compile Include="Semantic\Model\IStatement.cs" />
+    <Compile Include="Semantic\Model\IValueSource.cs" />
+    <Compile Include="Semantic\Model\IValueTarget.cs" />
+    <Compile Include="Semantic\Model\MinusOperation.cs" />
+    <Compile Include="Semantic\Model\MultiplyOperation.cs" />
+    <Compile Include="Semantic\Model\PowOperation.cs" />
+    <Compile Include="Semantic\Model\SubtractOperation.cs" />
+    <Compile Include="Semantic\Model\Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
