@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using DynamicSolver.CoreMath.Collections;
 using DynamicSolver.CoreMath.Semantic.Model;
 using JetBrains.Annotations;
 
@@ -22,6 +23,9 @@ namespace DynamicSolver.CoreMath.Semantic.Print
         {
             private readonly StringBuilder _builder = new StringBuilder();
 
+            private readonly IndexedSet<Variable, string> _variables = new IndexedSet<Variable, string>();
+            private int _latestGeneratedVariableIndex = 0;
+            
             public string GetSemanticString()
             {
                 return _builder.ToString();
@@ -34,22 +38,65 @@ namespace DynamicSolver.CoreMath.Semantic.Print
 
             protected override void Visit(Variable variable)
             {
-                throw new NotImplementedException();
+                if (_variables.TryGetValueByItem1(variable, out string name))
+                {
+                    _builder.Append(name);
+                    return;
+                }
+
+                var explicitName = variable.ExplicitName;
+                if (explicitName != null)
+                {
+                    if (_variables.ContainsItem2(explicitName))
+                    {
+                        throw new InvalidOperationException(
+                            $"Variable with explicit name '{explicitName}' conflicts with different variable with the same explicit or generated name.");
+                    }
+                    _variables.Add(variable, explicitName);
+                    _builder.Append(explicitName);
+                    return;
+                }
+
+                var generatedName = $"_gen${++_latestGeneratedVariableIndex}";
+                if (_variables.ContainsItem2(generatedName))
+                {
+                    throw new InvalidOperationException(
+                        $"Generated name '{generatedName}' conflicts with different variable with the same explicit name. Do not use explicit variable names like _gen${{number}}.");
+                }
+
+                _variables.Add(variable, generatedName);
+                _builder.Append(generatedName);
             }
 
             protected override void Visit(MinusOperation minusOperation)
             {
-                throw new NotImplementedException();
+                var shouldAddBracketsAroundOperand = (minusOperation.Operand as Constant)?.Value < 0
+                                                     || (minusOperation.Operand is MinusOperation);
+
+                _builder.Append("-");
+
+                if (shouldAddBracketsAroundOperand) _builder.Append("(");
+                minusOperation.Operand.Accept(this);
+                if (shouldAddBracketsAroundOperand) _builder.Append(")");
             }
 
             protected override void Visit(AddOperation addOperation)
             {
-                throw new NotImplementedException();
+                _builder.Append("(");
+                addOperation.Left.Accept(this);
+                _builder.Append(" + ");
+                addOperation.Right.Accept(this);
+                _builder.Append(")");
             }
 
             protected override void Visit(SubtractOperation subtractOperation)
             {
-                throw new NotImplementedException();
+                _builder.Append("(");
+                subtractOperation.Left.Accept(this);
+                _builder.Append(" - ");
+                subtractOperation.Right.Accept(this);
+                _builder.Append(")");
+
             }
 
             protected override void Visit(MultiplyOperation multiplyOperation)
