@@ -135,7 +135,36 @@ namespace DynamicSolver.CoreMath.Semantic.Print
 
             protected override void Visit(FunctionCallOperation functionCallOperation)
             {
-                throw new NotImplementedException();
+                switch (functionCallOperation.Function)
+                {
+                    case Function.Sin:
+                        _builder.Append("sin");
+                        break;
+                    case Function.Cos:
+                        _builder.Append("cos");
+                        break;
+                    case Function.Tg:
+                        _builder.Append("tg");
+                        break;
+                    case Function.Ctg:
+                        _builder.Append("ctg");
+                        break;
+                    case Function.Ln:
+                        _builder.Append("ln");
+                        break;
+                    case Function.Lg:
+                        _builder.Append("lg");
+                        break;
+                    case Function.Exp:
+                        _builder.Append("exp");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                _builder.Append("(");
+                _builder.Append(functionCallOperation.Argument.Accept(this));
+                _builder.Append(")");
             }
 
             protected override void Visit(AssignStatement assignStatement)

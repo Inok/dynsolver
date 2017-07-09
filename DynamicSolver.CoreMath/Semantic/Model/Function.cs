@@ -1,4 +1,6 @@
-﻿namespace DynamicSolver.CoreMath.Semantic.Model
+﻿using System.ComponentModel;
+
+namespace DynamicSolver.CoreMath.Semantic.Model
 {
     public enum Function
     {

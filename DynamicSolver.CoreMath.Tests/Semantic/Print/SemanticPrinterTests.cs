@@ -176,5 +176,12 @@ namespace DynamicSolver.CoreMath.Tests.Semantic.Print
                 new PowOperation(new Constant(3), new Constant(4))));
             Assert.That(actual, Is.EqualTo("((1 ^ 2) ^ (3 ^ 4))"));
         }
+
+        [Test]
+        public void PrintElement_FunctionCallOperation_PrintsFunctionWithCorrectName([Values] Function function)
+        {
+            var actual = _semanticPrinter.PrintElement(new FunctionCallOperation(function, new Constant(1)));
+            Assert.That(actual, Is.EqualTo($"{function.ToString("G").ToLower()}(1)"));
+        }
     }
 }
