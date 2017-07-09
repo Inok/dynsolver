@@ -183,5 +183,43 @@ namespace DynamicSolver.CoreMath.Tests.Semantic.Print
             var actual = _semanticPrinter.PrintElement(new FunctionCallOperation(function, new Constant(1)));
             Assert.That(actual, Is.EqualTo($"{function.ToString("G").ToLower()}(1)"));
         }
+        
+        [Test]
+        public void PrintElement_AssignOperation_PrintsAssignStatement()
+        {
+            var actual = _semanticPrinter.PrintElement(new AssignStatement(new Variable("x"), new Constant(1)));
+            Assert.That(actual, Is.EqualTo("x := 1"));
+        }
+
+        [Test]
+        public void PrintElement_AssignOperation_WithComplexArgument_PrintsAssignStatement()
+        {
+            var actual = _semanticPrinter.PrintElement(new AssignStatement(
+                new Variable("x"),
+                new AddOperation(new Variable("y"), new Constant(1))
+            ));
+            Assert.That(actual, Is.EqualTo("x := (y + 1)"));
+        }
+        
+        [Test]
+        public void PrintElement_AssignOperation_WithSameSourceAndTarget_PrintsAssignStatement()
+        {
+            var variable = new Variable("x");
+            var actual = _semanticPrinter.PrintElement(new AssignStatement(variable, variable));
+            Assert.That(actual, Is.EqualTo("x := x"));
+        }
+        
+        [Test]
+        public void PrintElement_AssignOperation_WithTargetInsideSource_PrintsAssignStatement()
+        {
+            var variable = new Variable("x");
+            var actual = _semanticPrinter.PrintElement(new AssignStatement(
+                variable,
+                new MultiplyOperation(
+                    new AddOperation(variable, new Constant(1)),
+                    variable)
+            ));
+            Assert.That(actual, Is.EqualTo("x := ((x + 1) * x)"));
+        }
     }
 }

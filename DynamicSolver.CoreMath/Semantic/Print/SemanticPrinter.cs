@@ -169,7 +169,9 @@ namespace DynamicSolver.CoreMath.Semantic.Print
 
             protected override void Visit(AssignStatement assignStatement)
             {
-                throw new NotImplementedException();
+                assignStatement.Target.Accept(this);
+                _builder.Append(" := ");
+                assignStatement.Source.Accept(this);
             }
         }
     }
