@@ -75,9 +75,17 @@ namespace DynamicSolver.CoreMath.Semantic.Print
 
                 _builder.Append("-");
 
-                if (shouldAddBracketsAroundOperand) _builder.Append("(");
+                if (shouldAddBracketsAroundOperand)
+                {
+                    _builder.Append("(");
+                }
+                
                 minusOperation.Operand.Accept(this);
-                if (shouldAddBracketsAroundOperand) _builder.Append(")");
+                
+                if (shouldAddBracketsAroundOperand)
+                {
+                    _builder.Append(")");
+                }
             }
 
             protected override void Visit(AddOperation addOperation)
@@ -96,22 +104,33 @@ namespace DynamicSolver.CoreMath.Semantic.Print
                 _builder.Append(" - ");
                 subtractOperation.Right.Accept(this);
                 _builder.Append(")");
-
             }
 
             protected override void Visit(MultiplyOperation multiplyOperation)
             {
-                throw new NotImplementedException();
+                _builder.Append("(");
+                multiplyOperation.Left.Accept(this);
+                _builder.Append(" * ");
+                multiplyOperation.Right.Accept(this);
+                _builder.Append(")");
             }
 
             protected override void Visit(DivideOperation divideOperation)
             {
-                throw new NotImplementedException();
+                _builder.Append("(");
+                divideOperation.Left.Accept(this);
+                _builder.Append(" / ");
+                divideOperation.Right.Accept(this);
+                _builder.Append(")");
             }
 
             protected override void Visit(PowOperation powOperation)
             {
-                throw new NotImplementedException();
+                _builder.Append("(");
+                powOperation.Value.Accept(this);
+                _builder.Append(" ^ ");
+                powOperation.Power.Accept(this);
+                _builder.Append(")");
             }
 
             protected override void Visit(FunctionCallOperation functionCallOperation)

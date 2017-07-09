@@ -94,6 +94,7 @@ namespace DynamicSolver.CoreMath.Tests.Semantic.Print
             Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Variable("x"))), Is.EqualTo("-x"));
             Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new MinusOperation(new Variable("x")))), Is.EqualTo("-(-x)"));
             Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new AddOperation(new Variable("x"), new Variable("y")))), Is.EqualTo("-(x + y)"));
+            Assert.That(_semanticPrinter.PrintElement(new SubtractOperation(new MinusOperation(new Variable("x")), new MinusOperation(new Variable("y")))), Is.EqualTo("(-x - -y)"));
         }
 
         [Test]
@@ -106,7 +107,9 @@ namespace DynamicSolver.CoreMath.Tests.Semantic.Print
         [Test]
         public void PrintElement_AddOperation_Multiple_PrintsScoped()
         {
-            var actual = _semanticPrinter.PrintElement(new AddOperation(new AddOperation(new Constant(1), new Constant(2)), new AddOperation(new Constant(3), new Constant(4))));
+            var actual = _semanticPrinter.PrintElement(new AddOperation(
+                new AddOperation(new Constant(1), new Constant(2)),
+                new AddOperation(new Constant(3), new Constant(4))));
             Assert.That(actual, Is.EqualTo("((1 + 2) + (3 + 4))"));
         }
         
@@ -120,8 +123,58 @@ namespace DynamicSolver.CoreMath.Tests.Semantic.Print
         [Test]
         public void PrintElement_SubtractOperation_Multiple_PrintsScoped()
         {
-            var actual = _semanticPrinter.PrintElement(new SubtractOperation(new SubtractOperation(new Constant(1), new Constant(2)), new SubtractOperation(new Constant(3), new Constant(4))));
+            var actual = _semanticPrinter.PrintElement(new SubtractOperation(
+                new SubtractOperation(new Constant(1), new Constant(2)),
+                new SubtractOperation(new Constant(3), new Constant(4))));
             Assert.That(actual, Is.EqualTo("((1 - 2) - (3 - 4))"));
+        }
+        
+        [Test]
+        public void PrintElement_MultiplyOperation_PrintsMultiplyOperator()
+        {
+            var actual = _semanticPrinter.PrintElement(new MultiplyOperation(new Constant(1), new Constant(2)));
+            Assert.That(actual, Is.EqualTo("(1 * 2)"));
+        }
+
+        [Test]
+        public void PrintElement_MultiplyOperation_Multiple_PrintsScoped()
+        {
+            var actual = _semanticPrinter.PrintElement(new MultiplyOperation(
+                new MultiplyOperation(new Constant(1), new Constant(2)),
+                new MultiplyOperation(new Constant(3), new Constant(4))));
+            Assert.That(actual, Is.EqualTo("((1 * 2) * (3 * 4))"));
+        }
+        
+        [Test]
+        public void PrintElement_DivideOperation_PrintsDivideOperator()
+        {
+            var actual = _semanticPrinter.PrintElement(new DivideOperation(new Constant(1), new Constant(2)));
+            Assert.That(actual, Is.EqualTo("(1 / 2)"));
+        }
+
+        [Test]
+        public void PrintElement_DivideOperation_Multiple_PrintsScoped()
+        {
+            var actual = _semanticPrinter.PrintElement(new DivideOperation(
+                new DivideOperation(new Constant(1), new Constant(2)),
+                new DivideOperation(new Constant(3), new Constant(4))));
+            Assert.That(actual, Is.EqualTo("((1 / 2) / (3 / 4))"));
+        }
+        
+        [Test]
+        public void PrintElement_PowOperation_PrintsPowOperator()
+        {
+            var actual = _semanticPrinter.PrintElement(new PowOperation(new Constant(1), new Constant(2)));
+            Assert.That(actual, Is.EqualTo("(1 ^ 2)"));
+        }
+
+        [Test]
+        public void PrintElement_PowOperation_Multiple_PrintsScoped()
+        {
+            var actual = _semanticPrinter.PrintElement(new PowOperation(
+                new PowOperation(new Constant(1), new Constant(2)),
+                new PowOperation(new Constant(3), new Constant(4))));
+            Assert.That(actual, Is.EqualTo("((1 ^ 2) ^ (3 ^ 4))"));
         }
     }
 }
