@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.CoreMath.Analysis;
 using DynamicSolver.CoreMath.Execution;
 using DynamicSolver.DynamicSystem.Solvers;
 using JetBrains.Annotations;
@@ -10,14 +9,8 @@ namespace DynamicSolver.DynamicSystem
 {
     public class ExplicitOrdinaryDifferentialEquationSystem : IExplicitOrdinaryDifferentialEquationSystem
     {
-        [NotNull]
-        public IExecutableFunctionFactory FunctionFactory { get; }
-
-        [NotNull]
-        public IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> Equations { get; }
-
-        [NotNull]
-        public DynamicSystemState InitialState { get; }
+        private readonly IExecutableFunctionFactory _functionFactory;
+        private readonly IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> _equations;
 
         private IReadOnlyList<ExecutableFunctionInfo> _executableFunctions;
         [NotNull] public IReadOnlyList<ExecutableFunctionInfo> ExecutableFunctions
@@ -28,7 +21,7 @@ namespace DynamicSolver.DynamicSystem
                 {
                     return _executableFunctions;
                 }
-                _executableFunctions = Equations.Select(e => new ExecutableFunctionInfo(e.LeadingDerivative.Variable.Name, FunctionFactory.Create(e.Function))).ToList();
+                _executableFunctions = _equations.Select(e => new ExecutableFunctionInfo(e.LeadingDerivative.Variable.Name, _functionFactory.Create(e.Function))).ToList();
                 return _executableFunctions;
             }
         }
@@ -43,36 +36,23 @@ namespace DynamicSolver.DynamicSystem
                     return _jacobian;
                 }
 
-                return _jacobian = new JacobianCalculationService().GetJacobianFunctions(this);
+                return _jacobian = new JacobianCalculationService(_functionFactory).GetJacobianFunctions(_equations);
             }
         }
 
         public ExplicitOrdinaryDifferentialEquationSystem(
             [NotNull] IEnumerable<ExplicitOrdinaryDifferentialEquation> equations,
-            [NotNull] DynamicSystemState initialState,
             [NotNull] IExecutableFunctionFactory functionFactory
         )
         {
             if (equations == null) throw new ArgumentNullException(nameof(equations));
-            if (initialState == null) throw new ArgumentNullException(nameof(initialState));
             if (functionFactory == null) throw new ArgumentNullException(nameof(functionFactory));
 
             var equationList = equations.ToList();
             ValidateEquationsSystem(equationList);
-            ValidateState(equationList, initialState);
-
-            Equations = equationList;
-            InitialState = initialState;
-            FunctionFactory = functionFactory;
-        }
-
-        public IExplicitOrdinaryDifferentialEquationSystem WithInitialState([NotNull] DynamicSystemState state)
-        {
-            if (state == null) throw new ArgumentNullException(nameof(state));
-
-            ValidateState(Equations, state);
-
-            return new OverridenEquationSystem(this, state);
+            
+            _equations = equationList;
+            _functionFactory = functionFactory;
         }
 
         private static void ValidateEquationsSystem([NotNull] ICollection<ExplicitOrdinaryDifferentialEquation> equations)
@@ -111,42 +91,6 @@ namespace DynamicSolver.DynamicSystem
             if (maxOrderVariableDerivatives.Any(d => leadingDerivatives.All(ld => !ld.Variable.Equals(d.Variable))))
             {
                 throw new FormatException("Functions has an derivative of variable that not presented at leading derivatives.");
-            }
-        }
-
-        private static void ValidateState(IEnumerable<ExplicitOrdinaryDifferentialEquation> equations, DynamicSystemState initialState)
-        {
-            var leadingDerivativeNames = new HashSet<string>(equations.SelectMany(e => new ExpressionAnalyzer(e.Function).Variables));
-            if (!leadingDerivativeNames.SetEquals(initialState.DependentVariables.Keys))
-            {
-                throw new FormatException("Initial values has different set of arguments from equation system.");
-            }
-        }
-
-        private class OverridenEquationSystem : IExplicitOrdinaryDifferentialEquationSystem
-        {
-            private readonly IExplicitOrdinaryDifferentialEquationSystem _system;
-
-            public IExecutableFunctionFactory FunctionFactory => _system.FunctionFactory;
-
-            public IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> Equations => _system.Equations;
-
-            public DynamicSystemState InitialState { get; }
-
-            public IReadOnlyList<ExecutableFunctionInfo> ExecutableFunctions => _system.ExecutableFunctions;
-
-            public Dictionary<Tuple<string, string>, ExecutableFunctionInfo> Jacobian => _system.Jacobian;
-
-
-            public OverridenEquationSystem([NotNull] IExplicitOrdinaryDifferentialEquationSystem system, [NotNull] DynamicSystemState initialState)
-            {
-                _system = system;
-                InitialState = initialState;
-            }
-
-            public IExplicitOrdinaryDifferentialEquationSystem WithInitialState(DynamicSystemState state)
-            {
-                return _system.WithInitialState(state);
             }
         }
     }

@@ -138,14 +138,14 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             var itemsCount = (int)(modellingSettings.Time / modellingSettings.Step);
             var startValues = input.InitialState;
 
-            var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.Equations, input.InitialState, _functionFactory);
+            var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.Equations, _functionFactory);
 
             var sw = new Stopwatch();
             sw.Start();
-            var actual = startValues.Yield().Concat(solver.Solve(definition, new ModellingTaskParameters(modellingSettings.Step))).Take(itemsCount).ToList();
+            var actual = startValues.Yield().Concat(solver.Solve(definition, input.InitialState, new ModellingTaskParameters(modellingSettings.Step))).Take(itemsCount).ToList();
             sw.Stop();
 
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new ModellingTaskParameters(modellingSettings.Step / 10)).Skipping(9, 9)).Take(itemsCount);
+            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, input.InitialState, new ModellingTaskParameters(modellingSettings.Step / 10)).Skipping(9, 9)).Take(itemsCount);
 
             var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b });
 

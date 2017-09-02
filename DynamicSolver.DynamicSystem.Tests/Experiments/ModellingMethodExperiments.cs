@@ -8,7 +8,6 @@ using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;
 using DynamicSolver.DynamicSystem.Solvers.Extrapolation;
 using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;
-using DynamicSolver.DynamicSystem.Step;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests.Experiments
@@ -20,6 +19,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         private const double STEP = 0.01;
 
         private IExplicitOrdinaryDifferentialEquationSystem _equationSystem;
+        private DynamicSystemState _initialState;
 
         [SetUp]
         public void Setup()
@@ -32,19 +32,9 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                     ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("y'= -z^3 - (1 + y)*(z^2 + y^2 + 2*y) -4*x + 0,456*y")),
                     ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("z' = (1+y)*z^2 + x^2 - 0,0357")),
                 },
-                new DynamicSystemState(0, new Dictionary<string, double>() { ["x"] = 0.1, ["y"] = 0, ["z"] = -0.1 }),
                 new CompiledFunctionFactory());
 
-            /*
-                        _equationSystem = new ExplicitOrdinaryDifferentialEquationSystem(new[]
-                            {
-                                            ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x1'= -x1 - 2*x2 ")),
-                                            ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x2'= 3*x1 - 4*x2"))
-                                                    },
-                            new DynamicSystemState(0, new Dictionary<string, double>() { ["x1"] = 1, ["x2"] = 2 }),
-                            new CompiledFunctionFactory());
-            */
-
+            _initialState = new DynamicSystemState(0, new Dictionary<string, double>() {["x"] = 0.1, ["y"] = 0, ["z"] = -0.1});
         }
 
         [Test]
@@ -91,7 +81,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                     for (var i = 0; i < 3; i++)
                     {
                         analyzer.StartIteration();
-                        GC.KeepAlive(solver.Solve(_equationSystem, new ModellingTaskParameters(STEP)).Take(STEPS_COUNT).Count());
+                        GC.KeepAlive(solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(STEP)).Take(STEPS_COUNT).Count());
                     }
                 }
             }
@@ -104,7 +94,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                     for (var run = 0; run < 5; run++)
                     {
                         analyzer.StartIteration();
-                        GC.KeepAlive(solver.Solve(_equationSystem, new ModellingTaskParameters(STEP)).Take(STEPS_COUNT).Count());
+                        GC.KeepAlive(solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(STEP)).Take(STEPS_COUNT).Count());
                     }
                 }
             }
@@ -131,9 +121,9 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                 for (double step = 1; step > 0.005; step -= 0.002)
                 {
                     var stepsCount = (int) (modellingTime / step);
-                    var actual = solver.Solve(_equationSystem, new ModellingTaskParameters(step)).Take(stepsCount).ToList();
+                    var actual = solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(step)).Take(stepsCount).ToList();
                     var expected = new DormandPrince8DynamicSystemSolver()
-                        .Solve(_equationSystem, new ModellingTaskParameters(step / 10)).Take(stepsCount * 10).ToList();
+                        .Solve(_equationSystem, _initialState, new ModellingTaskParameters(step / 10)).Take(stepsCount * 10).ToList();
 
                     var error = 0.0;
                     for (var i = 0; i < actual.Count; i++)
@@ -184,8 +174,8 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                 {
                     var stepsCount = (int)(modellingTime / step);
 
-                    var actual = solver.Solve(_equationSystem, new ModellingTaskParameters(step)).Take(stepsCount).ToList();
-                    var expected = new DormandPrince8DynamicSystemSolver().Solve(_equationSystem, new ModellingTaskParameters(step / 10)).Take(stepsCount * 10).ToList();
+                    var actual = solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(step)).Take(stepsCount).ToList();
+                    var expected = new DormandPrince8DynamicSystemSolver().Solve(_equationSystem, _initialState, new ModellingTaskParameters(step / 10)).Take(stepsCount * 10).ToList();
 
                     var error = 0.0;
                     for (var i = 0; i < actual.Count; i++)
@@ -205,7 +195,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
                         sw.Start();
                         for (var i = 0; i < 10; i++)
                         {
-                            GC.KeepAlive(solver.Solve(_equationSystem, new ModellingTaskParameters(step)).Take(stepsCount).Count());
+                            GC.KeepAlive(solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(step)).Take(stepsCount).Count());
                         }
                         sw.Stop();
 

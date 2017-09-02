@@ -11,6 +11,7 @@ namespace DynamicSolver.DynamicSystem.Solvers
         [NotNull, ItemNotNull]
         IEnumerable<DynamicSystemState> Solve(
             [NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem,
+            [NotNull] DynamicSystemState initialState,
             [NotNull] ModellingTaskParameters parameters
         );
     }

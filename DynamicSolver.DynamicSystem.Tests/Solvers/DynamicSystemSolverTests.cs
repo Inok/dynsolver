@@ -35,6 +35,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         private readonly IDynamicSystemSolver _solver;
 
         private IExplicitOrdinaryDifferentialEquationSystem _equationSystem;
+        private DynamicSystemState _initialState;
         private Func<double, double> _expectedX1;
         private Func<double, double> _expectedX2;
 
@@ -76,9 +77,9 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
                     ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x1'= -x1 - 2*x2 ")),
                     ExplicitOrdinaryDifferentialEquation.FromExpression(parser.Parse("x2'= 3*x1 - 4*x2"))
                 },
-                new DynamicSystemState(0, new Dictionary<string, double>() { ["x1"] = 1, ["x2"] = 2 }),
                 new CompiledFunctionFactory()
             );
+            _initialState = new DynamicSystemState(0, new Dictionary<string, double>() {["x1"] = 1, ["x2"] = 2});
 
             _expectedX1 = t => -1d / 3 * Math.Exp(-2.5d * t) * (Math.Sqrt(15) * Math.Sin(Math.Sqrt(15) * t / 2) - 3 * Math.Cos(Math.Sqrt(15) * t / 2));
             _expectedX2 = t => 2 * Math.Exp(-2.5d * t) * Math.Cos(Math.Sqrt(15) * t / 2);
@@ -93,7 +94,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         [Test]
         public void Solve_ReturnsResultEqualToSystemSolution()
         {
-            var actual = _solver.Solve(_equationSystem, new ModellingTaskParameters(STEP)).Take(STEP_COUNT).ToList();
+            var actual = _solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(STEP)).Take(STEP_COUNT).ToList();
 
             Assert.That(actual.Count, Is.EqualTo(STEP_COUNT));
 
@@ -118,7 +119,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         public void Solve_WithProportionalStep_ErrorsHasProportionalValue()
         {
             double error1 = 0;
-            foreach (var state in _solver.Solve(_equationSystem, new ModellingTaskParameters(STEP)).Take(STEP_COUNT))
+            foreach (var state in _solver.Solve(_equationSystem, _initialState,  new ModellingTaskParameters(STEP)).Take(STEP_COUNT))
             {
                 var err1 = Math.Abs(state.DependentVariables["x1"] - _expectedX1(state.IndependentVariable));
                 var err2 = Math.Abs(state.DependentVariables["x2"] - _expectedX2(state.IndependentVariable));
@@ -126,7 +127,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             }
 
             double error2 = 0;
-            foreach (var state in _solver.Solve(_equationSystem, new ModellingTaskParameters(STEP*2)).Take(STEP_COUNT / 2))
+            foreach (var state in _solver.Solve(_equationSystem, _initialState, new ModellingTaskParameters(STEP*2)).Take(STEP_COUNT / 2))
             {
                 var err1 = Math.Abs(state.DependentVariables["x1"] - _expectedX1(state.IndependentVariable));
                 var err2 = Math.Abs(state.DependentVariables["x2"] - _expectedX2(state.IndependentVariable));

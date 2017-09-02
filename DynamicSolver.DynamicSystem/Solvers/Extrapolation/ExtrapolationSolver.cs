@@ -31,31 +31,33 @@ namespace DynamicSolver.DynamicSystem.Solvers.Extrapolation
             Description = new DynamicSystemSolverDescription(name, order, false);
         }
 
-        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, ModellingTaskParameters parameters)
+        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, 
+            DynamicSystemState initialState,
+            ModellingTaskParameters parameters)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
+            if (initialState == null) throw new ArgumentNullException(nameof(initialState));
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
-            var stepper = new FixedStepStepper(parameters.Step, equationSystem.InitialState.IndependentVariable);
+            var stepper = new FixedStepStepper(parameters.Step, initialState.IndependentVariable);
 
             var extrapolationCoefficients = GetExtrapolationCoefficients(ExtrapolationStages);
             var buffer = new double[ExtrapolationStages, ExtrapolationStages];
             var solvesBuffer = new IReadOnlyDictionary<string, double>[ExtrapolationStages];
 
-            var lastState = equationSystem.InitialState;
+            var lastState = initialState;
 
             while (true)
             {
-                var state = equationSystem.WithInitialState(lastState);
-
                 var step = stepper.MoveNext();
 
                 if (_parallelize)
                 {
+                    var state = lastState;
                     foreach (var vars in extrapolationCoefficients
                         .Select((c, i) => new KeyValuePair<int, int>(i, c))
                         .AsParallel()
-                        .Select(pair => new KeyValuePair<int, DynamicSystemState>(pair.Key, MakeExtrapolationSteps(state, step, pair.Value)))
+                        .Select(pair => new KeyValuePair<int, DynamicSystemState>(pair.Key, MakeExtrapolationSteps(equationSystem, state, step, pair.Value)))
                         .AsSequential())
                     {
                         solvesBuffer[vars.Key] = vars.Value.DependentVariables;
@@ -65,7 +67,7 @@ namespace DynamicSolver.DynamicSystem.Solvers.Extrapolation
                 {
                     for (var i = 0; i < solvesBuffer.Length; i++)
                     {
-                        solvesBuffer[i] = MakeExtrapolationSteps(state, step, extrapolationCoefficients[i]).DependentVariables;
+                        solvesBuffer[i] = MakeExtrapolationSteps(equationSystem, lastState, step, extrapolationCoefficients[i]).DependentVariables;
                     }
                 }
 
@@ -90,14 +92,10 @@ namespace DynamicSolver.DynamicSystem.Solvers.Extrapolation
             }
         }
 
-        protected virtual DynamicSystemState MakeExtrapolationSteps(
-            IExplicitOrdinaryDifferentialEquationSystem state,
-            IndependentVariableStep step,
-            int extrapolationCoefficient
-            )
+        protected virtual DynamicSystemState MakeExtrapolationSteps(IExplicitOrdinaryDifferentialEquationSystem equationSystem, DynamicSystemState state, IndependentVariableStep step, int extrapolationCoefficient)
         {
             var stepSize = step.Delta / extrapolationCoefficient;
-            var extrapolationStepsLastValue = BaseSolver.Solve(state, new ModellingTaskParameters(stepSize)).Take(extrapolationCoefficient).Last();
+            var extrapolationStepsLastValue = BaseSolver.Solve(equationSystem, state, new ModellingTaskParameters(stepSize)).Take(extrapolationCoefficient).Last();
             return extrapolationStepsLastValue;
         }
 

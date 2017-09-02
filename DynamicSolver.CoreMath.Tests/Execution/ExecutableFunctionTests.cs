@@ -68,11 +68,9 @@ namespace DynamicSolver.CoreMath.Tests.Execution
         }
 
         [TestCase("x - y", "")]
-        [TestCase("1", "x=2")]
         [TestCase("x - y", "z=10")]
         [TestCase("x - y", "x=1")]
         [TestCase("x - y", "y=2")]
-        [TestCase("x - y", "x=1;y=2;z=10")]
         public void Execute_WithDictionary_InvalidArguments_Throws(string expression, string arguments)
         {
             var args = arguments.Split(';').Where(s => !string.IsNullOrEmpty(s)).Select(arg => arg.Split('=')).ToDictionary(arg => arg[0], arg => double.Parse(arg[1]));
@@ -100,6 +98,8 @@ namespace DynamicSolver.CoreMath.Tests.Execution
         [TestCase("x1 + x2 * x3", 7, "x1=1;x2=2;x3=3")]
         [TestCase("sin((a - 1) * pi)", 1, "a=1.5")]
         [TestCase("a + (a / 2) ^ a", 20, "a=4")]
+        [TestCase("x - y", -1, "x=1;y=2;z=10")]
+        [TestCase("1", "x=2")]
         public void Execute_WithDictionary_CalculatesAExpected(string expression, double expected, string variables)
         {
             var args = variables.Split(';').Where(s => !string.IsNullOrEmpty(s)).Select(arg => arg.Split('=')).ToDictionary(arg => arg[0], arg => double.Parse(arg[1], new NumberFormatInfo() {NumberDecimalSeparator = "."}));

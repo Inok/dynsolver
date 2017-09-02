@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.CoreMath.Derivation;
+using DynamicSolver.CoreMath.Execution;
 using DynamicSolver.CoreMath.Expression;
 using DynamicSolver.DynamicSystem.Solvers;
 using JetBrains.Annotations;
@@ -10,10 +11,17 @@ namespace DynamicSolver.DynamicSystem
 {
     public class JacobianCalculationService
     {
-        [NotNull]
-        public Dictionary<Tuple<string, string>, ExecutableFunctionInfo> GetJacobianFunctions([NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        private readonly IExecutableFunctionFactory _functionFactory;
+
+        public JacobianCalculationService([NotNull] IExecutableFunctionFactory functionFactory)
         {
-            var nextStateExpressions = ExpressNextStateVariableValueExpressions(equationSystem);
+            _functionFactory = functionFactory ?? throw new ArgumentNullException(nameof(functionFactory));
+        }
+
+        [NotNull]
+        public Dictionary<Tuple<string, string>, ExecutableFunctionInfo> GetJacobianFunctions([NotNull] IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> equations)
+        {
+            var nextStateExpressions = ExpressNextStateVariableValueExpressions(equations);
 
             var dictionary = new Dictionary<Tuple<string, string>, ExecutableFunctionInfo>();
 
@@ -22,7 +30,7 @@ namespace DynamicSolver.DynamicSystem
                 foreach (var nameToStatement in expr.Value)
                 {
                     var key = Tuple.Create(expr.Key, nameToStatement.Key);
-                    var info = new ExecutableFunctionInfo(nameToStatement.Key, equationSystem.FunctionFactory.Create(nameToStatement.Value));
+                    var info = new ExecutableFunctionInfo(nameToStatement.Key, _functionFactory.Create(nameToStatement.Value));
 
                     dictionary.Add(key, info);
                 }
@@ -32,22 +40,22 @@ namespace DynamicSolver.DynamicSystem
         }
 
         [NotNull]
-        public IDictionary<string, IDictionary<string, IExpression>> ExpressNextStateVariableValueExpressions([NotNull] IExplicitOrdinaryDifferentialEquationSystem equationSystem)
+        private IDictionary<string, IDictionary<string, IExpression>> ExpressNextStateVariableValueExpressions([NotNull] IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> equations)
         {
-            if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
+            if (equations == null) throw new ArgumentNullException(nameof(equations));
             
-            if (equationSystem.Equations.Any(e => e.LeadingDerivative.Order > 1))
+            if (equations.Any(e => e.LeadingDerivative.Order > 1))
             {
-                throw new ArgumentException("Equation system contains leading derivatives with order greater than 1", nameof(equationSystem));
+                throw new ArgumentException("Equation system contains leading derivatives with order greater than 1", nameof(equations));
             }
 
             var result = new Dictionary<string, IDictionary<string, IExpression>>();
 
             var derivationService = new SymbolicDerivationService();
 
-            var leadingVariables = equationSystem.Equations.Select(e => e.LeadingDerivative).ToList();
+            var leadingVariables = equations.Select(e => e.LeadingDerivative).ToList();
 
-            foreach (var equation in equationSystem.Equations)
+            foreach (var equation in equations)
             {
                 var derivativeDictionary = new Dictionary<string, IExpression>();
 
