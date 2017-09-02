@@ -99,7 +99,7 @@ namespace DynamicSolver.CoreMath.Tests.Execution
         [TestCase("sin((a - 1) * pi)", 1, "a=1.5")]
         [TestCase("a + (a / 2) ^ a", 20, "a=4")]
         [TestCase("x - y", -1, "x=1;y=2;z=10")]
-        [TestCase("1", "x=2")]
+        [TestCase("1", 1, "x=2")]
         public void Execute_WithDictionary_CalculatesAExpected(string expression, double expected, string variables)
         {
             var args = variables.Split(';').Where(s => !string.IsNullOrEmpty(s)).Select(arg => arg.Split('=')).ToDictionary(arg => arg[0], arg => double.Parse(arg[1], new NumberFormatInfo() {NumberDecimalSeparator = "."}));
