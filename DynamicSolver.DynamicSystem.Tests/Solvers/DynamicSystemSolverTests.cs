@@ -21,7 +21,9 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(DormandPrince8DynamicSystemSolver), 8)]
 
     [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 2)]    
-    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2)]    
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2)]
+    
+    [TestFixture(typeof(KDFastDynamicSystemSolver), 2, 95)]
     public class DynamicSystemSolverTests
     {
         private const double STEP = 0.1;
@@ -37,25 +39,29 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         private Func<double, double> _expectedX2;
 
         public DynamicSystemSolverTests(Type solverType, int methodAccuracy)
-            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, null, null)
+            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, null)
         {
             
         }
 
-        public DynamicSystemSolverTests(Type solverType, int methodAccuracy, double absoluteErrorTolerance)
-            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, absoluteErrorTolerance, null)
+        public DynamicSystemSolverTests(Type solverType, int methodAccuracy, int proportionTolerancePercent)
+            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, proportionTolerancePercent / 100f)
+        {
+        }
+        
+        protected DynamicSystemSolverTests(Type solverType, int methodAccuracy, float? proportionTolerance = null)
+            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, proportionTolerance)
         {
         }
 
         protected DynamicSystemSolverTests(
             IDynamicSystemSolver solver,
             int methodAccuracy,
-            double? absoluteErrorTolerance = null,
             float? proportionTolerance = null)
         {
             _solver = solver;
             _methodAccuracy = methodAccuracy;
-            _absoluteErrorTolerance = absoluteErrorTolerance ?? (3 * Math.Pow(STEP, methodAccuracy));
+            _absoluteErrorTolerance = 3 * Math.Pow(STEP, methodAccuracy);
             _proportionTolerance = proportionTolerance ?? 1;
         }
         

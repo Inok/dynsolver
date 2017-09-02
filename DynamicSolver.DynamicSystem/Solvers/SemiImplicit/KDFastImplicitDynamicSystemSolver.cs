@@ -6,7 +6,7 @@ namespace DynamicSolver.DynamicSystem.Solvers.SemiImplicit
 {
     public class KDFastImplicitDynamicSystemSolver : IDynamicSystemSolver
     {
-        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (fast)", 2, true);
+        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (fast implicit)", 2, true);
 
         public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, ModellingTaskParameters parameters)
         {

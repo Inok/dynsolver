@@ -36,8 +36,8 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
         {
             if (arguments == null) throw new ArgumentNullException(nameof(arguments));
 
-            var set = new HashSet<string>(arguments.Keys);
-            set.SymmetricExceptWith(OrderedArguments);
+            var set = new HashSet<string>(OrderedArguments);
+            set.ExceptWith(arguments.Keys);
             if (set.Count > 0)
             {
                 throw new ArgumentException(

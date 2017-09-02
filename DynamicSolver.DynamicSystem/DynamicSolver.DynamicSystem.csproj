@@ -71,6 +71,7 @@
     <Compile Include="Solvers\SemiImplicit\KDNewtonBasedDynamicSystemSolver.cs" />
     <Compile Include="Solvers\Explicit\RungeKutta4DynamicSystemSolver.cs" />
     <Compile Include="Solvers\IDynamicSystemSolver.cs" />
+    <Compile Include="Solvers\SemiImplicit\KDFastDynamicSystemSolver.cs" />
     <Compile Include="Step\FixedStepStepper.cs" />
     <Compile Include="Step\IndependentVariableStep.cs" />
     <Compile Include="SolverRegistrationModule.cs" />

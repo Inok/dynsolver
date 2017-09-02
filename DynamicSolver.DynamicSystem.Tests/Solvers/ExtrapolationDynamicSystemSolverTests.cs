@@ -21,8 +21,11 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     
     [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 1, 2)]
     [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2, 4)]
-    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 3, 6)]
-    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 4, 8)]
+    
+    [TestFixture(typeof(KDFastDynamicSystemSolver), 1, 2, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), 2, 4, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), 3, 6, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), 4, 8, 90)]
 
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 1, 2)]
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2, 3)]
@@ -42,7 +45,6 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             : base(
                 new ExtrapolationSolver((IDynamicSystemSolver) Activator.CreateInstance(baseSolverType), stageCount, false),
                 methodAccuracy,
-                null,
                 tolerancePercent / 100f
             )
         {
