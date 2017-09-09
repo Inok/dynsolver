@@ -1,15 +1,14 @@
 ﻿using System;
-using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Analysis
+namespace DynamicSolver.CoreMath.Syntax
 {
-    public class ExpressionVisitor
+    public class SyntaxExpressionVisitor
     {
-        [NotNull]
-        private readonly ISyntaxExpression _expression;
+        [NotNull] private readonly ISyntaxExpression _expression;
 
-        public ExpressionVisitor([NotNull] ISyntaxExpression expression)
+        public SyntaxExpressionVisitor([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             _expression = expression;
@@ -46,7 +45,7 @@ namespace DynamicSolver.CoreMath.Analysis
                 TryRaise(VisitUnaryMinusOperator, expression as UnaryMinusOperator);
                 TryRaise(VisitDeriveUnaryOperator, expression as DeriveUnaryOperator);
 
-                var unary = (IUnaryOperator)expression;
+                var unary = (IUnaryOperator) expression;
                 Visit(unary.Operand);
                 return;
             }
@@ -62,12 +61,12 @@ namespace DynamicSolver.CoreMath.Analysis
 
             if (TryRaise(VisitFunctionCall, expression as IFunctionCall))
             {
-                Visit(((IFunctionCall)expression).Argument);
+                Visit(((IFunctionCall) expression).Argument);
             }
         }
 
         [ContractAnnotation("arg:null => false; arg:notnull => true")]
-        private bool TryRaise<T>([CanBeNull] EventHandler<T> handler, T arg) where T: class
+        private bool TryRaise<T>([CanBeNull] EventHandler<T> handler, T arg) where T : class
         {
             if (arg == null)
             {
@@ -87,7 +86,7 @@ namespace DynamicSolver.CoreMath.Analysis
         public event EventHandler<MultiplyBinaryOperator> VisitMultiplyBinaryOperator;
         public event EventHandler<DivideBinaryOperator> VisitDivideBinaryOperator;
         public event EventHandler<PowBinaryOperator> VisitPowBinaryOperator;
-        
+
         public event EventHandler<IUnaryOperator> VisitUnaryOperator;
         public event EventHandler<UnaryMinusOperator> VisitUnaryMinusOperator;
         public event EventHandler<DeriveUnaryOperator> VisitDeriveUnaryOperator;

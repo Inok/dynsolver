@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using DynamicSolver.CoreMath.Analysis;
+using DynamicSolver.CoreMath.Syntax;
 using DynamicSolver.CoreMath.Syntax.Parser;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.DynamicSystem.Solvers;
@@ -60,7 +60,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
 
             var vars = system.Select(e => e.LeadingDerivative.Variable.Name)
-                .Concat(system.SelectMany(e => new ExpressionAnalyzer(e.Function).Variables))
+                .Concat(system.SelectMany(e => new SyntaxExpressionAnalyzer(e.Function).Variables))
                 .Distinct(StringComparer.Ordinal)
                 .Select(v => new
                 {

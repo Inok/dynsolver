@@ -1,5 +1,6 @@
 ﻿using DynamicSolver.CoreMath.Derivation;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using DynamicSolver.CoreMath.Syntax.Parser;
 using NUnit.Framework;
 

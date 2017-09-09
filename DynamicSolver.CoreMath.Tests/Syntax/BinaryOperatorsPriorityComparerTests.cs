@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using Moq;
 using NUnit.Framework;
 

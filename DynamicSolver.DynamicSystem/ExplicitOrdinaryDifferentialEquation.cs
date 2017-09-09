@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using DynamicSolver.CoreMath.Analysis;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem
@@ -11,7 +11,7 @@ namespace DynamicSolver.DynamicSystem
         private readonly ISyntaxExpression _originalExpression;
 
         [NotNull]
-        private static readonly ExpressionFormatter Formatter = new ExpressionFormatter();
+        private static readonly SyntaxExpressionFormatter Formatter = new SyntaxExpressionFormatter();
 
         public VariableDerivative LeadingDerivative { get; }
         public ISyntaxExpression Function { get; }
@@ -33,7 +33,7 @@ namespace DynamicSolver.DynamicSystem
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             
-            if (!new ExpressionAnalyzer(expression).IsSimpleAssignment)
+            if (!new SyntaxExpressionAnalyzer(expression).IsSimpleAssignment)
             {
                 throw new FormatException("Statement is not simple assignment.");
             }
@@ -45,7 +45,7 @@ namespace DynamicSolver.DynamicSystem
 
             if (!leftDerivativeAnalyzer.IsVariableDerivative)
             {
-                var formatter = new ExpressionFormatter();
+                var formatter = new SyntaxExpressionFormatter();
                 throw new FormatException($"Variable derivative expected at left side of expression, but was {formatter.Format(leftOperand)}.");
             }
             var leadingDerivative = leftDerivativeAnalyzer.AsVariableDerivative();

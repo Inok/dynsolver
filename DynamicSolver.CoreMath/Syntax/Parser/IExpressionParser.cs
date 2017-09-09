@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using DynamicSolver.CoreMath.Syntax.Model;
+using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Syntax.Parser
 {

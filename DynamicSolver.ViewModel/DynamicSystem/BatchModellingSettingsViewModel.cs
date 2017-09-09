@@ -149,7 +149,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 /* System */
                 report.AddHeader(1, "System");
                 
-                var formatter = new ExpressionFormatter();
+                var formatter = new SyntaxExpressionFormatter();
                 foreach (var equation in TaskViewModel.EquationSystem.Equations)
                 {
                     var name = equation.LeadingDerivative.Variable.Name;

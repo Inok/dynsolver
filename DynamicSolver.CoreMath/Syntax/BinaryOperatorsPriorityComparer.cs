@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DynamicSolver.CoreMath.Syntax.Model;
 
 namespace DynamicSolver.CoreMath.Syntax
 {

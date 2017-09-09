@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Analysis
+namespace DynamicSolver.CoreMath.Syntax
 {
-    public class ExpressionAnalyzer : IExpressionAnalyzer
+    public class SyntaxExpressionAnalyzer
     {
         [NotNull]
         private readonly ISyntaxExpression _expression;
@@ -14,7 +14,7 @@ namespace DynamicSolver.CoreMath.Analysis
 
         public IReadOnlyCollection<string> Variables => _variables ?? (_variables = (IReadOnlyCollection<string>) GetVariablesSet());
 
-        public ExpressionAnalyzer([NotNull] ISyntaxExpression expression)
+        public SyntaxExpressionAnalyzer([NotNull] ISyntaxExpression expression)
         {
             _expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
@@ -23,7 +23,7 @@ namespace DynamicSolver.CoreMath.Analysis
         {
             var set = new HashSet<string>();
 
-            var visitor = new ExpressionVisitor(_expression);
+            var visitor = new SyntaxExpressionVisitor(_expression);
             visitor.VisitVariablePrimitive += (_, v) => set.Add(v.Name);
             visitor.Visit();
 
@@ -42,7 +42,7 @@ namespace DynamicSolver.CoreMath.Analysis
                     return (_isSimpleAssignment = false).Value;
 
                 var assignmentsCount = 0;
-                var visitor = new ExpressionVisitor(_expression);
+                var visitor = new SyntaxExpressionVisitor(_expression);
                 visitor.VisitAssignmentBinaryOperator += (_, v) => assignmentsCount++;
                 visitor.Visit();
 
@@ -59,7 +59,7 @@ namespace DynamicSolver.CoreMath.Analysis
                     return _isComputable.Value;
 
                 var assignmentsCount = 0;
-                var visitor = new ExpressionVisitor(_expression);
+                var visitor = new SyntaxExpressionVisitor(_expression);
                 visitor.VisitAssignmentBinaryOperator += (_, v) => assignmentsCount++;
                 visitor.Visit();
 
@@ -70,7 +70,7 @@ namespace DynamicSolver.CoreMath.Analysis
         public bool HasOperator<T>() where T : ISyntaxExpression
         {
             var result = false;
-            var visitor = new ExpressionVisitor(_expression);
+            var visitor = new SyntaxExpressionVisitor(_expression);
             visitor.VisitAnyNode += (_, v) => result = result || v is T;
             visitor.Visit();
             return result;

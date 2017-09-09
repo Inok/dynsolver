@@ -1,4 +1,5 @@
 ﻿using System;
+using DynamicSolver.CoreMath.Syntax.Model;
 
 namespace DynamicSolver.CoreMath.Syntax.Parser
 {

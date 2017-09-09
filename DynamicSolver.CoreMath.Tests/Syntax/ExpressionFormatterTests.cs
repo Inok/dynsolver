@@ -1,5 +1,6 @@
 ﻿using System;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using NUnit.Framework;
 
 namespace DynamicSolver.CoreMath.Tests.Syntax
@@ -7,7 +8,7 @@ namespace DynamicSolver.CoreMath.Tests.Syntax
     [TestFixture]
     public class ExpressionFormatterTests
     {
-        private readonly ExpressionFormatter _formatter = new ExpressionFormatter();
+        private readonly SyntaxExpressionFormatter _formatter = new SyntaxExpressionFormatter();
 
         [Test]
         public void ComplexStatement_ToString()

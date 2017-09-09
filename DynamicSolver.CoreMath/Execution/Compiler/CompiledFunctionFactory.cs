@@ -1,5 +1,6 @@
 ﻿using System;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Execution.Compiler

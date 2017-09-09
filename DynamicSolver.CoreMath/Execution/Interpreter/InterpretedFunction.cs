@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using DynamicSolver.CoreMath.Analysis;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Execution.Interpreter
@@ -28,13 +28,13 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
         public InterpretedFunction([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
-            if (!new ExpressionAnalyzer(expression).IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(expression));
+            if (!new SyntaxExpressionAnalyzer(expression).IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(expression));
 
             _expression = expression;
 
             var list = new List<string>();
 
-            var visitor = new ExpressionVisitor(_expression);
+            var visitor = new SyntaxExpressionVisitor(_expression);
             visitor.VisitVariablePrimitive += (_, p) => list.Add(p.Name);
             visitor.VisitFunctionCall += (_, f) =>
             {

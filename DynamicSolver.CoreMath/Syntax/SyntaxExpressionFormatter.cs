@@ -1,9 +1,10 @@
 ﻿using System;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Syntax
 {
-    public class ExpressionFormatter
+    public class SyntaxExpressionFormatter
     {
         private static readonly BinaryOperatorsPriorityComparer PriorityComparer = new BinaryOperatorsPriorityComparer();
 
@@ -17,44 +18,37 @@ namespace DynamicSolver.CoreMath.Syntax
 
         private static string InternalFormat(ISyntaxExpression expression)
         {
-            var numeric = expression as NumericPrimitive;
-            if (numeric != null)
+            if (expression is NumericPrimitive numeric)
             {
                 return FormatNode(numeric);
             }
 
-            var constant = expression as ConstantPrimitive;
-            if (constant != null)
+            if (expression is ConstantPrimitive constant)
             {
                 return FormatNode(constant);
             }
 
-            var variable = expression as VariablePrimitive;
-            if (variable != null)
+            if (expression is VariablePrimitive variable)
             {
                 return FormatNode(variable);
             }
 
-            var unaryMinus = expression as UnaryMinusOperator;
-            if (unaryMinus != null)
+            if (expression is UnaryMinusOperator unaryMinus)
             {
                 return FormatNode(unaryMinus);
             }
 
-            var derive = expression as DeriveUnaryOperator;
-            if (derive != null)
+            if (expression is DeriveUnaryOperator derive)
             {
                 return FormatNode(derive);
             }
 
-            var functionCall = expression as IFunctionCall;
-            if (functionCall != null)
+            if (expression is IFunctionCall functionCall)
             {
                 return FormatNode(functionCall);
             }
 
-            var binary = expression as IBinaryOperator;
-            if (binary != null)
+            if (expression is IBinaryOperator binary)
             {
                 return FormatNode(binary);
             }

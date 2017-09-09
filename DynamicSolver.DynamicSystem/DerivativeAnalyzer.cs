@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.CoreMath.Analysis;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem
@@ -40,7 +40,7 @@ namespace DynamicSolver.DynamicSystem
                 }
 
                 var success = true;
-                var visitor = new ExpressionVisitor(_expression);
+                var visitor = new SyntaxExpressionVisitor(_expression);
                 visitor.VisitDeriveUnaryOperator += (_, op) => success = success && (op.Operand is DeriveUnaryOperator || op.Operand is VariablePrimitive);
                 visitor.Visit();
 

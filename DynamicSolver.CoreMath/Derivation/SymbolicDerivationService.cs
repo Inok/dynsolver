@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.CoreMath.Analysis;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Derivation
@@ -132,7 +132,7 @@ namespace DynamicSolver.CoreMath.Derivation
                 return false;
             }
 
-            return new ExpressionAnalyzer(expression).Variables.Contains(respectedTo);
+            return new SyntaxExpressionAnalyzer(expression).Variables.Contains(respectedTo);
         }
 
         private static readonly Dictionary<string, Func<ISyntaxExpression, ISyntaxExpression>> FunctionDerivatives = new Dictionary<string, Func<ISyntaxExpression, ISyntaxExpression>>()

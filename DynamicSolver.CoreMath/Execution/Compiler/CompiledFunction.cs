@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
-using DynamicSolver.CoreMath.Analysis;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Execution.Compiler
@@ -19,7 +19,7 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
 
-            var analyzer = new ExpressionAnalyzer(expression);
+            var analyzer = new SyntaxExpressionAnalyzer(expression);
 
             if (!analyzer.IsComputable)
             {

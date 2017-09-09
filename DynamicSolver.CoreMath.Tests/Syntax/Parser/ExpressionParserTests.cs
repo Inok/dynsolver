@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using DynamicSolver.CoreMath.Syntax.Parser;
 using Inok.Tools.Dump;
 using NUnit.Framework;

@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using DynamicSolver.CoreMath.Syntax.Model;
 
 namespace DynamicSolver.CoreMath.Syntax.Parser
 {

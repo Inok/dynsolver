@@ -4,6 +4,7 @@ using System.Linq;
 using DynamicSolver.CoreMath.Derivation;
 using DynamicSolver.CoreMath.Execution;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Model;
 using DynamicSolver.DynamicSystem.Solvers;
 using JetBrains.Annotations;
 

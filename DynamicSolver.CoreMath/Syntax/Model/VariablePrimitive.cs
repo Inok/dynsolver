@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Syntax
+namespace DynamicSolver.CoreMath.Syntax.Model
 {
     public class VariablePrimitive : IPrimitive, IEquatable<VariablePrimitive>
     {

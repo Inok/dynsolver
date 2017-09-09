@@ -1,13 +1,13 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Syntax
+namespace DynamicSolver.CoreMath.Syntax.Model
 {
-    public sealed class UnaryMinusOperator : IUnaryOperator, IEquatable<UnaryMinusOperator>
+    public sealed class DeriveUnaryOperator : IUnaryOperator, IEquatable<DeriveUnaryOperator>
     {
         public ISyntaxExpression Operand { get; }
 
-        public UnaryMinusOperator([NotNull] ISyntaxExpression operand)
+        public DeriveUnaryOperator([NotNull] ISyntaxExpression operand)
         {
             if (operand == null) throw new ArgumentNullException(nameof(operand));
 
@@ -16,10 +16,10 @@ namespace DynamicSolver.CoreMath.Syntax
 
         public override string ToString()
         {
-            return $"-({Operand})";
+            return $"({Operand})'";
         }
 
-        public bool Equals(UnaryMinusOperator other)
+        public bool Equals(DeriveUnaryOperator other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
@@ -30,7 +30,7 @@ namespace DynamicSolver.CoreMath.Syntax
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj is UnaryMinusOperator && Equals((UnaryMinusOperator) obj);
+            return obj is DeriveUnaryOperator && Equals((DeriveUnaryOperator) obj);
         }
 
         public bool Equals(ISyntaxExpression other)
