@@ -113,6 +113,7 @@
     <Compile Include="Common\ErrorListView.xaml.cs">
       <DependentUpon>ErrorListView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DynamicSystem\BatchModellingSettingsView.xaml.cs" />
     <Compile Include="DynamicSystem\ModellingSettingsView.xaml.cs">
       <DependentUpon>ModellingSettingsView.xaml</DependentUpon>
     </Compile>
@@ -128,6 +129,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="DynamicSystem\BatchModellingSettingsView.xaml" />
     <Page Include="DynamicSystem\ModellingSettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

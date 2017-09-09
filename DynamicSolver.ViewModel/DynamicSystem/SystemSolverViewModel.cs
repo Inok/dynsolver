@@ -33,13 +33,14 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         public DynamicSystemTaskViewModel TaskViewModel { get; }
         
         public ModellingSettingsViewModel ModellingSettingsViewModel { get; }
+        
+        public BatchModellingSettingsViewModel BatchModellingSettingsViewModel { get; }
 
         [NotNull]
         public ErrorListViewModel ErrorListViewModel { get; } = new ErrorListViewModel();
 
         [NotNull]
         public BusyIndicatorViewModel BusyViewModel { get; } = new BusyIndicatorViewModel();
-
 
         public bool ShowAbsoluteError
         {
@@ -81,6 +82,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
             ModellingSettingsViewModel = new ModellingSettingsViewModel(solvers);
+            BatchModellingSettingsViewModel = new BatchModellingSettingsViewModel(solvers, TaskViewModel, _functionFactory);
 
             var inputObservable = this.WhenAnyValue(
                 m => m.TaskViewModel.EquationSystem,
