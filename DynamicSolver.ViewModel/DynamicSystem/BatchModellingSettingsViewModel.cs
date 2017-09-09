@@ -265,7 +265,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             return await Task.Run(() =>
             {
                 var solver = new DormandPrince8DynamicSystemSolver();
-                var parameters = new ModellingTaskParameters(step / 10);
+                var parameters = new ModellingTaskParameters(step / 100);
 
                 var result = new DynamicSystemState[itemsCount];
                 result[0] = initial;
@@ -276,7 +276,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 var baselineSolve = solver.Solve(system, initial, parameters);
 
                 var i = 1;
-                foreach (var state in baselineSolve.Skipping(9, 9).Take(itemsCount - 1))
+                foreach (var state in baselineSolve.Skipping(99, 99).Take(itemsCount - 1))
                 {
                     result[i++] = state;
                 }
