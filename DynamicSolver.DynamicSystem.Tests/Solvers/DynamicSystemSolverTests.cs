@@ -23,7 +23,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 2)]    
     [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2)]
     
-    [TestFixture(typeof(KDFastDynamicSystemSolver), 2, 95)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 2, 95)]
     public class DynamicSystemSolverTests
     {
         private const double STEP = 0.1;
@@ -47,6 +47,11 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
 
         public DynamicSystemSolverTests(Type solverType, int methodAccuracy, int proportionTolerancePercent)
             : this((IDynamicSystemSolver) Activator.CreateInstance(solverType), methodAccuracy, proportionTolerancePercent / 100f)
+        {
+        }
+
+        public DynamicSystemSolverTests(Type solverType, object[] args, int methodAccuracy, int proportionTolerancePercent)
+            : this((IDynamicSystemSolver) Activator.CreateInstance(solverType, args), methodAccuracy, proportionTolerancePercent / 100f)
         {
         }
         

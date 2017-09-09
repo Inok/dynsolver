@@ -43,8 +43,11 @@ namespace DynamicSolver.DynamicSystem
 
             Bind<IDynamicSystemSolver>().ToMethod(c => new KDNewtonBasedDynamicSystemSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastImplicitDynamicSystemSolver()).InSingletonScope();
-            
-            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastDynamicSystemSolver()).InSingletonScope();
+
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastDynamicSystemSolver(2)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastDynamicSystemSolver(4)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastDynamicSystemSolver(6)).InSingletonScope();
+            Bind<IDynamicSystemSolver>().ToMethod(c => new KDFastDynamicSystemSolver(8)).InSingletonScope();
 
             Bind<IDynamicSystemSolver>().ToMethod(c => new ExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();
             Bind<IDynamicSystemSolver>().ToMethod(c => new SymmetricExplicitMiddlePointDynamicSystemSolver()).InSingletonScope();

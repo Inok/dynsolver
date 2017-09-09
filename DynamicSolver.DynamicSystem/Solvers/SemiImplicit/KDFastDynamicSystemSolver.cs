@@ -7,7 +7,16 @@ namespace DynamicSolver.DynamicSystem.Solvers.SemiImplicit
 {
     public class KDFastDynamicSystemSolver : IDynamicSystemSolver
     {
-        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (fast)", 2, true);
+        private readonly int _secondHalfStageRepeats;
+        
+        public DynamicSystemSolverDescription Description { get; }
+
+        public KDFastDynamicSystemSolver(int secondHalfStageRepeats)
+        {
+            if (secondHalfStageRepeats <= 0) throw new ArgumentOutOfRangeException(nameof(secondHalfStageRepeats));
+            _secondHalfStageRepeats = secondHalfStageRepeats;
+            Description = new DynamicSystemSolverDescription($"KD (n-repeats, {_secondHalfStageRepeats})", 2, true);
+        }
 
         public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem,
             DynamicSystemState initialState,
@@ -49,10 +58,10 @@ namespace DynamicSolver.DynamicSystem.Solvers.SemiImplicit
                     if (fourStepFunctions[i])
                     {
                         var startValue = firstHalfVars[function.Name];
-                        secondHalfVars[function.Name] = startValue + halfStep * function.Function.Execute(secondHalfVars);
-                        secondHalfVars[function.Name] = startValue + halfStep * function.Function.Execute(secondHalfVars);
-                        secondHalfVars[function.Name] = startValue + halfStep * function.Function.Execute(secondHalfVars);
-                        secondHalfVars[function.Name] = startValue + halfStep * function.Function.Execute(secondHalfVars);
+                        for (var repeat = 0; repeat < _secondHalfStageRepeats; repeat++)
+                        {
+                            secondHalfVars[function.Name] = startValue + halfStep * function.Function.Execute(secondHalfVars);                            
+                        }
                     }
                     else
                     {
