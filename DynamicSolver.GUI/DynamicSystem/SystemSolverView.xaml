@@ -11,35 +11,52 @@
     <Grid DataContext="{Binding ViewModel,  ElementName=UserControl}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <dynamicSystem:DynamicSystemTaskView ViewModel="{Binding TaskViewModel}" />
-        <dynamicSystem:ModellingSettingsView Grid.Row="1" ViewModel="{Binding ModellingSettingsViewModel}" />
+        <TabControl Grid.Row="1">
+            <TabItem Header="Solver" IsSelected="True">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    
+                    <dynamicSystem:ModellingSettingsView Grid.Row="0" ViewModel="{Binding ModellingSettingsViewModel}" />
 
-        <xctk:BusyIndicator Grid.Row="2" IsBusy="{Binding BusyViewModel.IsBusy}">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" MinHeight="25" />
-                    <RowDefinition Height="Auto" MinHeight="25" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                    <xctk:BusyIndicator Grid.Row="1" IsBusy="{Binding BusyViewModel.IsBusy}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" MinHeight="25" />
+                                <RowDefinition Height="Auto" MinHeight="25" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
 
-                <common:ErrorListView ViewModel="{Binding ErrorListViewModel}" Margin="0,3"/>
+                            <common:ErrorListView ViewModel="{Binding ErrorListViewModel}" Margin="0,3"/>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
-                    <TextBlock Text="{Binding ElapsedTime, StringFormat='Elapsed time: {0}'}" 
-                               VerticalAlignment="Center"  Margin="0,0,15,0"/>
-                    <CheckBox IsChecked="{Binding ShowAbsoluteError, Mode=TwoWay}" Content="Show absolute error" 
-                              Margin="0,0,15,0" VerticalAlignment="Center" />
-                </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Right">
+                                <TextBlock Text="{Binding ElapsedTime, StringFormat='Elapsed time: {0}'}" 
+                                           VerticalAlignment="Center"  Margin="0,0,15,0"/>
+                                <CheckBox IsChecked="{Binding ShowAbsoluteError, Mode=TwoWay}" Content="Show absolute error" 
+                                          Margin="0,0,15,0" VerticalAlignment="Center" />
+                            </StackPanel>
 
-                <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
-                <oxy:PlotView Grid.Row="3" Model="{Binding ErrorPlotModel}" />
-            </Grid>
-        </xctk:BusyIndicator>
+                            <oxy:PlotView Grid.Row="2" Model="{Binding ValuePlotModel}" />
+                            <oxy:PlotView Grid.Row="3" Model="{Binding ErrorPlotModel}" />
+                        </Grid>
+                    </xctk:BusyIndicator>
+                </Grid>
+            </TabItem>
+            
+            <TabItem Header="Batch solver">
+                <dynamicSystem:BatchModellingSettingsView ViewModel="{Binding BatchModellingSettingsViewModel}" />
+            </TabItem>
+            
+        </TabControl>
+        
+
     </Grid>
 
 </UserControl>

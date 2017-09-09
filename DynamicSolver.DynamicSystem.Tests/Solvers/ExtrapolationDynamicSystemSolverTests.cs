@@ -14,15 +14,18 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(ExplicitEulerSolver), 8, 8)]
     [TestFixture(typeof(ExplicitEulerSolver), 8, 8)]
 
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 1, 2)]
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 2, 4, 90)]
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 3, 6, 90)]
-    [TestFixture(typeof(KDFirstExplicitDynamicSystemSolver), 4, 8, 85)]
-
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 1, 2)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 2, 4, 95)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 3, 6, 90)]
-    [TestFixture(typeof(KDFirstImplicitDynamicSystemSolver), 4, 8, 85)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 1, 2)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 2, 4, 95)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 3, 6, 90)]
+    [TestFixture(typeof(KDNewtonBasedDynamicSystemSolver), 4, 8, 85)]
+    
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 1, 2)]
+    [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2, 4)]
+    
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 1, 2, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 2, 4, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 3, 6, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 4, 8, 90)]
 
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 1, 2)]
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2, 3)]
@@ -42,7 +45,16 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             : base(
                 new ExtrapolationSolver((IDynamicSystemSolver) Activator.CreateInstance(baseSolverType), stageCount, false),
                 methodAccuracy,
-                null,
+                tolerancePercent / 100f
+            )
+        {
+        }
+        
+        public ExtrapolationDynamicSystemSolverTests(Type baseSolverType, object[] args, int stageCount, int methodAccuracy,
+            int tolerancePercent)
+            : base(
+                new ExtrapolationSolver((IDynamicSystemSolver) Activator.CreateInstance(baseSolverType, args), stageCount, false),
+                methodAccuracy,
                 tolerancePercent / 100f
             )
         {

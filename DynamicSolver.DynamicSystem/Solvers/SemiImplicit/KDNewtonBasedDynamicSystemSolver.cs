@@ -4,23 +4,26 @@ using DynamicSolver.DynamicSystem.Step;
 
 namespace DynamicSolver.DynamicSystem.Solvers.SemiImplicit
 {
-    public class KDFirstImplicitDynamicSystemSolver : IDynamicSystemSolver
+    public class KDNewtonBasedDynamicSystemSolver : IDynamicSystemSolver
     {
-        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (I,E)", 2, true);
+        public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("KD (Newton)", 2, true);
 
-        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, ModellingTaskParameters parameters)
+        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem,
+            DynamicSystemState initialState,
+            ModellingTaskParameters parameters)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
+            if (initialState == null) throw new ArgumentNullException(nameof(initialState));
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
             var functions = equationSystem.ExecutableFunctions;
-            var stepper = new FixedStepStepper(parameters.Step, equationSystem.InitialState.IndependentVariable);
+            var stepper = new FixedStepStepper(parameters.Step, initialState.IndependentVariable);
 
             var tmpArgs = new Dictionary<string, double>(StringComparer.Ordinal);
 
             var firstHalfVars = new Dictionary<string, double>(StringComparer.Ordinal);
 
-            var lastState = equationSystem.InitialState;
+            var lastState = initialState;
             while (true)
             {
                 var step = stepper.MoveNext();

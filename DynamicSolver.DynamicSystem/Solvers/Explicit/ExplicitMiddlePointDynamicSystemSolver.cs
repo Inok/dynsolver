@@ -8,15 +8,18 @@ namespace DynamicSolver.DynamicSystem.Solvers.Explicit
     {
         public DynamicSystemSolverDescription Description { get; } = new DynamicSystemSolverDescription("Explicit middle point", 2, false);
 
-        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem, ModellingTaskParameters parameters)
+        public IEnumerable<DynamicSystemState> Solve(IExplicitOrdinaryDifferentialEquationSystem equationSystem,
+            DynamicSystemState initialState,
+            ModellingTaskParameters parameters)
         {
             if (equationSystem == null) throw new ArgumentNullException(nameof(equationSystem));
+            if (initialState == null) throw new ArgumentNullException(nameof(initialState));
             if (parameters == null) throw new ArgumentNullException(nameof(parameters));
 
             var functions = equationSystem.ExecutableFunctions;
-            var stepper = new FixedStepStepper(parameters.Step, equationSystem.InitialState.IndependentVariable);
+            var stepper = new FixedStepStepper(parameters.Step, initialState.IndependentVariable);
 
-            var lastState = equationSystem.InitialState;
+            var lastState = initialState;
             while (true)
             {
                 var step = stepper.MoveNext();

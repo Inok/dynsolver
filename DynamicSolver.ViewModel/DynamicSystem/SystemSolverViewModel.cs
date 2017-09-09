@@ -28,11 +28,13 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         private PlotModel _valuePlotModel;
         private PlotModel _errorPlotModel;
         private TimeSpan? _elapsedTime;
-        private bool _showAbsoluteError = false;
+        private bool _showAbsoluteError;
 
         public DynamicSystemTaskViewModel TaskViewModel { get; }
         
         public ModellingSettingsViewModel ModellingSettingsViewModel { get; }
+        
+        public BatchModellingSettingsViewModel BatchModellingSettingsViewModel { get; }
 
         [NotNull]
         public ErrorListViewModel ErrorListViewModel { get; } = new ErrorListViewModel();
@@ -40,31 +42,30 @@ namespace DynamicSolver.ViewModel.DynamicSystem
         [NotNull]
         public BusyIndicatorViewModel BusyViewModel { get; } = new BusyIndicatorViewModel();
 
-
         public bool ShowAbsoluteError
         {
-            get { return _showAbsoluteError; }
-            set { this.RaiseAndSetIfChanged(ref _showAbsoluteError, value); }
+            get => _showAbsoluteError;
+            set => this.RaiseAndSetIfChanged(ref _showAbsoluteError, value);
         }
 
         public ReactiveCommand Calculate { get; }
 
         public PlotModel ValuePlotModel
         {
-            get { return _valuePlotModel; }
-            set { this.RaiseAndSetIfChanged(ref _valuePlotModel, value); }
+            get => _valuePlotModel;
+            set => this.RaiseAndSetIfChanged(ref _valuePlotModel, value);
         }
 
         public PlotModel ErrorPlotModel
         {
-            get { return _errorPlotModel; }
-            set { this.RaiseAndSetIfChanged(ref _errorPlotModel, value); }
+            get => _errorPlotModel;
+            set => this.RaiseAndSetIfChanged(ref _errorPlotModel, value);
         }
 
         public TimeSpan? ElapsedTime
         {
-            get { return _elapsedTime; }
-            set { this.RaiseAndSetIfChanged(ref _elapsedTime, value); }
+            get => _elapsedTime;
+            set => this.RaiseAndSetIfChanged(ref _elapsedTime, value);
         }
 
         public SystemSolverViewModel(
@@ -81,6 +82,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
             TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
             ModellingSettingsViewModel = new ModellingSettingsViewModel(solvers);
+            BatchModellingSettingsViewModel = new BatchModellingSettingsViewModel(solvers, TaskViewModel, _functionFactory);
 
             var inputObservable = this.WhenAnyValue(
                 m => m.TaskViewModel.EquationSystem,
@@ -88,7 +90,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 m => m.ShowAbsoluteError
             );
             
-            Calculate = ReactiveCommand.CreateFromTask(CalculateAsync, inputObservable.Select(input => input.Item1 != null && input.Item2 != null));
+            Calculate = ReactiveCommand.CreateFromTask(CalculateAsync, inputObservable.Select(input => input.Item1 != null && input.Item1.Equations.Count > 0 && input.Item2 != null));
             inputObservable.Select(_ => Unit.Default).InvokeCommand(this, m => m.Calculate);
         }
 
@@ -105,9 +107,9 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 {
                     var plotters = await Task.Run(() => FillPlotters(input, ModellingSettingsViewModel.ModellingSettings, ShowAbsoluteError), token);
 
-                    ValuePlotModel = plotters.Item1;
-                    ErrorPlotModel = plotters.Item2;
-                    ElapsedTime = plotters.Item3;
+                    ValuePlotModel = plotters.actual;
+                    ErrorPlotModel = plotters.error;
+                    ElapsedTime = plotters.elapsed;
                 }
                 catch (Exception ex)
                 {
@@ -124,7 +126,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             }
         }
 
-        private Tuple<PlotModel, PlotModel, TimeSpan> FillPlotters(
+        private async Task<(PlotModel actual, PlotModel error, TimeSpan elapsed)> FillPlotters(
             [NotNull] ExplicitOrdinaryDifferentialEquationSystemDefinition input,
             [NotNull] ModellingSettings modellingSettings,
             bool showAbsoluteError)
@@ -132,35 +134,72 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             if (input == null) throw new ArgumentNullException(nameof(input));
             if (modellingSettings == null) throw new ArgumentNullException(nameof(modellingSettings));
 
-            var solver = modellingSettings.Solver;
-            var baselineSolver = new DormandPrince8DynamicSystemSolver();
-            
             var itemsCount = (int)(modellingSettings.Time / modellingSettings.Step);
             var startValues = input.InitialState;
 
-            var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.Equations, input.InitialState, _functionFactory);
+            var definition = new ExplicitOrdinaryDifferentialEquationSystem(input.Equations, _functionFactory);
 
-            var sw = new Stopwatch();
-            sw.Start();
-            var actual = startValues.Yield().Concat(solver.Solve(definition, new ModellingTaskParameters(modellingSettings.Step))).Take(itemsCount).ToList();
-            sw.Stop();
+            var actualTask = Task.Run(() =>
+            {
+                var solver = modellingSettings.Solver;
+                var parameters = new ModellingTaskParameters(modellingSettings.Step);
+                
+                var result = new DynamicSystemState[itemsCount];
+                result[0] = startValues;
 
-            var baseline = startValues.Yield().Concat(baselineSolver.Solve(definition, new ModellingTaskParameters(modellingSettings.Step / 10)).Skipping(9, 9)).Take(itemsCount);
+                var sw = new Stopwatch();
+                sw.Start();
+                
+                var actualSolve = solver.Solve(definition, startValues, parameters);
+               
+                var i = 1;
+                foreach (var state in actualSolve.Take(itemsCount - 1))
+                {
+                    result[i++] = state;
+                }
 
-            var solves = actual.Zip(baseline, (act, b) => new { actual = act, baseline = b });
+                sw.Stop();
+                return (result: result, elapsed: sw.Elapsed);
+            });
+            
+            var baselineTask = Task.Run(() =>
+            {
+                var solver = new DormandPrince8DynamicSystemSolver();
+                var parameters = new ModellingTaskParameters(modellingSettings.Step / 10);
+                
+                var result = new DynamicSystemState[itemsCount];
+                result[0] = startValues;
+
+                var sw = new Stopwatch();
+                sw.Start();
+
+                var baselineSolve = solver.Solve(definition, startValues, parameters);
+                
+                var i = 1;
+                foreach (var state in baselineSolve.Skipping(9, 9).Take(itemsCount - 1))
+                {
+                    result[i++] = state;
+                }
+
+                sw.Stop();
+                return (result: result, elapsed: sw.Elapsed);
+            });
+
+            var (actual, elapsed) = await actualTask;
+            var (baseline, _) = await baselineTask;
 
             var names = input.Equations.Select(e => e.LeadingDerivative.Variable.Name).ToList();
-            var lines = names.Select(n => new { name = n, value = new LineSeries { Title = n }, error = new LineSeries { Title = n } }).ToList();
-
-            foreach (var point in solves)
+            var lines = names.Select(n => new { name = n, value = new LineSeries { Title = n }, error = new LineSeries { Title = n } }).ToArray();
+            
+            for (var i = 0; i < itemsCount; i++)
             {
-                var time = point.actual.IndependentVariable;
+                var time = actual[i].IndependentVariable;
                 foreach (var line in lines)
                 {
-                    var val = point.actual.DependentVariables[line.name];
+                    var val = actual[i].DependentVariables[line.name];
                     line.value.Points.Add(new DataPoint(time, val));
 
-                    var error = point.baseline.DependentVariables[line.name] - val;
+                    var error = baseline[i].DependentVariables[line.name] - val;
                     line.error.Points.Add(new DataPoint(time, showAbsoluteError ? Math.Abs(error) : error));
                 }
             }
@@ -179,7 +218,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 errorPlot.Series.Add(lineSeries.error);
             }
 
-            return new Tuple<PlotModel, PlotModel, TimeSpan>(actualPlot, errorPlot, sw.Elapsed);
+            return (actualPlot, errorPlot, elapsed);
         }
 
         public string UrlPathSegment => nameof(SystemSolverViewModel);
