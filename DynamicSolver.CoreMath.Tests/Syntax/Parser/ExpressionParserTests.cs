@@ -12,7 +12,7 @@ namespace DynamicSolver.CoreMath.Tests.Syntax.Parser
     [TestFixture]
     public class ExpressionParserTests
     {
-        private readonly IExpressionParser _parser = new ExpressionParser();
+        private readonly ISyntaxParser _parser = new SyntaxParser();
 
         [TestCase((string)null)]
         [TestCase(" ")]

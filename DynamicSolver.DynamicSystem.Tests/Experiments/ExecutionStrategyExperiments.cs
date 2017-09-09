@@ -17,7 +17,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Compiler()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var arguments = new double[] { 1, 2, 3, 4 };
@@ -54,7 +54,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Interpreter()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var arguments = new Dictionary<string, double>() { { "x1", 1 }, { "x2", 2 }, { "x3", 3 }, { "x4", 4 } };
@@ -92,7 +92,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Compiler_Init()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var factory = new CompiledFunctionFactory();
@@ -125,7 +125,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Interpreter_Init()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var factory = new InterpretedFunctionFactory();
@@ -158,7 +158,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Compiler_Execute()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var arguments = new Dictionary<string, double> { { "x1", 1.0 }, { "x2", 2.0 }, { "x3", 3.0 }, { "x4", 4.0 } };
@@ -197,7 +197,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Interpreter_Execute()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             //var arguments = new Dictionary<string, double> { { "x1", 1.0 }, { "x2", 2.0 }, { "x3", 3.0 }, { "x4", 4.0 } };
@@ -235,7 +235,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Compiler_Complex()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var arguments = new Dictionary<string, double> { { "x1", 1.0 }, { "x2", 2.0 }, { "x3", 3.0 }, { "x4", 4.0 } };
@@ -274,7 +274,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Experiments
         [Test]
         public void ExecutionTime_Interpreter_Complex()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
             var statement = parser.Parse(EXPRESSION);
 
             var arguments = new Dictionary<string, double> { { "x1", 1.0 }, { "x2", 2.0 }, { "x3", 3.0 }, { "x4", 4.0 } };

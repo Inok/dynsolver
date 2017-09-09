@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Syntax.Parser
 {
-    public interface IExpressionParser
+    public interface ISyntaxParser
     {
         [NotNull]
         ISyntaxExpression Parse(string inputExpression);

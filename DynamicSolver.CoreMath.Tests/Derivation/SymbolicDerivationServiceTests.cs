@@ -9,7 +9,7 @@ namespace DynamicSolver.CoreMath.Tests.Derivation
     [TestFixture]
     public class SymbolicDerivationServiceTests
     {
-        private readonly ExpressionParser _parser = new ExpressionParser();
+        private readonly SyntaxParser _parser = new SyntaxParser();
         private readonly SymbolicDerivationService _service = new SymbolicDerivationService();
 
 

@@ -70,8 +70,8 @@
     <Compile Include="Syntax\Model\SubtractBinaryOperator.cs" />
     <Compile Include="Syntax\Model\UnaryMinusOperator.cs" />
     <Compile Include="Syntax\Model\VariablePrimitive.cs" />
-    <Compile Include="Syntax\Parser\ExpressionParser.cs" />
-    <Compile Include="Syntax\Parser\IExpressionParser.cs" />
+    <Compile Include="Syntax\Parser\SyntaxParser.cs" />
+    <Compile Include="Syntax\Parser\ISyntaxParser.cs" />
     <Compile Include="Syntax\Parser\Lexer.cs" />
     <Compile Include="Execution\Interpreter\InterpretedFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -18,7 +18,7 @@ namespace DynamicSolver.CoreMath.Tests.Execution
     [TestFixture(typeof(CompiledFunction))]
     public class ExecutableFunctionTests<T> where T: IExecutableFunction
     {
-        [NotNull] private readonly ExpressionParser _parser = new ExpressionParser();
+        [NotNull] private readonly SyntaxParser _parser = new SyntaxParser();
 
         private static IExecutableFunction CreateFunction(ISyntaxExpression statement)
         {

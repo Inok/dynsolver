@@ -26,7 +26,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 
         public ExplicitOrdinaryDifferentialEquationSystemDefinition EquationSystem => _equationSystem.Value;
 
-        public DynamicSystemTaskViewModel([NotNull] IExpressionParser parser)
+        public DynamicSystemTaskViewModel([NotNull] ISyntaxParser parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
 

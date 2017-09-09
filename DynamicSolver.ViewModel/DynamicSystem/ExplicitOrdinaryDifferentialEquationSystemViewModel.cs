@@ -11,7 +11,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
 {
     public class ExplicitOrdinaryDifferentialEquationSystemViewModel : ReactiveObject
     {
-        private readonly IExpressionParser _parser;
+        private readonly ISyntaxParser _parser;
 
         private string _input;
         private IReadOnlyCollection<ExplicitOrdinaryDifferentialEquation> _equationSystem;
@@ -33,7 +33,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             set { this.RaiseAndSetIfChanged(ref _equationSystem, value); }
         }
 
-        public ExplicitOrdinaryDifferentialEquationSystemViewModel([NotNull] IExpressionParser parser)
+        public ExplicitOrdinaryDifferentialEquationSystemViewModel([NotNull] ISyntaxParser parser)
         {
             if (parser == null) throw new ArgumentNullException(nameof(parser));
             _parser = parser;

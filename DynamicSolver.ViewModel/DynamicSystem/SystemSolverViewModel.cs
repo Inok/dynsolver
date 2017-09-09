@@ -80,7 +80,7 @@ namespace DynamicSolver.ViewModel.DynamicSystem
             HostScreen = hostScreen;
             _functionFactory = functionFactory;
 
-            TaskViewModel = new DynamicSystemTaskViewModel(new ExpressionParser());
+            TaskViewModel = new DynamicSystemTaskViewModel(new SyntaxParser());
             ModellingSettingsViewModel = new ModellingSettingsViewModel(solvers);
             BatchModellingSettingsViewModel = new BatchModellingSettingsViewModel(solvers, TaskViewModel, _functionFactory);
 

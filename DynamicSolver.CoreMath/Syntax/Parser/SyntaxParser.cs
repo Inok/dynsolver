@@ -3,7 +3,7 @@ using DynamicSolver.CoreMath.Syntax.Model;
 
 namespace DynamicSolver.CoreMath.Syntax.Parser
 {
-    public class ExpressionParser : IExpressionParser
+    public class SyntaxParser : ISyntaxParser
     {
         public ISyntaxExpression Parse(string inputExpression)
         {

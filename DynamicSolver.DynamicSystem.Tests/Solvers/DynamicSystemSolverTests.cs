@@ -74,7 +74,7 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
         [SetUp]
         public void Setup()
         {
-            var parser = new ExpressionParser();
+            var parser = new SyntaxParser();
 
             _equationSystem = new ExplicitOrdinaryDifferentialEquationSystem(
                 new[]
