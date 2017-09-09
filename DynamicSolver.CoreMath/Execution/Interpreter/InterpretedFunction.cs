@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using DynamicSolver.CoreMath.Analysis;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Execution.Interpreter

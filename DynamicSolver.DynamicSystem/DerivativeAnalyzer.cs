@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.CoreMath.Analysis;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem

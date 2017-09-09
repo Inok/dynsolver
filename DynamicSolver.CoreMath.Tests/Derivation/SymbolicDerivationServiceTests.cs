@@ -1,6 +1,6 @@
 ﻿using DynamicSolver.CoreMath.Derivation;
-using DynamicSolver.CoreMath.Expression;
 using DynamicSolver.CoreMath.Parser;
+using DynamicSolver.CoreMath.Syntax;
 using NUnit.Framework;
 
 namespace DynamicSolver.CoreMath.Tests.Derivation

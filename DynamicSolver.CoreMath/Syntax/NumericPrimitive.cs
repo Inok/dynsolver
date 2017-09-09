@@ -2,7 +2,7 @@
 using System.Globalization;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Expression
+namespace DynamicSolver.CoreMath.Syntax
 {
     public class NumericPrimitive : IPrimitive, IEquatable<NumericPrimitive>
     {

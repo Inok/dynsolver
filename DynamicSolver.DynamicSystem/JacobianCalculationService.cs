@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.CoreMath.Derivation;
 using DynamicSolver.CoreMath.Execution;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 using DynamicSolver.DynamicSystem.Solvers;
 using JetBrains.Annotations;
 

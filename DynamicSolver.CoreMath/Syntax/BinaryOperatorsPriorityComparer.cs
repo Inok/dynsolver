@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DynamicSolver.CoreMath.Expression
+namespace DynamicSolver.CoreMath.Syntax
 {
     public class BinaryOperatorsPriorityComparer : IComparer<IBinaryOperator>
     {

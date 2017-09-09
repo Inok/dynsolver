@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DynamicSolver.CoreMath.Expression;
 using DynamicSolver.CoreMath.Parser;
+using DynamicSolver.CoreMath.Syntax;
 using Inok.Tools.Dump;
 using NUnit.Framework;
 

@@ -13,10 +13,9 @@ namespace DynamicSolver.CoreMath.Semantic.Model
 
         public AddOperation([NotNull] IValueSource left, [NotNull] IValueSource right)
         {
-            if (left == null) throw new ArgumentNullException(nameof(left));
             if (right == null) throw new ArgumentNullException(nameof(right));
 
-            Left = left;
+            Left = left ?? throw new ArgumentNullException(nameof(left));
             Right = right;
         }
 

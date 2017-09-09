@@ -1,5 +1,5 @@
 ﻿using System;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 using NUnit.Framework;
 
 namespace DynamicSolver.CoreMath.Tests.Expression

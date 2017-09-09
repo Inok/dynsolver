@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Analysis
@@ -16,8 +16,7 @@ namespace DynamicSolver.CoreMath.Analysis
 
         public ExpressionAnalyzer([NotNull] IExpression expression)
         {
-            if (expression == null) throw new ArgumentNullException(nameof(expression));
-            _expression = expression;
+            _expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
 
         public ISet<string> GetVariablesSet()

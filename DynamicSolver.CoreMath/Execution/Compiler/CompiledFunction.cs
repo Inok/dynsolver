@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using DynamicSolver.CoreMath.Analysis;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.CoreMath.Execution.Compiler

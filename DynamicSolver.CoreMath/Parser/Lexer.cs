@@ -1,6 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
-using DynamicSolver.CoreMath.Expression;
+using DynamicSolver.CoreMath.Syntax;
 
 namespace DynamicSolver.CoreMath.Parser
 {

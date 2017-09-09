@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Expression
+namespace DynamicSolver.CoreMath.Syntax
 {
     public sealed class AddBinaryOperator : BinaryOperator
     {

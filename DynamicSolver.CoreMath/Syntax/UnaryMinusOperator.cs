@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Expression
+namespace DynamicSolver.CoreMath.Syntax
 {
     public sealed class UnaryMinusOperator : IUnaryOperator, IEquatable<UnaryMinusOperator>
     {
