@@ -22,10 +22,10 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
     [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 1, 2)]
     [TestFixture(typeof(KDFastImplicitDynamicSystemSolver), 2, 4)]
     
-    [TestFixture(typeof(KDFastDynamicSystemSolver), 1, 2, 90)]
-    [TestFixture(typeof(KDFastDynamicSystemSolver), 2, 4, 90)]
-    [TestFixture(typeof(KDFastDynamicSystemSolver), 3, 6, 90)]
-    [TestFixture(typeof(KDFastDynamicSystemSolver), 4, 8, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 1, 2, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 2, 4, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 3, 6, 90)]
+    [TestFixture(typeof(KDFastDynamicSystemSolver), new object[] {4}, 4, 8, 90)]
 
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 1, 2)]
     [TestFixture(typeof(ExplicitMiddlePointDynamicSystemSolver), 2, 3)]
@@ -44,6 +44,16 @@ namespace DynamicSolver.DynamicSystem.Tests.Solvers
             int tolerancePercent)
             : base(
                 new ExtrapolationSolver((IDynamicSystemSolver) Activator.CreateInstance(baseSolverType), stageCount, false),
+                methodAccuracy,
+                tolerancePercent / 100f
+            )
+        {
+        }
+        
+        public ExtrapolationDynamicSystemSolverTests(Type baseSolverType, object[] args, int stageCount, int methodAccuracy,
+            int tolerancePercent)
+            : base(
+                new ExtrapolationSolver((IDynamicSystemSolver) Activator.CreateInstance(baseSolverType, args), stageCount, false),
                 methodAccuracy,
                 tolerancePercent / 100f
             )
