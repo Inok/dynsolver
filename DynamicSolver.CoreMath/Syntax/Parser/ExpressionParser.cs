@@ -1,7 +1,6 @@
 ﻿using System;
-using DynamicSolver.CoreMath.Syntax;
 
-namespace DynamicSolver.CoreMath.Parser
+namespace DynamicSolver.CoreMath.Syntax.Parser
 {
     public class ExpressionParser : IExpressionParser
     {

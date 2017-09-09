@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.CoreMath.Parser;
+using DynamicSolver.CoreMath.Syntax.Parser;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.ViewModel.Common.ErrorList;
 using JetBrains.Annotations;

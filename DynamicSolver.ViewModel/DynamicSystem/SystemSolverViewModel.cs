@@ -7,7 +7,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicSolver.CoreMath.Execution;
-using DynamicSolver.CoreMath.Parser;
+using DynamicSolver.CoreMath.Syntax.Parser;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;

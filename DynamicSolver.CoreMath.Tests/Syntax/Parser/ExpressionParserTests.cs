@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using DynamicSolver.CoreMath.Parser;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Parser;
 using Inok.Tools.Dump;
 using NUnit.Framework;
 
-namespace DynamicSolver.CoreMath.Tests.Parser
+namespace DynamicSolver.CoreMath.Tests.Syntax.Parser
 {
     [TestFixture]
     public class ExpressionParserTests

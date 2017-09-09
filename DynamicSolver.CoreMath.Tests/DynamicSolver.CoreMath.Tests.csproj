@@ -56,12 +56,12 @@
       <Link>SolutionInfo.cs</Link>
     </Compile>
     <Compile Include="Derivation\SymbolicDerivationServiceTests.cs" />
-    <Compile Include="Expression\BinaryOperatorsPriorityComparerTests.cs" />
-    <Compile Include="Expression\ExpressionFormatterTests.cs" />
+    <Compile Include="Syntax\BinaryOperatorsPriorityComparerTests.cs" />
+    <Compile Include="Syntax\ExpressionFormatterTests.cs" />
     <Compile Include="Execution\ExecutableFunctionTests.cs" />
-    <Compile Include="Parser\ExpressionParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Semantic\Print\SemanticPrinterTests.cs" />
+    <Compile Include="Syntax\Parser\ExpressionParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

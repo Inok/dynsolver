@@ -2,7 +2,7 @@
 using DynamicSolver.CoreMath.Syntax;
 using NUnit.Framework;
 
-namespace DynamicSolver.CoreMath.Tests.Expression
+namespace DynamicSolver.CoreMath.Tests.Syntax
 {
     [TestFixture]
     public class ExpressionFormatterTests

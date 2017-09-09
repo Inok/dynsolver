@@ -4,7 +4,7 @@ using DynamicSolver.CoreMath.Syntax;
 using Moq;
 using NUnit.Framework;
 
-namespace DynamicSolver.CoreMath.Tests.Expression
+namespace DynamicSolver.CoreMath.Tests.Syntax
 {
     [TestFixture]
     public class BinaryOperatorsPriorityComparerTests

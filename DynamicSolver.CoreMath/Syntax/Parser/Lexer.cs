@@ -1,8 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
-using DynamicSolver.CoreMath.Syntax;
 
-namespace DynamicSolver.CoreMath.Parser
+namespace DynamicSolver.CoreMath.Syntax.Parser
 {
     public class Lexer
     {

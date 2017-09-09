@@ -1,7 +1,6 @@
-﻿using DynamicSolver.CoreMath.Syntax;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
-namespace DynamicSolver.CoreMath.Parser
+namespace DynamicSolver.CoreMath.Syntax.Parser
 {
     public interface IExpressionParser
     {

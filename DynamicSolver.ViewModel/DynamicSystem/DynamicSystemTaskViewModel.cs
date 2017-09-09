@@ -5,7 +5,7 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using DynamicSolver.CoreMath.Analysis;
-using DynamicSolver.CoreMath.Parser;
+using DynamicSolver.CoreMath.Syntax.Parser;
 using DynamicSolver.DynamicSystem;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.ViewModel.Common.Edit;

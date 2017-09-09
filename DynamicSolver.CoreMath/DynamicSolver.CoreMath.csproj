@@ -65,14 +65,14 @@
     <Compile Include="Syntax\IUnaryOperator.cs" />
     <Compile Include="Syntax\MultiplyBinaryOperator.cs" />
     <Compile Include="Syntax\NumericPrimitive.cs" />
+    <Compile Include="Syntax\Parser\ExpressionParser.cs" />
+    <Compile Include="Syntax\Parser\IExpressionParser.cs" />
+    <Compile Include="Syntax\Parser\Lexer.cs" />
     <Compile Include="Syntax\PowBinaryOperator.cs" />
     <Compile Include="Syntax\SubtractBinaryOperator.cs" />
     <Compile Include="Syntax\UnaryMinusOperator.cs" />
     <Compile Include="Syntax\VariablePrimitive.cs" />
     <Compile Include="Execution\Interpreter\InterpretedFunction.cs" />
-    <Compile Include="Parser\ExpressionParser.cs" />
-    <Compile Include="Parser\IExpressionParser.cs" />
-    <Compile Include="Parser\Lexer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Analysis\ExpressionAnalyzer.cs" />
     <Compile Include="Analysis\ExpressionVisitor.cs" />

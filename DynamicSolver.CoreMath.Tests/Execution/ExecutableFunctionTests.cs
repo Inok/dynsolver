@@ -6,8 +6,8 @@ using System.Reflection;
 using DynamicSolver.CoreMath.Execution;
 using DynamicSolver.CoreMath.Execution.Compiler;
 using DynamicSolver.CoreMath.Execution.Interpreter;
-using DynamicSolver.CoreMath.Parser;
 using DynamicSolver.CoreMath.Syntax;
+using DynamicSolver.CoreMath.Syntax.Parser;
 using JetBrains.Annotations;
 using NUnit.Framework;
 
