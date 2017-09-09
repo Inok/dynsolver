@@ -8,14 +8,14 @@ namespace DynamicSolver.CoreMath.Syntax
         private static readonly BinaryOperatorsPriorityComparer PriorityComparer = new BinaryOperatorsPriorityComparer();
 
         [NotNull]
-        public string Format([NotNull] IExpression expression)
+        public string Format([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
 
             return InternalFormat(expression);
         }
 
-        private static string InternalFormat(IExpression expression)
+        private static string InternalFormat(ISyntaxExpression expression)
         {
             var numeric = expression as NumericPrimitive;
             if (numeric != null)
@@ -76,7 +76,7 @@ namespace DynamicSolver.CoreMath.Syntax
             return $"{FormatBinary(binary, binary.LeftOperand)} {GetBinaryOperatorToken(binary)} {FormatBinary(binary, binary.RightOperand)}";
         }
 
-        private static string FormatBinary(IBinaryOperator _this, IExpression operand)
+        private static string FormatBinary(IBinaryOperator _this, ISyntaxExpression operand)
         {
             var binary = operand as IBinaryOperator;
 

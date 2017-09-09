@@ -2,7 +2,7 @@
 
 namespace DynamicSolver.CoreMath.Syntax
 {
-    public interface IExpression : IEquatable<IExpression>
+    public interface ISyntaxExpression : IEquatable<ISyntaxExpression>
     {
         
     }

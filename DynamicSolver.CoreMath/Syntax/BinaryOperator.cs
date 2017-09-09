@@ -7,10 +7,10 @@ namespace DynamicSolver.CoreMath.Syntax
     {
         protected abstract string OperatorToken { get; }
 
-        public IExpression LeftOperand { get; }
-        public IExpression RightOperand { get; }
+        public ISyntaxExpression LeftOperand { get; }
+        public ISyntaxExpression RightOperand { get; }
 
-        protected BinaryOperator([NotNull] IExpression leftOperand, [NotNull] IExpression rightOperand)
+        protected BinaryOperator([NotNull] ISyntaxExpression leftOperand, [NotNull] ISyntaxExpression rightOperand)
         {
             if (leftOperand == null) throw new ArgumentNullException(nameof(leftOperand));
             if (rightOperand == null) throw new ArgumentNullException(nameof(rightOperand));
@@ -41,7 +41,7 @@ namespace DynamicSolver.CoreMath.Syntax
             return other != null && Equals(other);
         }
 
-        public bool Equals(IExpression other)
+        public bool Equals(ISyntaxExpression other)
         {
             return this.Equals((object)other);
         }

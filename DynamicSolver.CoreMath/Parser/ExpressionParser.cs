@@ -5,7 +5,7 @@ namespace DynamicSolver.CoreMath.Parser
 {
     public class ExpressionParser : IExpressionParser
     {
-        public IExpression Parse(string inputExpression)
+        public ISyntaxExpression Parse(string inputExpression)
         {
             if (string.IsNullOrWhiteSpace(inputExpression)) throw new ArgumentException("Argument is null or empty", nameof(inputExpression));
 
@@ -21,7 +21,7 @@ namespace DynamicSolver.CoreMath.Parser
             return expression;
         }
 
-        private static IExpression ParseAssignment(Lexer lexer)
+        private static ISyntaxExpression ParseAssignment(Lexer lexer)
         {
             var expr = ParseAddSubtract(lexer);
 
@@ -34,7 +34,7 @@ namespace DynamicSolver.CoreMath.Parser
             return expr;
         }
 
-        private static IExpression ParseAddSubtract(Lexer lexer)
+        private static ISyntaxExpression ParseAddSubtract(Lexer lexer)
         {
             var expr = ParseMulDiv(lexer);
 
@@ -59,7 +59,7 @@ namespace DynamicSolver.CoreMath.Parser
             return expr;
         }
 
-        private static IExpression ParseMulDiv(Lexer lexer)
+        private static ISyntaxExpression ParseMulDiv(Lexer lexer)
         {
             var expr = ParsePow(lexer);
 
@@ -84,7 +84,7 @@ namespace DynamicSolver.CoreMath.Parser
             return expr;
         }
 
-        private static IExpression ParsePow(Lexer lexer)
+        private static ISyntaxExpression ParsePow(Lexer lexer)
         {
             var expr = ParseFactor(lexer);
 
@@ -97,7 +97,7 @@ namespace DynamicSolver.CoreMath.Parser
             return expr;
         }
 
-        private static IExpression ParseFactor(Lexer lexer)
+        private static ISyntaxExpression ParseFactor(Lexer lexer)
         {
             lexer.SkipLeadingWhitespaces();
             if (lexer.IsEmpty)
@@ -150,7 +150,7 @@ namespace DynamicSolver.CoreMath.Parser
             return ParsePrimitive(lexer);
         }
 
-        private static IExpression ParsePrimitive(Lexer lexer)
+        private static ISyntaxExpression ParsePrimitive(Lexer lexer)
         {
             lexer.SkipLeadingWhitespaces();
 
@@ -172,7 +172,7 @@ namespace DynamicSolver.CoreMath.Parser
             throw new FormatException($"Primitive cannot be parsed, starting at {lexer.Input}");
         }
 
-        private static IExpression ParseIdentifier(Lexer lexer)
+        private static ISyntaxExpression ParseIdentifier(Lexer lexer)
         {
             var identifier = lexer.ReadIdentifier();
 
@@ -195,7 +195,7 @@ namespace DynamicSolver.CoreMath.Parser
                 return new FunctionCall(identifier, childExpr);
             }
 
-            IExpression expr = new VariablePrimitive(identifier);
+            ISyntaxExpression expr = new VariablePrimitive(identifier);
 
             while (lexer.AdvanceToken('\'', false))
             {

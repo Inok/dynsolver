@@ -21,11 +21,11 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
             ["lg"]  = (d) => Math.Log10(d),
         };
         
-        [NotNull] private readonly IExpression _expression;
+        [NotNull] private readonly ISyntaxExpression _expression;
 
         public IReadOnlyCollection<string> OrderedArguments { get; }
 
-        public InterpretedFunction([NotNull] IExpression expression)
+        public InterpretedFunction([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (!new ExpressionAnalyzer(expression).IsComputable) throw new ArgumentException("Expression is invalid: it is not computable.", nameof(expression));
@@ -78,7 +78,7 @@ namespace DynamicSolver.CoreMath.Execution.Interpreter
             return ExecuteInternal(_expression, arguments);
         }
 
-        private double ExecuteInternal([NotNull] IExpression expression, [NotNull] IReadOnlyDictionary<string, double> arguments)
+        private double ExecuteInternal([NotNull] ISyntaxExpression expression, [NotNull] IReadOnlyDictionary<string, double> arguments)
         {
             if (expression is IPrimitive)
             {

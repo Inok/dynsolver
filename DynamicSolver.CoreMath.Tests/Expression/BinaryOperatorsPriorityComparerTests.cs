@@ -11,7 +11,7 @@ namespace DynamicSolver.CoreMath.Tests.Expression
     {
         private static T Create<T>() where T: IBinaryOperator
         {
-            return (T) Activator.CreateInstance(typeof(T), Mock.Of<IExpression>(), Mock.Of<IExpression>());
+            return (T) Activator.CreateInstance(typeof(T), Mock.Of<ISyntaxExpression>(), Mock.Of<ISyntaxExpression>());
         }
 
         private static IEnumerable<object[]> CompareEqualCases()

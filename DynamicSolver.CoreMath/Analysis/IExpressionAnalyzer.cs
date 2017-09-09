@@ -11,6 +11,6 @@ namespace DynamicSolver.CoreMath.Analysis
         bool IsSimpleAssignment { get; }
         bool IsComputable { get; }
 
-        bool HasOperator<T>() where T : IExpression;
+        bool HasOperator<T>() where T : ISyntaxExpression;
     }
 }

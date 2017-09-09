@@ -2,11 +2,11 @@
 
 namespace DynamicSolver.CoreMath.Syntax
 {
-    public interface IFunctionCall : IExpression
+    public interface IFunctionCall : ISyntaxExpression
     {
         [NotNull]
         string FunctionName { get; }
         [NotNull]
-        IExpression Argument { get; set; }
+        ISyntaxExpression Argument { get; set; }
     }
 }

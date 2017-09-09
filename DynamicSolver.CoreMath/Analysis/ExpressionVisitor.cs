@@ -7,9 +7,9 @@ namespace DynamicSolver.CoreMath.Analysis
     public class ExpressionVisitor
     {
         [NotNull]
-        private readonly IExpression _expression;
+        private readonly ISyntaxExpression _expression;
 
-        public ExpressionVisitor([NotNull] IExpression expression)
+        public ExpressionVisitor([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             _expression = expression;
@@ -20,7 +20,7 @@ namespace DynamicSolver.CoreMath.Analysis
             Visit(_expression);
         }
 
-        private void Visit([NotNull] IExpression expression)
+        private void Visit([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
 
@@ -78,7 +78,7 @@ namespace DynamicSolver.CoreMath.Analysis
             return true;
         }
 
-        public event EventHandler<IExpression> VisitAnyNode;
+        public event EventHandler<ISyntaxExpression> VisitAnyNode;
 
         public event EventHandler<IBinaryOperator> VisitBinaryOperator;
         public event EventHandler<AssignmentBinaryOperator> VisitAssignmentBinaryOperator;

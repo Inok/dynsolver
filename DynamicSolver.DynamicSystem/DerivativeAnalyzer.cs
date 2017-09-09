@@ -9,7 +9,7 @@ namespace DynamicSolver.DynamicSystem
 {
     public class DerivativeAnalyzer
     {
-        [NotNull] private readonly IExpression _expression;
+        [NotNull] private readonly ISyntaxExpression _expression;
 
         private VariableDerivative _derivative;
         private bool? _isVariableDerivative;
@@ -48,7 +48,7 @@ namespace DynamicSolver.DynamicSystem
             }
         }
 
-        public DerivativeAnalyzer([NotNull] IExpression expression)
+        public DerivativeAnalyzer([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             _expression = expression;
@@ -70,7 +70,7 @@ namespace DynamicSolver.DynamicSystem
         }
 
 
-        private static IEnumerable<VariableDerivative> EnumerateVariableDerivatives(IExpression expression)
+        private static IEnumerable<VariableDerivative> EnumerateVariableDerivatives(ISyntaxExpression expression)
         {
             var derivative = GetVariableDerivative(expression);
             if (derivative != null)
@@ -110,7 +110,7 @@ namespace DynamicSolver.DynamicSystem
         }
 
 
-        private static VariableDerivative GetVariableDerivative(IExpression expression)
+        private static VariableDerivative GetVariableDerivative(ISyntaxExpression expression)
         {
             int order = 0;
 

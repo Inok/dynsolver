@@ -2,9 +2,9 @@
 
 namespace DynamicSolver.CoreMath.Syntax
 {
-    public interface IUnaryOperator : IExpression
+    public interface IUnaryOperator : ISyntaxExpression
     {
         [NotNull]
-        IExpression Operand { get; }
+        ISyntaxExpression Operand { get; }
     }
 }

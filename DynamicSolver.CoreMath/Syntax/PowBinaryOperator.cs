@@ -6,7 +6,7 @@ namespace DynamicSolver.CoreMath.Syntax
     {
         protected override string OperatorToken { get; } = "^";
 
-        public PowBinaryOperator([NotNull] IExpression leftOperand, [NotNull] IExpression rightOperand) : base(leftOperand, rightOperand)
+        public PowBinaryOperator([NotNull] ISyntaxExpression leftOperand, [NotNull] ISyntaxExpression rightOperand) : base(leftOperand, rightOperand)
         {
         }
     }

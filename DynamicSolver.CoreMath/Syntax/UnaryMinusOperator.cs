@@ -5,9 +5,9 @@ namespace DynamicSolver.CoreMath.Syntax
 {
     public sealed class UnaryMinusOperator : IUnaryOperator, IEquatable<UnaryMinusOperator>
     {
-        public IExpression Operand { get; }
+        public ISyntaxExpression Operand { get; }
 
-        public UnaryMinusOperator([NotNull] IExpression operand)
+        public UnaryMinusOperator([NotNull] ISyntaxExpression operand)
         {
             if (operand == null) throw new ArgumentNullException(nameof(operand));
 
@@ -33,7 +33,7 @@ namespace DynamicSolver.CoreMath.Syntax
             return obj is UnaryMinusOperator && Equals((UnaryMinusOperator) obj);
         }
 
-        public bool Equals(IExpression other)
+        public bool Equals(ISyntaxExpression other)
         {
             return this.Equals((object)other);
         }

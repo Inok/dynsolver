@@ -10,7 +10,7 @@ namespace DynamicSolver.CoreMath.Derivation
     public class SymbolicDerivationService
     {
         [NotNull]
-        public IExpression GetDerivative([NotNull] IExpression expression, [NotNull] string respectToVariableName)
+        public ISyntaxExpression GetDerivative([NotNull] ISyntaxExpression expression, [NotNull] string respectToVariableName)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             if (string.IsNullOrWhiteSpace(respectToVariableName))
@@ -107,7 +107,7 @@ namespace DynamicSolver.CoreMath.Derivation
             var functionCall = expression as IFunctionCall;
             if (functionCall != null)
             {
-                Func<IExpression, IExpression> derivative;
+                Func<ISyntaxExpression, ISyntaxExpression> derivative;
                 if (!FunctionDerivatives.TryGetValue(functionCall.FunctionName, out derivative))
                 {
                     throw new NotImplementedException($"Function derivative of {functionCall.FunctionName} is unknown");
@@ -119,7 +119,7 @@ namespace DynamicSolver.CoreMath.Derivation
             throw new NotImplementedException();
         }
 
-        private bool IsDependOnRespected(IExpression expression, string respectedTo)
+        private bool IsDependOnRespected(ISyntaxExpression expression, string respectedTo)
         {
             if (expression is ConstantPrimitive || expression is NumericPrimitive)
             {
@@ -135,7 +135,7 @@ namespace DynamicSolver.CoreMath.Derivation
             return new ExpressionAnalyzer(expression).Variables.Contains(respectedTo);
         }
 
-        private static readonly Dictionary<string, Func<IExpression, IExpression>> FunctionDerivatives = new Dictionary<string, Func<IExpression, IExpression>>()
+        private static readonly Dictionary<string, Func<ISyntaxExpression, ISyntaxExpression>> FunctionDerivatives = new Dictionary<string, Func<ISyntaxExpression, ISyntaxExpression>>()
         {
             ["sin"] = e => new FunctionCall("cos", e),
             ["cos"] = e => new UnaryMinusOperator(new FunctionCall("sin", e)),

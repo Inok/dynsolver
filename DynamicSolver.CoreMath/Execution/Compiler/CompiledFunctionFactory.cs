@@ -6,7 +6,7 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
 {
     public class CompiledFunctionFactory : IExecutableFunctionFactory
     {
-        public IExecutableFunction Create([NotNull] IExpression statement)
+        public IExecutableFunction Create([NotNull] ISyntaxExpression statement)
         {
             if (statement == null) throw new ArgumentNullException(nameof(statement));
 

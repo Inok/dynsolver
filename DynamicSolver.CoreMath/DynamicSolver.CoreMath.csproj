@@ -59,7 +59,7 @@
     <Compile Include="Syntax\ExpressionFormatter.cs" />
     <Compile Include="Syntax\FunctionCall.cs" />
     <Compile Include="Syntax\IBinaryOperator.cs" />
-    <Compile Include="Syntax\IExpression.cs" />
+    <Compile Include="Syntax\ISyntaxExpression.cs" />
     <Compile Include="Syntax\IFunctionCall.cs" />
     <Compile Include="Syntax\IPrimitive.cs" />
     <Compile Include="Syntax\IUnaryOperator.cs" />

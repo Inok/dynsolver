@@ -19,7 +19,7 @@ namespace DynamicSolver.CoreMath.Tests.Execution
     {
         [NotNull] private readonly ExpressionParser _parser = new ExpressionParser();
 
-        private static IExecutableFunction CreateFunction(IExpression statement)
+        private static IExecutableFunction CreateFunction(ISyntaxExpression statement)
         {
             try
             {

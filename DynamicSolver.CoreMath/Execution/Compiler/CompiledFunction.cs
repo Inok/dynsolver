@@ -15,7 +15,7 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
         
         public IReadOnlyCollection<string> OrderedArguments { get; }
 
-        public CompiledFunction([NotNull] IExpression expression)
+        public CompiledFunction([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
 
@@ -62,14 +62,14 @@ namespace DynamicSolver.CoreMath.Execution.Compiler
             return _function(arguments);
         }
 
-        private Func<double[], double> BuildFunction(IExpression expression, List<string> orderedArguments)
+        private Func<double[], double> BuildFunction(ISyntaxExpression expression, List<string> orderedArguments)
         {
             var argumentsParameter = System.Linq.Expressions.Expression.Parameter(typeof(double[]), "args");
             var lambdaExpression = System.Linq.Expressions.Expression.Lambda(BuildExpression(expression, orderedArguments, argumentsParameter), argumentsParameter);
             return (Func<double[], double>) lambdaExpression.Compile();
         }
 
-        private System.Linq.Expressions.Expression BuildExpression(IExpression expression, IList<string> orderedArguments, ParameterExpression argumentsParameter)
+        private System.Linq.Expressions.Expression BuildExpression(ISyntaxExpression expression, IList<string> orderedArguments, ParameterExpression argumentsParameter)
         {
             if (expression is IPrimitive)
             {

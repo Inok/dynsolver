@@ -7,9 +7,9 @@ namespace DynamicSolver.CoreMath.Syntax
     {
         public string FunctionName { get; }
 
-        public IExpression Argument { get; set; }
+        public ISyntaxExpression Argument { get; set; }
 
-        public FunctionCall(string functionName, [NotNull] IExpression argument)
+        public FunctionCall(string functionName, [NotNull] ISyntaxExpression argument)
         {
             if (string.IsNullOrEmpty(functionName)) throw new ArgumentException("Argument is null or empty", nameof(functionName));
             if (argument == null) throw new ArgumentNullException(nameof(argument));
@@ -37,7 +37,7 @@ namespace DynamicSolver.CoreMath.Syntax
             return obj is FunctionCall && Equals((FunctionCall) obj);
         }
 
-        public bool Equals(IExpression other)
+        public bool Equals(ISyntaxExpression other)
         {
             return this.Equals((object)other);
         }

@@ -6,7 +6,7 @@ namespace DynamicSolver.CoreMath.Syntax
     {
         protected override string OperatorToken { get; } = "/";
 
-        public DivideBinaryOperator([NotNull] IExpression leftOperand, [NotNull] IExpression rightOperand) : base(leftOperand, rightOperand)
+        public DivideBinaryOperator([NotNull] ISyntaxExpression leftOperand, [NotNull] ISyntaxExpression rightOperand) : base(leftOperand, rightOperand)
         {
         }
     }

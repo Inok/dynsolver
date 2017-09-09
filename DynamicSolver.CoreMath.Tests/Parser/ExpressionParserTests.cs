@@ -312,7 +312,7 @@ namespace DynamicSolver.CoreMath.Tests.Parser
         [Test]
         public void ParseComplexExpression_ReturnsCorrectStatement()
         {
-            IExpression expected =
+            ISyntaxExpression expected =
                 new AssignmentBinaryOperator(
                     new VariablePrimitive("y"),
                     new DivideBinaryOperator(

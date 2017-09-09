@@ -34,7 +34,7 @@ namespace DynamicSolver.CoreMath.Syntax
             return Equals((VariablePrimitive) obj);
         }
 
-        public bool Equals(IExpression other)
+        public bool Equals(ISyntaxExpression other)
         {
             return this.Equals((object)other);
         }

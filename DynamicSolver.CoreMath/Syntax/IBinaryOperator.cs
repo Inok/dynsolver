@@ -2,11 +2,11 @@
 
 namespace DynamicSolver.CoreMath.Syntax
 {
-    public interface IBinaryOperator : IExpression
+    public interface IBinaryOperator : ISyntaxExpression
     {
         [NotNull]
-        IExpression LeftOperand { get; }
+        ISyntaxExpression LeftOperand { get; }
         [NotNull]
-        IExpression RightOperand { get; }        
+        ISyntaxExpression RightOperand { get; }        
     }
 }

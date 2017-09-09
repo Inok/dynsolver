@@ -12,7 +12,7 @@ namespace DynamicSolver.CoreMath.Tests.Expression
         [Test]
         public void ComplexStatement_ToString()
         {
-            IExpression expression =
+            ISyntaxExpression expression =
                 new AssignmentBinaryOperator(
                     new VariablePrimitive("y"),
                     new DivideBinaryOperator(

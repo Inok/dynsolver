@@ -4,6 +4,6 @@ namespace DynamicSolver.CoreMath.Execution
 {
     public interface IExecutableFunctionFactory
     {
-        IExecutableFunction Create(IExpression statement);
+        IExecutableFunction Create(ISyntaxExpression statement);
     }
 }

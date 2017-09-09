@@ -5,9 +5,9 @@ namespace DynamicSolver.CoreMath.Syntax
 {
     public sealed class DeriveUnaryOperator : IUnaryOperator, IEquatable<DeriveUnaryOperator>
     {
-        public IExpression Operand { get; }
+        public ISyntaxExpression Operand { get; }
 
-        public DeriveUnaryOperator([NotNull] IExpression operand)
+        public DeriveUnaryOperator([NotNull] ISyntaxExpression operand)
         {
             if (operand == null) throw new ArgumentNullException(nameof(operand));
 
@@ -33,7 +33,7 @@ namespace DynamicSolver.CoreMath.Syntax
             return obj is DeriveUnaryOperator && Equals((DeriveUnaryOperator) obj);
         }
 
-        public bool Equals(IExpression other)
+        public bool Equals(ISyntaxExpression other)
         {
             return this.Equals((object)other);
         }

@@ -115,7 +115,7 @@ namespace DynamicSolver.CoreMath.Tests.Derivation
             Assert.That(_service.GetDerivative(_parser.Parse("(y + 1^y)^(x + 3)"), "x"), Is.EqualTo(_parser.Parse("(y + 1^y)^(x + 3) * ln(y + 1^y)")));
         }
 
-        private static IExpression WrapWithUnaryMinus(string number)
+        private static ISyntaxExpression WrapWithUnaryMinus(string number)
         {
             return new UnaryMinusOperator(new NumericPrimitive(number));
         }

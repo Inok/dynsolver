@@ -8,13 +8,13 @@ namespace DynamicSolver.CoreMath.Analysis
     public class ExpressionAnalyzer : IExpressionAnalyzer
     {
         [NotNull]
-        private readonly IExpression _expression;
+        private readonly ISyntaxExpression _expression;
 
         private IReadOnlyCollection<string> _variables;
 
         public IReadOnlyCollection<string> Variables => _variables ?? (_variables = (IReadOnlyCollection<string>) GetVariablesSet());
 
-        public ExpressionAnalyzer([NotNull] IExpression expression)
+        public ExpressionAnalyzer([NotNull] ISyntaxExpression expression)
         {
             _expression = expression ?? throw new ArgumentNullException(nameof(expression));
         }
@@ -67,7 +67,7 @@ namespace DynamicSolver.CoreMath.Analysis
             }
         }
 
-        public bool HasOperator<T>() where T : IExpression
+        public bool HasOperator<T>() where T : ISyntaxExpression
         {
             var result = false;
             var visitor = new ExpressionVisitor(_expression);

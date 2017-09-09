@@ -8,15 +8,15 @@ namespace DynamicSolver.DynamicSystem
 {
     public class ExplicitOrdinaryDifferentialEquation
     {
-        private readonly IExpression _originalExpression;
+        private readonly ISyntaxExpression _originalExpression;
 
         [NotNull]
         private static readonly ExpressionFormatter Formatter = new ExpressionFormatter();
 
         public VariableDerivative LeadingDerivative { get; }
-        public IExpression Function { get; }
+        public ISyntaxExpression Function { get; }
 
-        private ExplicitOrdinaryDifferentialEquation(IExpression originalExpression, VariableDerivative leadingDerivative, IExpression function)
+        private ExplicitOrdinaryDifferentialEquation(ISyntaxExpression originalExpression, VariableDerivative leadingDerivative, ISyntaxExpression function)
         {
             _originalExpression = originalExpression;
 
@@ -29,7 +29,7 @@ namespace DynamicSolver.DynamicSystem
             return Formatter.Format(_originalExpression);
         }
 
-        public static ExplicitOrdinaryDifferentialEquation FromExpression([NotNull] IExpression expression)
+        public static ExplicitOrdinaryDifferentialEquation FromExpression([NotNull] ISyntaxExpression expression)
         {
             if (expression == null) throw new ArgumentNullException(nameof(expression));
             
