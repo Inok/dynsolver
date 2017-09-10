@@ -1,4 +1,4 @@
-﻿using DynamicSolver.ViewModel;
+﻿using DynamicSolver.App.ViewModel;
 using ReactiveUI;
 
 namespace DynamicSolver.GUI

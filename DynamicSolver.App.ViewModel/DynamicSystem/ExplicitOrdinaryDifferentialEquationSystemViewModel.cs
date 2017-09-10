@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicSolver.App.ViewModel.Common.ErrorList;
 using DynamicSolver.Core.Syntax.Parser;
 using DynamicSolver.Modelling;
-using DynamicSolver.ViewModel.Common.ErrorList;
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class ExplicitOrdinaryDifferentialEquationSystemViewModel : ReactiveObject
     {

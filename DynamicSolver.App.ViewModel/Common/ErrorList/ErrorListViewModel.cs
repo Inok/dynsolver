@@ -1,9 +1,8 @@
-﻿using System.Reactive;
-using System.Reactive.Linq;
+﻿using System.Reactive.Linq;
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.Common.ErrorList
+namespace DynamicSolver.App.ViewModel.Common.ErrorList
 {
     public class ErrorListViewModel : ReactiveObject
     {

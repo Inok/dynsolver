@@ -3,7 +3,7 @@ using System.Reactive.Linq;
 using System.Text;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.Common.ErrorList
+namespace DynamicSolver.App.ViewModel.Common.ErrorList
 {
     public class ErrorViewModel : ReactiveObject
     {

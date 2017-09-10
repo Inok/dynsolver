@@ -1,5 +1,5 @@
-﻿using DynamicSolver.GUI.DynamicSystem;
-using DynamicSolver.ViewModel.DynamicSystem;
+﻿using DynamicSolver.App.ViewModel.DynamicSystem;
+using DynamicSolver.GUI.DynamicSystem;
 using Ninject.Modules;
 using ReactiveUI;
 

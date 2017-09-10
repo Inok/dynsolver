@@ -2,7 +2,7 @@
 using DynamicSolver.Modelling.Solvers;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class ModellingSettings
     {

@@ -2,7 +2,7 @@
 using System.Reactive.Disposables;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.Common.Busy
+namespace DynamicSolver.App.ViewModel.Common.Busy
 {
     public class BusyIndicatorViewModel : ReactiveObject
     {

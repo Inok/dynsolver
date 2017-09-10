@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 using Ninject;
 using Splat;
 
-namespace DynamicSolver.ViewModel
+namespace DynamicSolver.App.ViewModel
 {
     public class NinjectLocator : IMutableDependencyResolver
     {

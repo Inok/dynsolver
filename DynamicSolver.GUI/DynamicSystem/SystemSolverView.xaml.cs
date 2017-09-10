@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using DynamicSolver.ViewModel.DynamicSystem;
+using DynamicSolver.App.ViewModel.DynamicSystem;
 using ReactiveUI;
 
 namespace DynamicSolver.GUI.DynamicSystem

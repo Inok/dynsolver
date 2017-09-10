@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net462</TargetFramework>
+    <Version>$(PackageVersion)</Version>
+    <Authors>Pavel Borisov</Authors>
+    <Company />
+    <Description />
+  </PropertyGroup>
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="11.0.0" />
+    <PackageReference Include="Ninject" Version="3.2.2" />
+    <PackageReference Include="OxyPlot.Core" Version="1.0.0" />
+    <PackageReference Include="reactiveui" Version="7.4.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DynamicSolver.Core\DynamicSolver.Core.csproj" />
+    <ProjectReference Include="..\DynamicSolver.Modelling\DynamicSolver.Modelling.csproj" />
+  </ItemGroup>
+</Project>

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using DynamicSolver.App.ViewModel.Common.Select;
 using DynamicSolver.Modelling.Solvers;
 using DynamicSolver.Modelling.Solvers.Extrapolation;
-using DynamicSolver.ViewModel.Common.Select;
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class ModellingSettingsViewModel : ReactiveObject
     {

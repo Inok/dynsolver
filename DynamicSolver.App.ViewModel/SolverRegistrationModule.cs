@@ -7,7 +7,7 @@ using DynamicSolver.Modelling.Solvers.Explicit;
 using DynamicSolver.Modelling.Solvers.SemiImplicit;
 using Ninject.Modules;
 
-namespace DynamicSolver.ViewModel
+namespace DynamicSolver.App.ViewModel
 {
     public class SolverRegistrationModule : NinjectModule
     {

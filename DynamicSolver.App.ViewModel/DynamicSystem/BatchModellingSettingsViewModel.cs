@@ -5,15 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using DynamicSolver.App.ViewModel.Common;
+using DynamicSolver.App.ViewModel.Common.Busy;
+using DynamicSolver.App.ViewModel.Common.Select;
 using DynamicSolver.Core.Execution;
 using DynamicSolver.Core.Syntax;
 using DynamicSolver.Modelling;
 using DynamicSolver.Modelling.Solvers;
 using DynamicSolver.Modelling.Solvers.Explicit;
 using DynamicSolver.Modelling.Solvers.Extrapolation;
-using DynamicSolver.ViewModel.Common.Busy;
-using DynamicSolver.ViewModel.Common.Select;
-using Inok.Tools.Linq;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -21,7 +21,7 @@ using OxyPlot.Reporting;
 using OxyPlot.Series;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class BatchModellingSettingsViewModel : ReactiveObject
     {
@@ -285,5 +285,6 @@ namespace DynamicSolver.ViewModel.DynamicSystem
                 return (result, sw.Elapsed);
             });
         }
+        
     }
 }

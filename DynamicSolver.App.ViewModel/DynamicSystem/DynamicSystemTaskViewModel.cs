@@ -4,15 +4,15 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using DynamicSolver.App.ViewModel.Common.Edit;
 using DynamicSolver.Core.Syntax;
 using DynamicSolver.Core.Syntax.Parser;
 using DynamicSolver.Modelling;
 using DynamicSolver.Modelling.Solvers;
-using DynamicSolver.ViewModel.Common.Edit;
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class DynamicSystemTaskViewModel : ReactiveObject
     {

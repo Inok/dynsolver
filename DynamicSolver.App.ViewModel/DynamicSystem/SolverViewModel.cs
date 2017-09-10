@@ -5,7 +5,7 @@ using DynamicSolver.Modelling.Solvers;
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class SolverViewModel
     {

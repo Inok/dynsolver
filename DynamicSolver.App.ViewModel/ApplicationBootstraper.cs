@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using DynamicSolver.Modelling;
-using DynamicSolver.ViewModel.DynamicSystem;
+using DynamicSolver.App.ViewModel.DynamicSystem;
 using Ninject;
 using Ninject.Modules;
 using ReactiveUI;
 using Splat;
 
-namespace DynamicSolver.ViewModel
+namespace DynamicSolver.App.ViewModel
 {
     public class ApplicationBootstraper : ReactiveObject, IScreen
     {

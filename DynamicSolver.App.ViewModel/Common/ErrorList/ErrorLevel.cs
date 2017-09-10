@@ -1,4 +1,4 @@
-namespace DynamicSolver.ViewModel.Common.ErrorList
+namespace DynamicSolver.App.ViewModel.Common.ErrorList
 {
     public enum ErrorLevel
     {

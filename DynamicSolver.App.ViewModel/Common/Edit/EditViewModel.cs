@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.Common.Edit
+namespace DynamicSolver.App.ViewModel.Common.Edit
 {
     public class EditViewModel<T> : ReactiveObject
     {

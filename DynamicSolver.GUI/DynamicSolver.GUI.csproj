@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DynamicSolver.GUI</RootNamespace>
     <AssemblyName>DynamicSolver.GUI</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -183,12 +183,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.ViewModel\DynamicSolver.ViewModel.csproj">
-      <Project>{3da1c621-033e-4cfa-aede-2932cdb35bed}</Project>
-      <Name>DynamicSolver.ViewModel</Name>
+    <ProjectReference Include="..\DynamicSolver.App.ViewModel\DynamicSolver.App.ViewModel.csproj">
+      <Project>{e44c79f4-b4ab-4ab3-9497-f9c82e1a5d9b}</Project>
+      <Name>DynamicSolver.App.ViewModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

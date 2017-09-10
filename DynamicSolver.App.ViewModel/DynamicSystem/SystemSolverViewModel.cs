@@ -6,21 +6,21 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DynamicSolver.App.ViewModel.Common;
+using DynamicSolver.App.ViewModel.Common.Busy;
+using DynamicSolver.App.ViewModel.Common.ErrorList;
 using DynamicSolver.Core.Execution;
 using DynamicSolver.Core.Syntax.Parser;
 using DynamicSolver.Modelling;
 using DynamicSolver.Modelling.Solvers;
 using DynamicSolver.Modelling.Solvers.Explicit;
-using DynamicSolver.ViewModel.Common.Busy;
-using DynamicSolver.ViewModel.Common.ErrorList;
-using Inok.Tools.Linq;
 using JetBrains.Annotations;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.DynamicSystem
+namespace DynamicSolver.App.ViewModel.DynamicSystem
 {
     public class SystemSolverViewModel : ReactiveObject, IRoutableViewModel
     {

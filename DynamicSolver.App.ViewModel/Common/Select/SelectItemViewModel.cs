@@ -2,7 +2,7 @@
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace DynamicSolver.ViewModel.Common.Select
+namespace DynamicSolver.App.ViewModel.Common.Select
 {
     public class SelectItemViewModel<T> : ReactiveObject
     {

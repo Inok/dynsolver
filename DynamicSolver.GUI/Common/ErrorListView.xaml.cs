@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using DynamicSolver.ViewModel.Common.ErrorList;
+using DynamicSolver.App.ViewModel.Common.ErrorList;
 using ReactiveUI;
 
 namespace DynamicSolver.GUI.Common
