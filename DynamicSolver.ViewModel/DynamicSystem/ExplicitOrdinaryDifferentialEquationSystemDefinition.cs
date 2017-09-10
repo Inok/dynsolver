@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.DynamicSystem;
-using DynamicSolver.DynamicSystem.Solvers;
+using DynamicSolver.Modelling;
+using DynamicSolver.Modelling.Solvers;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.ViewModel.DynamicSystem

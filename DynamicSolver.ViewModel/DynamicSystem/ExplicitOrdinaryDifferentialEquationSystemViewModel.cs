@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DynamicSolver.Core.Syntax.Parser;
-using DynamicSolver.DynamicSystem;
+using DynamicSolver.Modelling;
 using DynamicSolver.ViewModel.Common.ErrorList;
 using JetBrains.Annotations;
 using ReactiveUI;

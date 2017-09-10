@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Subjects;
-using DynamicSolver.DynamicSystem.Solvers;
+using DynamicSolver.Modelling.Solvers;
 using JetBrains.Annotations;
 using ReactiveUI;
 

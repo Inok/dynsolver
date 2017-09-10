@@ -1,5 +1,5 @@
 ﻿using System;
-using DynamicSolver.DynamicSystem.Solvers;
+using DynamicSolver.Modelling.Solvers;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.ViewModel.DynamicSystem

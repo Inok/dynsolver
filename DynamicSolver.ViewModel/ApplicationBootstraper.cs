@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DynamicSolver.DynamicSystem;
+using DynamicSolver.Modelling;
 using DynamicSolver.ViewModel.DynamicSystem;
 using Ninject;
 using Ninject.Modules;
