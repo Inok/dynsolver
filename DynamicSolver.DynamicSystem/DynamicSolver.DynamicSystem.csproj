@@ -82,10 +82,6 @@
     <Compile Include="VariableDerivative.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DynamicSolver.CoreMath\DynamicSolver.CoreMath.csproj">
-      <Project>{75dc424a-2f66-456d-8251-91a7290fb265}</Project>
-      <Name>DynamicSolver.CoreMath</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.Core\DynamicSolver.Core.csproj">
       <Project>{6c767e42-58f0-48b9-bace-30db399f7f0b}</Project>
       <Name>DynamicSolver.Core</Name>

@@ -58,10 +58,6 @@
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
       <Name>DynamicSolver.DynamicSystem</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DynamicSolver.CoreMath\DynamicSolver.CoreMath.csproj">
-      <Project>{75DC424A-2F66-456D-8251-91A7290FB265}</Project>
-      <Name>DynamicSolver.CoreMath</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
