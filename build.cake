@@ -6,6 +6,8 @@
 using Polly;
 
 
+#load "./parameters.cake"
+
 //---------------------------------
 //--- Configuration ---------------
 //---------------------------------
@@ -29,24 +31,18 @@ var testResultFilePath = rootDir + File("TestResult.xml");
 //--- Version ---------------------
 //---------------------------------
 
-string FormatBranch(string branch)
-{
-    return branch.Replace("feature/", "");
-}
-
-var solutionInfo = ParseAssemblyInfo(solutionInfoFile);
-var semanticVersion = solutionInfo.AssemblyVersion;
+var semanticVersion = PACKAGE_VERSION;
 
 if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
 {
     var branch = BuildSystem.AppVeyor.Environment.Repository.Branch;
-    var build = BuildSystem.AppVeyor.Environment.Build.Number;
-    semanticVersion += "." + build + "-" + FormatBranch(branch);
-}
-else
-{
-    var branch = GitBranchCurrent(rootDir).FriendlyName;
-    semanticVersion += "-" + FormatBranch(branch);
+        
+    if(!string.Equals(branch, "master", StringComparison.OrdinalIgnoreCase))
+    {
+        branch = branch.Replace("feature/", "").Replace("_", "-");
+        var build = BuildSystem.AppVeyor.Environment.Build.Number;
+        semanticVersion += "-" + branch + "." + build;
+    }
 }
 
 
@@ -130,6 +126,7 @@ Task("Build")
     MSBuild(solutionFilePath, settings => {
         settings.SetConfiguration(configuration);
         settings.WithProperty("Platform", "\"" + platform + "\"");
+        settings.WithProperty("PackageVersion", semanticVersion);
         settings.SetVerbosity(Verbosity.Minimal);
         settings.UseToolVersion(MSBuildToolVersion.VS2017);
         settings.SetNodeReuse(false);
