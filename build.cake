@@ -83,7 +83,8 @@ Setup(context =>
 
 Task("Clean-Build").Does(() =>
 {
-    var buildFilesDirs = GetDirectories("**/bin/") + GetDirectories("**/obj/");
+    var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin")
+                       + GetDirectories("./DynamicSolver.*/obj");
     CleanDirectories(buildFilesDirs);
 });
 
