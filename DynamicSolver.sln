@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{3803E1DB-7ECA-45E5-BEE1-8C2308AFBA2D}"
 EndProject
@@ -14,21 +14,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		appveyor.yml = appveyor.yml
 		build.cake = build.cake
 		build.ps1 = build.ps1
-		SolutionInfo.cs = SolutionInfo.cs
-		parameters.cake = parameters.cake
+		version.cake = version.cake
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.Core", "DynamicSolver.Core\DynamicSolver.Core.csproj", "{6C767E42-58F0-48B9-BACE-30DB399F7F0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSolver.Core", "DynamicSolver.Core\DynamicSolver.Core.csproj", "{6C767E42-58F0-48B9-BACE-30DB399F7F0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.Core.Tests", "DynamicSolver.Core.Tests\DynamicSolver.Core.Tests.csproj", "{482244F9-E11B-49FF-9DCB-E434641A5FBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSolver.Core.Tests", "DynamicSolver.Core.Tests\DynamicSolver.Core.Tests.csproj", "{482244F9-E11B-49FF-9DCB-E434641A5FBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.Modelling", "DynamicSolver.Modelling\DynamicSolver.Modelling.csproj", "{948BFC7F-E551-4013-98A3-F8BC03989E90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSolver.Modelling", "DynamicSolver.Modelling\DynamicSolver.Modelling.csproj", "{948BFC7F-E551-4013-98A3-F8BC03989E90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.Modelling.Tests", "DynamicSolver.Modelling.Tests\DynamicSolver.Modelling.Tests.csproj", "{4B25E579-F8AF-4903-8C29-28473C99DDEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSolver.Modelling.Tests", "DynamicSolver.Modelling.Tests\DynamicSolver.Modelling.Tests.csproj", "{4B25E579-F8AF-4903-8C29-28473C99DDEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.App.ViewModel", "DynamicSolver.App.ViewModel\DynamicSolver.App.ViewModel.csproj", "{E44C79F4-B4AB-4AB3-9497-F9C82E1A5D9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSolver.App.ViewModel", "DynamicSolver.App.ViewModel\DynamicSolver.App.ViewModel.csproj", "{E44C79F4-B4AB-4AB3-9497-F9C82E1A5D9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamicSolver.App", "DynamicSolver.App\DynamicSolver.App.csproj", "{25B43BF3-BABF-4F24-A0E7-31B55783F0DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DynamicSolver.App", "DynamicSolver.App\DynamicSolver.App.csproj", "{25B43BF3-BABF-4F24-A0E7-31B55783F0DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,5 +71,8 @@ Global
 		{4B25E579-F8AF-4903-8C29-28473C99DDEC} = {9019B105-D810-4019-8367-9254C3896935}
 		{E44C79F4-B4AB-4AB3-9497-F9C82E1A5D9B} = {3803E1DB-7ECA-45E5-BEE1-8C2308AFBA2D}
 		{25B43BF3-BABF-4F24-A0E7-31B55783F0DB} = {3803E1DB-7ECA-45E5-BEE1-8C2308AFBA2D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C4B09A7F-7321-444B-8D97-004D23E0A675}
 	EndGlobalSection
 EndGlobal

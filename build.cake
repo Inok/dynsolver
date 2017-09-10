@@ -4,24 +4,29 @@
 
 using Polly;
 
+#load "./version.cake"
 
-#load "./parameters.cake"
+const string APP_TARGET_FRAMEWORK = "net462";
+const string TESTS_TARGET_FRAMEWORK = "net462";
+
 
 //---------------------------------
-//--- Configuration ---------------
+//--- Arguments -------------------
 //---------------------------------
 
 var target = Argument("target", "Default");
 var platform = Argument("platform", "Any CPU");
 var configuration = Argument("configuration", "Release");
 
+
+//---------------------------------
+//--- Paths -----------------------
+//---------------------------------
+
 var rootDir = Directory(".");
-
 var solutionFilePath = rootDir + File("DynamicSolver.sln");
-
 var artifactsDir = rootDir + Directory("artifacts");
 var artifactsSolverDir = artifactsDir + Directory("solver");
-
 var testResultFilePath = rootDir + File("TestResult.xml");
 
 
@@ -55,7 +60,6 @@ else
 }
 
 
-
 //---------------------------------
 //--- Setup -----------------------
 //---------------------------------
@@ -73,15 +77,13 @@ Setup(context =>
 });
 
 
-
 //---------------------------------
 //--- Tasks -----------------------
 //---------------------------------
 
 Task("Clean-Build").Does(() =>
 {
-    var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/")
-                       + GetDirectories("./DynamicSolver.*/obj/");
+    var buildFilesDirs = GetDirectories("**/bin/") + GetDirectories("**/obj/");
     CleanDirectories(buildFilesDirs);
 });
 
@@ -103,8 +105,7 @@ Task("Clean-TestResult").Does(() =>
 
 Task("Restore-NuGet-Packages").Does(() =>
 {
-    var maxRetryCount = 3;
-    var timeout = 1d;
+    const int maxRetryCount = 3;
     Policy
         .Handle<Exception>()
         .Retry(maxRetryCount, (exception, retryCount, context) => {
@@ -115,7 +116,6 @@ Task("Restore-NuGet-Packages").Does(() =>
             else
             {
                 Information(exception.Message);
-                timeout += 1;
             }})
         .Execute(()=> {
                 DotNetCoreRestore();
@@ -145,7 +145,7 @@ Task("Run-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/" + TARGET_FRAMEWORK + "/*.Tests.dll");
+    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/" + TESTS_TARGET_FRAMEWORK + "/*.Tests.dll");
 
     NUnit3(testAssemblies, new NUnit3Settings() {
         NoHeader = true,
@@ -170,8 +170,8 @@ Task("Copy-App-Artifacts")
 {
     CreateDirectory(artifactsSolverDir);
 
-    var artifacts = GetFiles("./DynamicSolver.App/bin/" + configuration + "/" + TARGET_FRAMEWORK + "/*.dll")
-                  + GetFiles("./DynamicSolver.App/bin/" + configuration + "/" + TARGET_FRAMEWORK + "/*.exe");
+    var artifacts = GetFiles("./DynamicSolver.App/bin/" + configuration + "/" + APP_TARGET_FRAMEWORK + "/*.dll")
+                  + GetFiles("./DynamicSolver.App/bin/" + configuration + "/" + APP_TARGET_FRAMEWORK + "/*.exe");
     CopyFiles(artifacts, artifactsSolverDir);
 });
 
@@ -184,7 +184,6 @@ Task("Pack-Zip-Artifacts")
     Information("Pack directory " + artifactsSolverDir + " to " + artifactsSolverZip);
     Zip(artifactsSolverDir, artifactsSolverZip);
 });
-
 
 
 //---------------------------------
