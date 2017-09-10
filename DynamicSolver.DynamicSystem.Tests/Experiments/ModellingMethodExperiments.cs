@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using DynamicSolver.CoreMath.Execution.Compiler;
-using DynamicSolver.CoreMath.Syntax.Parser;
+using DynamicSolver.Core.Execution.Compiler;
+using DynamicSolver.Core.Syntax.Parser;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;
 using DynamicSolver.DynamicSystem.Solvers.Extrapolation;

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.CoreMath.Derivation;
-using DynamicSolver.CoreMath.Execution;
-using DynamicSolver.CoreMath.Syntax;
-using DynamicSolver.CoreMath.Syntax.Model;
+using DynamicSolver.Core.Derivation;
+using DynamicSolver.Core.Execution;
+using DynamicSolver.Core.Syntax.Model;
 using DynamicSolver.DynamicSystem.Solvers;
 using JetBrains.Annotations;
 

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using DynamicSolver.CoreMath.Execution.Compiler;
-using DynamicSolver.CoreMath.Execution.Interpreter;
-using DynamicSolver.CoreMath.Syntax.Parser;
+using DynamicSolver.Core.Execution.Compiler;
+using DynamicSolver.Core.Execution.Interpreter;
+using DynamicSolver.Core.Syntax.Parser;
 using NUnit.Framework;
 
 namespace DynamicSolver.DynamicSystem.Tests.Experiments

@@ -121,6 +121,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DynamicSolver.Core\DynamicSolver.Core.csproj">
+      <Project>{6c767e42-58f0-48b9-bace-30db399f7f0b}</Project>
+      <Name>DynamicSolver.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DynamicSolver.DynamicSystem\DynamicSolver.DynamicSystem.csproj">
       <Project>{014c42f7-a7df-4e9e-9853-2a6d02393b99}</Project>
       <Name>DynamicSolver.DynamicSystem</Name>

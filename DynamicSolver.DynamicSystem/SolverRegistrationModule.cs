@@ -1,7 +1,7 @@
 ﻿using System;
-using DynamicSolver.CoreMath.Execution;
-using DynamicSolver.CoreMath.Execution.Compiler;
-using DynamicSolver.CoreMath.Execution.Interpreter;
+using DynamicSolver.Core.Execution;
+using DynamicSolver.Core.Execution.Compiler;
+using DynamicSolver.Core.Execution.Interpreter;
 using DynamicSolver.DynamicSystem.Solvers;
 using DynamicSolver.DynamicSystem.Solvers.Explicit;
 using DynamicSolver.DynamicSystem.Solvers.SemiImplicit;

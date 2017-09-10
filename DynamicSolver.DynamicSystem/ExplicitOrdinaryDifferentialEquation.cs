@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
-using DynamicSolver.CoreMath.Syntax;
-using DynamicSolver.CoreMath.Syntax.Model;
+using DynamicSolver.Core.Syntax;
+using DynamicSolver.Core.Syntax.Model;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.DynamicSystem

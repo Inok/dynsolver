@@ -139,7 +139,7 @@ Task("Run-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/*.Tests.dll");
+    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/**/*.Tests.dll");
 
     NUnit3(testAssemblies, new NUnit3Settings() {
         NoHeader = true,

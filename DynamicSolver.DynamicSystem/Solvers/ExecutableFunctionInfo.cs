@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DynamicSolver.CoreMath.Execution;
+using DynamicSolver.Core.Execution;
 
 namespace DynamicSolver.DynamicSystem.Solvers
 {
