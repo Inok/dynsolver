@@ -113,6 +113,7 @@ Task("Restore-NuGet-Packages").Does(() =>
                     ToolPath = "./tools/NuGet.CommandLine/tools/NuGet.exe",
                     ToolTimeout = TimeSpan.FromMinutes(timeout)
                 });
+                DotNetCoreRestore();
             });
 });
 
