@@ -1,4 +1,3 @@
-#tool "nuget:https://dotnet.myget.org/F/nuget-build/?package=NuGet.CommandLine"
 #tool "nuget:?package=NUnit.ConsoleRunner"
 #addin "nuget:?package=Cake.Git"
 #addin "nuget:?package=Polly&version=4.2.0"
@@ -19,7 +18,6 @@ var configuration = Argument("configuration", "Release");
 var rootDir = Directory(".");
 
 var solutionFilePath = rootDir + File("DynamicSolver.sln");
-var solutionInfoFile = rootDir + File("SolutionInfo.cs");
 
 var artifactsDir = rootDir + Directory("artifacts");
 var artifactsSolverDir = artifactsDir + Directory("solver");
@@ -31,18 +29,29 @@ var testResultFilePath = rootDir + File("TestResult.xml");
 //--- Version ---------------------
 //---------------------------------
 
-var semanticVersion = PACKAGE_VERSION;
+string FormatVersion(string branch, int? build)
+{
+    var version = PACKAGE_VERSION;
+    if(!string.Equals(branch, "master", StringComparison.OrdinalIgnoreCase))
+    {
+        branch = branch.Replace("feature/", "").Replace("_", "-");        
+        version += "-" + branch + "." + (build.HasValue ? build.ToString() : DateTime.Now.ToString("yyyyMMddHHmm"));
+    }
+    return version;
+}
+
+string semanticVersion;
 
 if(BuildSystem.AppVeyor.IsRunningOnAppVeyor)
 {
     var branch = BuildSystem.AppVeyor.Environment.Repository.Branch;
-        
-    if(!string.Equals(branch, "master", StringComparison.OrdinalIgnoreCase))
-    {
-        branch = branch.Replace("feature/", "").Replace("_", "-");
-        var build = BuildSystem.AppVeyor.Environment.Build.Number;
-        semanticVersion += "-" + branch + "." + build;
-    }
+    var build = BuildSystem.AppVeyor.Environment.Build.Number;
+    semanticVersion = FormatVersion(branch, build);
+}
+else
+{
+    var branch = GitBranchCurrent(rootDir).FriendlyName;
+    semanticVersion = FormatVersion(branch, null);
 }
 
 
@@ -71,8 +80,8 @@ Setup(context =>
 
 Task("Clean-Build").Does(() =>
 {
-    var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/" + configuration)
-                       + GetDirectories("./DynamicSolver.*/obj/" + configuration);
+    var buildFilesDirs = GetDirectories("./DynamicSolver.*/bin/")
+                       + GetDirectories("./DynamicSolver.*/obj/");
     CleanDirectories(buildFilesDirs);
 });
 
@@ -109,10 +118,6 @@ Task("Restore-NuGet-Packages").Does(() =>
                 timeout += 1;
             }})
         .Execute(()=> {
-                NuGetRestore(solutionFilePath, new NuGetRestoreSettings {
-                    ToolPath = "./tools/NuGet.CommandLine/tools/NuGet.exe",
-                    ToolTimeout = TimeSpan.FromMinutes(timeout)
-                });
                 DotNetCoreRestore();
             });
 });
@@ -140,7 +145,7 @@ Task("Run-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/**/*.Tests.dll");
+    var testAssemblies = GetFiles("./DynamicSolver.*/bin/" + configuration + "/" + TARGET_FRAMEWORK + "/*.Tests.dll");
 
     NUnit3(testAssemblies, new NUnit3Settings() {
         NoHeader = true,
@@ -165,8 +170,8 @@ Task("Copy-App-Artifacts")
 {
     CreateDirectory(artifactsSolverDir);
 
-    var artifacts = GetFiles("./DynamicSolver.GUI/bin/" + configuration + "/*.dll")
-                  + GetFiles("./DynamicSolver.GUI/bin/" + configuration + "/*.exe");
+    var artifacts = GetFiles("./DynamicSolver.App/bin/" + configuration + "/" + TARGET_FRAMEWORK + "/*.dll")
+                  + GetFiles("./DynamicSolver.App/bin/" + configuration + "/" + TARGET_FRAMEWORK + "/*.exe");
     CopyFiles(artifacts, artifactsSolverDir);
 });
 
