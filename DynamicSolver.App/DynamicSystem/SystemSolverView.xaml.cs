@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using DynamicSolver.App.ViewModel.DynamicSystem;
 using ReactiveUI;
 
-namespace DynamicSolver.GUI.DynamicSystem
+namespace DynamicSolver.App.DynamicSystem
 {
     public partial class SystemSolverView : UserControl, IViewFor<SystemSolverViewModel>
     {

@@ -1,9 +1,9 @@
-﻿using DynamicSolver.App.ViewModel.DynamicSystem;
-using DynamicSolver.GUI.DynamicSystem;
+﻿using DynamicSolver.App.DynamicSystem;
+using DynamicSolver.App.ViewModel.DynamicSystem;
 using Ninject.Modules;
 using ReactiveUI;
 
-namespace DynamicSolver.GUI
+namespace DynamicSolver.App
 {
     public class ViewsRegistrationModule : NinjectModule
     {

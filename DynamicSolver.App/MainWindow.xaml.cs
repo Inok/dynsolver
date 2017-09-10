@@ -1,7 +1,7 @@
 ﻿using DynamicSolver.App.ViewModel;
 using ReactiveUI;
 
-namespace DynamicSolver.GUI
+namespace DynamicSolver.App
 {
     public partial class MainWindow
     {

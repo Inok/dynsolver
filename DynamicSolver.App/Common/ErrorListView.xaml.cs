@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using DynamicSolver.App.ViewModel.Common.ErrorList;
 using ReactiveUI;
 
-namespace DynamicSolver.GUI.Common
+namespace DynamicSolver.App.Common
 {
     public partial class ErrorListView : UserControl, IViewFor<ErrorListViewModel>
     {

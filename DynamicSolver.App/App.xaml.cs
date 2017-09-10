@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace DynamicSolver.GUI
+namespace DynamicSolver.App
 {
     /// <summary>
     /// Interaction logic for App.xaml
