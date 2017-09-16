@@ -308,5 +308,38 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
             var element = new AddOperation(var1, arr1);
             Assert.That(() => _semanticPrinter.PrintElement(element), Throws.InvalidOperationException);
         }
+        
+        [Test]
+        public void PrintElement_RepeatStatement_Prints()
+        {
+            var varX = new Variable("x");
+            var s1 = new AssignStatement(varX, new AddOperation(new Constant(1), new Constant(2)));
+            var s2 = new AssignStatement(new Variable("y"), new MinusOperation(varX));
+            var block = new BlockStatement(new[] {s1, s2});
+            
+            var repeatStatement = new RepeatStatement(3, block);
+            
+            var actual = _semanticPrinter.PrintElement(repeatStatement);
+            Assert.That(actual, Is.EqualTo($"repeat '3' times {{{Environment.NewLine}  x := (1 + 2){Environment.NewLine}  y := -x{Environment.NewLine}}}"));
+        }
+        
+        [Test]
+        public void PrintElement_RepeatStatement_Nested_Prints()
+        {
+            var statement = new AssignStatement(new Variable("x"), new Constant(1));
+            
+            var innerRepeat = new RepeatStatement(3, statement);
+            var rootRepeat = new RepeatStatement(5, innerRepeat);
+            
+            var actual = _semanticPrinter.PrintElement(rootRepeat);
+
+            Assert.That(actual,
+                Is.EqualTo(
+                    $@"repeat '5' times {{{Environment.NewLine
+                        }  repeat '3' times {{{Environment.NewLine
+                        }    x := 1{Environment.NewLine
+                        }  }}{Environment.NewLine
+                        }}}"));
+        }
     }
 }

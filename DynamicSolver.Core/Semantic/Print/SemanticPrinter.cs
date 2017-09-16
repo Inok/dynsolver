@@ -21,10 +21,14 @@ namespace DynamicSolver.Core.Semantic.Print
 
         private class PrintSemanticVisitor : SemanticVisitor
         {
+            private const int INDENTATION_CHARACTERS_PER_LEVEL = 2;
+            private const char INDENTATION_CHARACTER = ' ';
+
             private readonly StringBuilder _builder = new StringBuilder();
 
             private readonly UniqueKeyValueSet<IDeclaration, string> _declarations = new UniqueKeyValueSet<IDeclaration, string>();
             private int _lastGeneratedNameIndex = 0;
+            private int _deep = 0;
 
             public string GetSemanticString()
             {
@@ -173,7 +177,11 @@ namespace DynamicSolver.Core.Semantic.Print
                 var i = 0;
                 foreach (var innerStatement in blockStatement.Statements)
                 {
-                    if (i++ != 0) _builder.Append(Environment.NewLine);
+                    if (i++ != 0)
+                    {
+                        MoveToNewLine();
+                    }
+
                     innerStatement.Accept(this);
                 }
             }
@@ -213,6 +221,19 @@ namespace DynamicSolver.Core.Semantic.Print
                 AppendArrayAccess(generatedName);
             }
 
+            protected override void Visit(RepeatStatement repeatStatement)
+            {
+                _builder.Append("repeat '").Append(repeatStatement.RepeatsCount).Append("' times {");
+
+                _deep++;
+                MoveToNewLine();
+                repeatStatement.Body.Accept(this);
+                _deep--;
+
+                MoveToNewLine();
+                _builder.Append("}");
+            }
+
             private string GenerateName()
             {
                 var index = ++_lastGeneratedNameIndex;
@@ -226,6 +247,12 @@ namespace DynamicSolver.Core.Semantic.Print
                 }
 
                 return name;
+            }
+
+            private void MoveToNewLine()
+            {
+                _builder.Append(Environment.NewLine);
+                _builder.Append(INDENTATION_CHARACTER, _deep * INDENTATION_CHARACTERS_PER_LEVEL);
             }
         }
     }

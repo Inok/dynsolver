@@ -17,5 +17,6 @@ namespace DynamicSolver.Core.Semantic
 
         T Visit(AssignStatement assignStatement);
         T Visit(BlockStatement blockStatement);
+        T Visit(RepeatStatement functionCallOperation);
     }
 }
