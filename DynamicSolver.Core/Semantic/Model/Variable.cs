@@ -42,13 +42,13 @@ namespace DynamicSolver.Core.Semantic.Model
             for (var i = 0; i < explicitName.Length; i++)
             {
                 var ch = explicitName[i];
-                if (char.IsLetterOrDigit(ch) || char.IsNumber(ch))
+                if (char.IsLetterOrDigit(ch) || char.IsNumber(ch) || ch == '_')
                 {
                     continue;
                 }
 
                 throw new ArgumentException(
-                    $"Variable name must contain only unicode letters and numbers, but name '{explicitName}' contains invalid character '{ch}' at position '{i}'.",
+                    $"Variable name must contain only unicode letters, numbers and underscores, but name '{explicitName}' contains invalid character '{ch}' at position '{i}'.",
                     nameof(explicitName));
             }
         }

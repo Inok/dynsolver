@@ -173,6 +173,16 @@ namespace DynamicSolver.Core.Semantic.Print
                 _builder.Append(" := ");
                 assignStatement.Source.Accept(this);
             }
+
+            protected override void Visit(BlockStatement blockStatement)
+            {
+                var i = 0;
+                foreach (var innerStatement in blockStatement.Statements)
+                {
+                    if (i++ != 0) _builder.Append(Environment.NewLine);
+                    innerStatement.Accept(this);
+                }
+            }
         }
     }
 }

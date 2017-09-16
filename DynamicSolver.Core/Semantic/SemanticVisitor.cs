@@ -14,6 +14,7 @@ namespace DynamicSolver.Core.Semantic
         protected abstract void Visit(PowOperation powOperation);
         protected abstract void Visit(FunctionCallOperation functionCallOperation);
         protected abstract void Visit(AssignStatement assignStatement);
+        protected abstract void Visit(BlockStatement blockStatement);
 
         object ISemanticVisitor<object>.Visit(Constant constant)
         {
@@ -72,6 +73,12 @@ namespace DynamicSolver.Core.Semantic
         object ISemanticVisitor<object>.Visit(AssignStatement assignStatement)
         {
             Visit(assignStatement);
+            return null;
+        }
+
+        object ISemanticVisitor<object>.Visit(BlockStatement block)
+        {
+            Visit(block);
             return null;
         }
     }

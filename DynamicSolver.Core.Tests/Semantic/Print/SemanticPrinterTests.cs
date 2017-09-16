@@ -76,16 +76,6 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         }
 
         [Test]
-        public void PrintElement_Variable_VariableWithExplicitNameEqualToGeneratedName_ThrowsInvalidOperationException()
-        {
-            var genFirstElement = new AddOperation(new Variable("_gen$1"), new Variable());
-            Assert.That(() => _semanticPrinter.PrintElement(genFirstElement), Throws.InvalidOperationException);
-
-            var explicitFirstElement = new AddOperation(new Variable(), new Variable("_gen$1"));
-            Assert.That(() => _semanticPrinter.PrintElement(explicitFirstElement), Throws.InvalidOperationException);
-        }
-
-        [Test]
         public void PrintElement_MinusOperation_PrintsMinusOperator()
         {
             Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Constant(1))), Is.EqualTo("-1"));
@@ -185,14 +175,14 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         }
         
         [Test]
-        public void PrintElement_AssignOperation_PrintsAssignStatement()
+        public void PrintElement_AssignStatement_PrintsAssignStatement()
         {
             var actual = _semanticPrinter.PrintElement(new AssignStatement(new Variable("x"), new Constant(1)));
             Assert.That(actual, Is.EqualTo("x := 1"));
         }
 
         [Test]
-        public void PrintElement_AssignOperation_WithComplexArgument_PrintsAssignStatement()
+        public void PrintElement_AssignStatement_WithComplexArgument_PrintsAssignStatement()
         {
             var actual = _semanticPrinter.PrintElement(new AssignStatement(
                 new Variable("x"),
@@ -202,7 +192,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         }
         
         [Test]
-        public void PrintElement_AssignOperation_WithSameSourceAndTarget_PrintsAssignStatement()
+        public void PrintElement_AssignStatement_WithSameSourceAndTarget_PrintsAssignStatement()
         {
             var variable = new Variable("x");
             var actual = _semanticPrinter.PrintElement(new AssignStatement(variable, variable));
@@ -210,7 +200,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         }
         
         [Test]
-        public void PrintElement_AssignOperation_WithTargetInsideSource_PrintsAssignStatement()
+        public void PrintElement_AssignStatement_WithTargetInsideSource_PrintsAssignStatement()
         {
             var variable = new Variable("x");
             var actual = _semanticPrinter.PrintElement(new AssignStatement(
@@ -220,6 +210,21 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
                     variable)
             ));
             Assert.That(actual, Is.EqualTo("x := ((x + 1) * x)"));
+        }
+
+        [Test]
+        public void PrintElement_BlockStatement_PrintsInnerStatementsByLines()
+        {
+            var statement = new BlockStatement(new[]
+            {
+                new AssignStatement(new Variable("b"), new Variable("a")),
+                new AssignStatement(new Variable("y"), new Variable("x")),
+                new AssignStatement(new Variable("n"), new Variable("m"))
+            });
+
+            var actual = _semanticPrinter.PrintElement(statement);
+
+            Assert.That(actual, Is.EqualTo($"b := a{Environment.NewLine}y := x{Environment.NewLine}n := m"));
         }
     }
 }
