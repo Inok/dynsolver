@@ -13,8 +13,9 @@ namespace DynamicSolver.Core.Semantic
         T Visit(DivideOperation divideOperation);
         T Visit(PowOperation powOperation);
         T Visit(FunctionCallOperation functionCallOperation);
-        
+        T Visit(ArrayAccessOperation arrayAccessOperation);
+
         T Visit(AssignStatement assignStatement);
-        T Visit(BlockStatement functionCallOperation);
+        T Visit(BlockStatement blockStatement);
     }
 }

@@ -215,16 +215,98 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_BlockStatement_PrintsInnerStatementsByLines()
         {
+            var var1 = new Variable();
+            var var2 = new Variable();
             var statement = new BlockStatement(new[]
             {
                 new AssignStatement(new Variable("b"), new Variable("a")),
+                new AssignStatement(var1, new Variable("m")),
                 new AssignStatement(new Variable("y"), new Variable("x")),
-                new AssignStatement(new Variable("n"), new Variable("m"))
+                new AssignStatement(var2, var1)
             });
 
             var actual = _semanticPrinter.PrintElement(statement);
 
-            Assert.That(actual, Is.EqualTo($"b := a{Environment.NewLine}y := x{Environment.NewLine}n := m"));
+            Assert.That(actual, Is.EqualTo($"b := a{Environment.NewLine}_gen$1 := m{Environment.NewLine}y := x{Environment.NewLine}_gen$2 := _gen$1"));
+        }
+        
+        [TestCase("x")]
+        [TestCase("y")]
+        [TestCase("t1")]
+        public void PrintElement_ArrayAccessOperation_WithExplicitName_PrintsName(string name)
+        {
+            var actual = _semanticPrinter.PrintElement(new ArrayAccessOperation(new ArrayDeclaration(name, 5), 2));
+
+            Assert.That(actual, Is.EqualTo($"{name}[2]"));
+        }
+
+        [Test]
+        public void PrintElement_ArrayAccessOperation_DifferentVariablesWithSameExplicitName_ThrowsInvalidOperationException()
+        {
+            var element = new AddOperation(new ArrayAccessOperation(new ArrayDeclaration("x", 5), 1), new ArrayAccessOperation(new ArrayDeclaration("x", 3), 0));
+            Assert.That(() => _semanticPrinter.PrintElement(element), Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void PrintElement_ArrayAccessOperation_WithNoName_PrintsGeneratedName()
+        {
+            var actual = _semanticPrinter.PrintElement(new ArrayAccessOperation(new ArrayDeclaration(5), 2));
+            Assert.That(actual, Is.EqualTo("_gen$1[2]"));
+        }
+
+        [Test]
+        public void PrintElement_ArrayAccessOperation_WithNoName_PrintsDifferentNames()
+        {
+            var arr1 = new ArrayAccessOperation(new ArrayDeclaration(2), 1);
+            var arr2 = new ArrayAccessOperation(new ArrayDeclaration(1), 0);
+            var arr3 = new ArrayAccessOperation(new ArrayDeclaration(3), 2);
+            
+            var actual = _semanticPrinter.PrintElement(new AddOperation(new AddOperation(arr1, arr2), arr3));
+            Assert.That(actual, Is.EqualTo("((_gen$1[1] + _gen$2[0]) + _gen$3[2])"));
+        }
+        
+        [Test]
+        public void PrintElement_ArrayAccessOperation_MultipleWithExplicitName_PrintsSameName()
+        {
+            var arrayDeclaration = new ArrayDeclaration("x", 2);
+            var arrAccess1 = new ArrayAccessOperation(arrayDeclaration, 0);
+            var arrAccess2 = new ArrayAccessOperation(arrayDeclaration, 1);
+            
+            var actual = _semanticPrinter.PrintElement(new AddOperation(arrAccess1, arrAccess2));
+            Assert.That(actual, Is.EqualTo("(x[0] + x[1])"));
+        }
+        
+        [Test]
+        public void PrintElement_ArrayAccessOperation_MultipleWithNoName_PrintsSameName()
+        {
+            var arrayDeclaration = new ArrayDeclaration(2);
+            var arrAccess1 = new ArrayAccessOperation(arrayDeclaration, 0);
+            var arrAccess2 = new ArrayAccessOperation(arrayDeclaration, 1);
+            
+            var actual = _semanticPrinter.PrintElement(new AddOperation(arrAccess1, arrAccess2));
+            Assert.That(actual, Is.EqualTo("(_gen$1[0] + _gen$1[1])"));
+        }
+        
+        [Test]
+        public void PrintElement_MixedVariablesAndArrayAccessOperations_WithNoName_GeneratesValidNames()
+        {
+            var var1 = new Variable();
+            var var2 = new Variable();
+            var arr1 = new ArrayAccessOperation(new ArrayDeclaration(2), 0);
+            var arr2 = new ArrayAccessOperation(new ArrayDeclaration(2), 1);
+
+            var actual = _semanticPrinter.PrintElement(new MultiplyOperation(new AddOperation(arr1, var2), new SubtractOperation(var1, arr2)));
+            Assert.That(actual, Is.EqualTo("((_gen$1[0] + _gen$2) * (_gen$3 - _gen$4[1]))"));
+        }
+
+        [Test]
+        public void PrintElement_MixedVariablesAndArrayAccessOperations_WithSameExplicitName_Throws()
+        {
+            var var1 = new Variable("x");
+            var arr1 = new ArrayAccessOperation(new ArrayDeclaration("x", 2), 0);
+
+            var element = new AddOperation(var1, arr1);
+            Assert.That(() => _semanticPrinter.PrintElement(element), Throws.InvalidOperationException);
         }
     }
 }

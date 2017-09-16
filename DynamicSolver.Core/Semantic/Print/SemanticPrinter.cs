@@ -23,9 +23,9 @@ namespace DynamicSolver.Core.Semantic.Print
         {
             private readonly StringBuilder _builder = new StringBuilder();
 
-            private readonly UniqueKeyValueSet<Variable, string> _variables = new UniqueKeyValueSet<Variable, string>();
-            private int _latestGeneratedVariableIndex = 0;
-            
+            private readonly UniqueKeyValueSet<IDeclaration, string> _declarations = new UniqueKeyValueSet<IDeclaration, string>();
+            private int _lastGeneratedNameIndex = 0;
+
             public string GetSemanticString()
             {
                 return _builder.ToString();
@@ -38,7 +38,7 @@ namespace DynamicSolver.Core.Semantic.Print
 
             protected override void Visit(Variable variable)
             {
-                if (_variables.TryGetValueByItem1(variable, out string name))
+                if (_declarations.TryGetValueByItem1(variable, out var name))
                 {
                     _builder.Append(name);
                     return;
@@ -47,24 +47,18 @@ namespace DynamicSolver.Core.Semantic.Print
                 var explicitName = variable.ExplicitName;
                 if (explicitName != null)
                 {
-                    if (_variables.ContainsItem2(explicitName))
+                    if (_declarations.ContainsItem2(explicitName))
                     {
                         throw new InvalidOperationException(
-                            $"Variable with explicit name '{explicitName}' conflicts with different variable with the same explicit or generated name.");
+                            $"Variable with explicit name '{explicitName}' conflicts with different node with the same explicit or generated name.");
                     }
-                    _variables.Add(variable, explicitName);
+                    _declarations.Add(variable, explicitName);
                     _builder.Append(explicitName);
                     return;
                 }
 
-                var generatedName = $"_gen${++_latestGeneratedVariableIndex}";
-                if (_variables.ContainsItem2(generatedName))
-                {
-                    throw new InvalidOperationException(
-                        $"Generated name '{generatedName}' conflicts with different variable with the same explicit name. Do not use explicit variable names like _gen${{number}}.");
-                }
-
-                _variables.Add(variable, generatedName);
+                var generatedName = GenerateName();
+                _declarations.Add(variable, generatedName);
                 _builder.Append(generatedName);
             }
 
@@ -182,6 +176,56 @@ namespace DynamicSolver.Core.Semantic.Print
                     if (i++ != 0) _builder.Append(Environment.NewLine);
                     innerStatement.Accept(this);
                 }
+            }
+
+            protected override void Visit(ArrayAccessOperation arrayAccessOperation)
+            {
+                void AppendArrayAccess(string arrName)
+                {
+                    _builder.Append(arrName).Append("[").Append(arrayAccessOperation.Index).Append("]");
+                }
+
+                var arrayDeclaration = arrayAccessOperation.Array;
+                
+                if (_declarations.TryGetValueByItem1(arrayDeclaration, out var name))
+                {
+                    AppendArrayAccess(name);
+                    return;
+                }
+
+                var explicitName = arrayDeclaration.ExplicitName;
+
+                if (explicitName != null)
+                {
+                    if (_declarations.ContainsItem2(explicitName))
+                    {
+                        throw new InvalidOperationException(
+                            $"Array with explicit name '{explicitName}' conflicts with different node with the same explicit or generated name.");
+                    }
+
+                    _declarations.Add(arrayDeclaration, explicitName);
+                    AppendArrayAccess(explicitName);
+                    return;
+                }
+
+                var generatedName = GenerateName();
+                _declarations.Add(arrayDeclaration, generatedName);
+                AppendArrayAccess(generatedName);
+            }
+
+            private string GenerateName()
+            {
+                var index = ++_lastGeneratedNameIndex;
+                
+                var name = $"_gen${index}";
+                
+                if (_declarations.ContainsItem2(name))
+                {
+                    throw new InvalidOperationException(
+                        $"Generated name '{name}' conflicts with different node with the same explicit name. Do not use explicit variable names like _gen${index}.");
+                }
+
+                return name;
             }
         }
     }
