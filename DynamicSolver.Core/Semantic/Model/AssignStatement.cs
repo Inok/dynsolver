@@ -13,11 +13,8 @@ namespace DynamicSolver.Core.Semantic.Model
 
         public AssignStatement([NotNull] IValueTarget target, [NotNull] IValueSource source)
         {
-            if (target == null) throw new ArgumentNullException(nameof(target));
-            if (source == null) throw new ArgumentNullException(nameof(source));
-
-            Target = target;
-            Source = source;
+            Target = target ?? throw new ArgumentNullException(nameof(target));
+            Source = source ?? throw new ArgumentNullException(nameof(source));
         }
         
         public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)

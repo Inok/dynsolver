@@ -10,9 +10,7 @@ namespace DynamicSolver.Core.Semantic.Model
 
         public MinusOperation([NotNull] IValueSource operand)
         {
-            if (operand == null) throw new ArgumentNullException(nameof(operand));
-
-            Operand = operand;
+            Operand = operand ?? throw new ArgumentNullException(nameof(operand));
         }
         
         public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)

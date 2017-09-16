@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Collections
 {
-    public class IndexedSet<TItem1, TItem2>
+    internal class UniqueKeyValueSet<TItem1, TItem2>
     {
         private readonly Dictionary<TItem1, TItem2> _item1ToItem2;
         private readonly Dictionary<TItem2, TItem1> _item2ToItem1;
@@ -12,11 +12,11 @@ namespace DynamicSolver.Core.Collections
         public TItem2 this[TItem1 key] => _item1ToItem2[key];
         public TItem1 this[TItem2 key] => _item2ToItem1[key];
 
-        public IndexedSet() : this(null, null)
+        public UniqueKeyValueSet() : this(null, null)
         {
         }
 
-        public IndexedSet(IEqualityComparer<TItem1> item1Comparer, IEqualityComparer<TItem2> item2Comparer)
+        public UniqueKeyValueSet(IEqualityComparer<TItem1> item1Comparer, IEqualityComparer<TItem2> item2Comparer)
         {
             _item1ToItem2 = new Dictionary<TItem1, TItem2>(item1Comparer);
             _item2ToItem1 = new Dictionary<TItem2, TItem1>(item2Comparer);

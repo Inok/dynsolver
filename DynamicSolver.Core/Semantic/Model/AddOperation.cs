@@ -13,10 +13,8 @@ namespace DynamicSolver.Core.Semantic.Model
 
         public AddOperation([NotNull] IValueSource left, [NotNull] IValueSource right)
         {
-            if (right == null) throw new ArgumentNullException(nameof(right));
-
             Left = left ?? throw new ArgumentNullException(nameof(left));
-            Right = right;
+            Right = right ?? throw new ArgumentNullException(nameof(right));
         }
 
         public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)

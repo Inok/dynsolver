@@ -23,7 +23,7 @@ namespace DynamicSolver.Core.Semantic.Print
         {
             private readonly StringBuilder _builder = new StringBuilder();
 
-            private readonly IndexedSet<Variable, string> _variables = new IndexedSet<Variable, string>();
+            private readonly UniqueKeyValueSet<Variable, string> _variables = new UniqueKeyValueSet<Variable, string>();
             private int _latestGeneratedVariableIndex = 0;
             
             public string GetSemanticString()

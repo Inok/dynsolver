@@ -13,11 +13,8 @@ namespace DynamicSolver.Core.Semantic.Model
 
         public PowOperation([NotNull] IValueSource value, [NotNull] IValueSource power)
         {
-            if (value == null) throw new ArgumentNullException(nameof(value));
-            if (power == null) throw new ArgumentNullException(nameof(power));
-
-            Value = value;
-            Power = power;
+            Value = value ?? throw new ArgumentNullException(nameof(value));
+            Power = power ?? throw new ArgumentNullException(nameof(power));
         }
         
         public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)
