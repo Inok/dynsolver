@@ -233,6 +233,19 @@ namespace DynamicSolver.Core.Semantic.Print
                 MoveToNewLine();
                 _builder.Append("}");
             }
+            
+            protected override void Visit(ReturnStatement returnStatement)
+            {
+                _builder.Append("return ");
+                returnStatement.Source.Accept(this);
+
+            }
+            
+            protected override void Visit(YieldReturnStatement yieldReturnStatement)
+            {
+                _builder.Append("yield return ");
+                yieldReturnStatement.Source.Accept(this);
+            }
 
             private string GenerateName()
             {

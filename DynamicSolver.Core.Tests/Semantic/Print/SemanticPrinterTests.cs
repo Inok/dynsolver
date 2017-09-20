@@ -341,5 +341,25 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
                         }  }}{Environment.NewLine
                         }}}"));
         }
+
+        [Test]
+        public void PrintElement_ReturnStatement_Prints()
+        {
+            var statement = new ReturnStatement(new AddOperation(new Variable("x"), new Constant(1)));
+
+            var actual = _semanticPrinter.PrintElement(statement);
+
+            Assert.That(actual, Is.EqualTo("return (x + 1)"));
+        }
+
+        [Test]
+        public void PrintElement_YieldReturnStatement_Prints()
+        {
+            var statement = new YieldReturnStatement(new AddOperation(new Variable("x"), new Constant(1)));
+
+            var actual = _semanticPrinter.PrintElement(statement);
+
+            Assert.That(actual, Is.EqualTo("yield return (x + 1)"));
+        }
     }
 }
