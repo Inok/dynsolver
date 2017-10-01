@@ -287,26 +287,86 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
             Assert.That(actual, Is.EqualTo("(_gen$1[0] + _gen$1[1])"));
         }
         
-        [Test]
-        public void PrintElement_MixedVariablesAndArrayAccessOperations_WithNoName_GeneratesValidNames()
+        [TestCase("x", "x")]
+        [TestCase("x", "y")]
+        [TestCase("y", "z")]
+        public void PrintElement_StructElementAccessOperation_WithExplicitName_PrintsName(string structName, string elementName)
         {
-            var var1 = new Variable();
-            var var2 = new Variable();
-            var arr1 = new ArrayAccessOperation(new ArrayDeclaration(2), 0);
-            var arr2 = new ArrayAccessOperation(new ArrayDeclaration(2), 1);
+            var structElement = new StructElementDefinition(elementName);
+            var structDeclaration = new StructDeclaration(new StructDefinition(structElement), new ElementName(structName));
+            
+            var actual = _semanticPrinter.PrintElement(new StructElementAccessOperation(structDeclaration, structElement));
 
-            var actual = _semanticPrinter.PrintElement(new MultiplyOperation(new AddOperation(arr1, var2), new SubtractOperation(var1, arr2)));
-            Assert.That(actual, Is.EqualTo("((_gen$1[0] + _gen$2) * (_gen$3 - _gen$4[1]))"));
+            Assert.That(actual, Is.EqualTo($"{structName}.{elementName}"));
         }
 
         [Test]
-        public void PrintElement_MixedVariablesAndArrayAccessOperations_WithSameExplicitName_Throws()
+        public void PrintElement_StructElementAccessOperation_DifferentStructuresWithSameElementName_Prints()
         {
-            var var1 = new Variable("x");
-            var arr1 = new ArrayAccessOperation(new ArrayDeclaration("x", 2), 0);
+            var element1 = new StructElementDefinition("a");
+            var struct1 = new StructDeclaration(new StructDefinition(element1), new ElementName("x"));
+            
+            var element2 = new StructElementDefinition("a");
+            var struct2 = new StructDeclaration(new StructDefinition(element2), new ElementName("y"));
 
-            var element = new AddOperation(var1, arr1);
+            var element = new AddOperation(
+                new StructElementAccessOperation(struct1, element1),
+                new StructElementAccessOperation(struct2, element2)
+            );
+            
+            Assert.That(_semanticPrinter.PrintElement(element), Is.EqualTo("(x.a + y.a)"));
+        }
+        
+        [Test]
+        public void PrintElement_StructElementAccessOperation_DifferentStructuresWithSameExplicitName_ThrowsInvalidOperationException()
+        {
+            var element1 = new StructElementDefinition("y");
+            var struct1 = new StructDeclaration(new StructDefinition(element1), new ElementName("x"));
+            
+            var element2 = new StructElementDefinition("z");
+            var struct2 = new StructDeclaration(new StructDefinition(element2), new ElementName("x"));
+
+            var element = new AddOperation(
+                new StructElementAccessOperation(struct1, element1),
+                new StructElementAccessOperation(struct2, element2)
+            );
+            
             Assert.That(() => _semanticPrinter.PrintElement(element), Throws.InvalidOperationException);
+        }
+        
+        [Test]
+        public void PrintElement_StructElementAccessOperation_DifferentElementsWithExplicitNames_Prints()
+        {
+            var element1 = new StructElementDefinition("a");
+            var element2 = new StructElementDefinition("b");
+            var structDeclaration = new StructDeclaration(new StructDefinition(element1, element2), new ElementName("x"));
+
+            var element = new AddOperation(
+                new StructElementAccessOperation(structDeclaration, element1),
+                new StructElementAccessOperation(structDeclaration, element2)
+            );
+
+            Assert.That(_semanticPrinter.PrintElement(element), Is.EqualTo("(x.a + x.b)"));
+        }
+        
+        [Test]
+        public void PrintElement_StructElementAccessOperation_DifferentElementsWithoutName_Prints()
+        {
+            var element1 = new StructElementDefinition();
+            var element2 = new StructElementDefinition();
+            var element3 = new StructElementDefinition();
+            var structDeclaration = new StructDeclaration(new StructDefinition(element1, element2, element3), new ElementName("x"));
+
+            var element = new AssignStatement(
+                new StructElementAccessOperation(structDeclaration, element1),
+                new SubtractOperation(
+                    new MultiplyOperation(
+                        new StructElementAccessOperation(structDeclaration, element2),
+                        new StructElementAccessOperation(structDeclaration, element3)),
+                    new StructElementAccessOperation(structDeclaration, element2)
+                ));
+
+            Assert.That(_semanticPrinter.PrintElement(element), Is.EqualTo("x._gen$1 := ((x._gen$2 * x._gen$3) - x._gen$2)"));
         }
         
         [Test]

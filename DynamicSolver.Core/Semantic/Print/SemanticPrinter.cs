@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using DynamicSolver.Core.Collections;
 using DynamicSolver.Core.Semantic.Model;
@@ -27,6 +29,8 @@ namespace DynamicSolver.Core.Semantic.Print
             private readonly StringBuilder _builder = new StringBuilder();
 
             private readonly UniqueKeyValueSet<IDeclaration, string> _declarations = new UniqueKeyValueSet<IDeclaration, string>();
+            private readonly UniqueKeyValueSet<StructDefinition, IReadOnlyDictionary<StructElementDefinition, string>> _structElementNames = new UniqueKeyValueSet<StructDefinition, IReadOnlyDictionary<StructElementDefinition, string>>();
+            
             private int _lastGeneratedNameIndex = 0;
             private int _deep = 0;
 
@@ -42,28 +46,8 @@ namespace DynamicSolver.Core.Semantic.Print
 
             protected override void Visit(Variable variable)
             {
-                if (_declarations.TryGetValueByItem1(variable, out var name))
-                {
-                    _builder.Append(name);
-                    return;
-                }
-
-                var explicitName = variable.ExplicitName;
-                if (explicitName != null)
-                {
-                    if (_declarations.ContainsItem2(explicitName))
-                    {
-                        throw new InvalidOperationException(
-                            $"Variable with explicit name '{explicitName}' conflicts with different node with the same explicit or generated name.");
-                    }
-                    _declarations.Add(variable, explicitName);
-                    _builder.Append(explicitName);
-                    return;
-                }
-
-                var generatedName = GenerateName();
-                _declarations.Add(variable, generatedName);
-                _builder.Append(generatedName);
+                var variableName = GetDeclarationName(variable);
+                _builder.Append(variableName);
             }
 
             protected override void Visit(MinusOperation minusOperation)
@@ -188,37 +172,15 @@ namespace DynamicSolver.Core.Semantic.Print
 
             protected override void Visit(ArrayAccessOperation arrayAccessOperation)
             {
-                void AppendArrayAccess(string arrName)
-                {
-                    _builder.Append(arrName).Append("[").Append(arrayAccessOperation.Index).Append("]");
-                }
-
-                var arrayDeclaration = arrayAccessOperation.Array;
-                
-                if (_declarations.TryGetValueByItem1(arrayDeclaration, out var name))
-                {
-                    AppendArrayAccess(name);
-                    return;
-                }
-
-                var explicitName = arrayDeclaration.ExplicitName;
-
-                if (explicitName != null)
-                {
-                    if (_declarations.ContainsItem2(explicitName))
-                    {
-                        throw new InvalidOperationException(
-                            $"Array with explicit name '{explicitName}' conflicts with different node with the same explicit or generated name.");
-                    }
-
-                    _declarations.Add(arrayDeclaration, explicitName);
-                    AppendArrayAccess(explicitName);
-                    return;
-                }
-
-                var generatedName = GenerateName();
-                _declarations.Add(arrayDeclaration, generatedName);
-                AppendArrayAccess(generatedName);
+                var arrayName = GetDeclarationName(arrayAccessOperation.Array);
+                _builder.Append(arrayName).Append("[").Append(arrayAccessOperation.Index).Append("]");
+            }
+            
+            protected override void Visit(StructElementAccessOperation structElementAccessOperation)
+            {
+                var structName = GetDeclarationName(structElementAccessOperation.StructDeclaration);
+                var elementName = GetStructElementName(structElementAccessOperation);
+                _builder.Append(structName).Append(".").Append(elementName);
             }
 
             protected override void Visit(RepeatStatement repeatStatement)
@@ -247,6 +209,32 @@ namespace DynamicSolver.Core.Semantic.Print
                 yieldReturnStatement.Source.Accept(this);
             }
 
+            private string GetDeclarationName(IDeclaration declaration)
+            {
+                if (_declarations.TryGetValueByItem1(declaration, out var name))
+                {
+                    return name;
+                }
+
+                var explicitName = declaration.ExplicitName;
+
+                if (explicitName != null)
+                {
+                    if (_declarations.ContainsItem2(explicitName))
+                    {
+                        throw new InvalidOperationException($"Declaration with explicit name '{explicitName}' conflicts with different node with the same explicit or generated name.");
+                    }
+
+                    _declarations.Add(declaration, explicitName);
+                    return explicitName;
+                }
+
+                var generatedName = GenerateName();
+                _declarations.Add(declaration, generatedName);
+                
+                return generatedName;
+            }
+
             private string GenerateName()
             {
                 var index = ++_lastGeneratedNameIndex;
@@ -260,6 +248,28 @@ namespace DynamicSolver.Core.Semantic.Print
                 }
 
                 return name;
+            }
+
+            private string GetStructElementName(StructElementAccessOperation operation)
+            {
+                var structDefinition = operation.StructDeclaration.Definition;
+
+                if (_structElementNames.TryGetValueByItem1(structDefinition, out var elementNames))
+                {
+                    return elementNames[operation.Element];
+                }
+
+                var names = new Dictionary<StructElementDefinition, string>();
+
+                var genIndex = 0;
+                foreach (var element in structDefinition.Elements)
+                {
+                    names.Add(element, element.ExplicitName ?? $"_gen${++genIndex}");
+                }
+
+                _structElementNames.Add(structDefinition, names);
+                
+                return names[operation.Element];
             }
 
             private void MoveToNewLine()

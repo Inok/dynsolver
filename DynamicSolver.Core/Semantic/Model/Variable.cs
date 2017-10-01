@@ -5,8 +5,7 @@ namespace DynamicSolver.Core.Semantic.Model
 {
     public class Variable : IValueSource, IValueTarget, IDeclaration
     {
-        [CanBeNull]
-        public string ExplicitName { get; }
+        public ElementName ExplicitName { get; }
 
         public Variable()
         {
@@ -15,8 +14,7 @@ namespace DynamicSolver.Core.Semantic.Model
 
         public Variable([NotNull] string explicitName)
         {
-            ValidateName(explicitName);
-            ExplicitName = explicitName;
+            ExplicitName = new ElementName(explicitName);
         }
 
         public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)
@@ -25,32 +23,5 @@ namespace DynamicSolver.Core.Semantic.Model
             return visitor.Visit(this);
         }
 
-        private static void ValidateName(string explicitName)
-        {
-            if (string.IsNullOrEmpty(explicitName))
-            {
-                throw new ArgumentException("Value cannot be null or empty.", nameof(explicitName));
-            }
-
-            if (!char.IsLetter(explicitName[0]))
-            {
-                throw new ArgumentException(
-                    $"First character of a variable name must be a unicode letter, but actual name is '{explicitName}'.",
-                    nameof(explicitName));
-            }
-
-            for (var i = 0; i < explicitName.Length; i++)
-            {
-                var ch = explicitName[i];
-                if (char.IsLetterOrDigit(ch) || char.IsNumber(ch) || ch == '_')
-                {
-                    continue;
-                }
-
-                throw new ArgumentException(
-                    $"Variable name must contain only unicode letters, numbers and underscores, but name '{explicitName}' contains invalid character '{ch}' at position '{i}'.",
-                    nameof(explicitName));
-            }
-        }
     }
 }

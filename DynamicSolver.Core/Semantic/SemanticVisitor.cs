@@ -13,9 +13,10 @@ namespace DynamicSolver.Core.Semantic
         protected abstract void Visit(DivideOperation divideOperation);
         protected abstract void Visit(PowOperation powOperation);
         protected abstract void Visit(FunctionCallOperation functionCallOperation);
+        protected abstract void Visit(StructElementAccessOperation structElementAccessOperation);
+        protected abstract void Visit(ArrayAccessOperation arrayAccessOperation);
         protected abstract void Visit(AssignStatement assignStatement);
         protected abstract void Visit(BlockStatement blockStatement);
-        protected abstract void Visit(ArrayAccessOperation arrayAccessOperation);
         protected abstract void Visit(RepeatStatement repeatStatement);
         protected abstract void Visit(ReturnStatement returnStatement);
         protected abstract void Visit(YieldReturnStatement yieldReturnStatement);
@@ -74,6 +75,18 @@ namespace DynamicSolver.Core.Semantic
             return null;
         }
 
+        object ISemanticVisitor<object>.Visit(ArrayAccessOperation arrayAccessOperation)
+        {
+            Visit(arrayAccessOperation);
+            return null;
+        }
+        
+        object ISemanticVisitor<object>.Visit(StructElementAccessOperation structElementAccessOperation)
+        {
+            Visit(structElementAccessOperation);
+            return null;
+        }
+
         object ISemanticVisitor<object>.Visit(AssignStatement assignStatement)
         {
             Visit(assignStatement);
@@ -83,12 +96,6 @@ namespace DynamicSolver.Core.Semantic
         object ISemanticVisitor<object>.Visit(BlockStatement block)
         {
             Visit(block);
-            return null;
-        }
-
-        object ISemanticVisitor<object>.Visit(ArrayAccessOperation arrayAccessOperation)
-        {
-            Visit(arrayAccessOperation);
             return null;
         }
 
