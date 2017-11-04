@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Semantic.Model
+namespace DynamicSolver.Core.Semantic.Model.Operation
 {
     public class MinusOperation : IValueSource
     {

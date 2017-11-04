@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using DynamicSolver.Core.Semantic.Model;
+using DynamicSolver.Core.Semantic.Model.Array;
+using DynamicSolver.Core.Semantic.Model.Operation;
+using DynamicSolver.Core.Semantic.Model.Statement;
+using DynamicSolver.Core.Semantic.Model.Struct;
+using DynamicSolver.Core.Semantic.Model.Value;
 using DynamicSolver.Core.Semantic.Print;
 using NUnit.Framework;
 
@@ -168,10 +173,10 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         }
 
         [Test]
-        public void PrintElement_FunctionCallOperation_PrintsFunctionWithCorrectName([Values] Function function)
+        public void PrintElement_MathFunctionCallOperation_PrintsFunctionWithCorrectName([Values] MathFunction mathFunction)
         {
-            var actual = _semanticPrinter.PrintElement(new FunctionCallOperation(function, new Constant(1)));
-            Assert.That(actual, Is.EqualTo($"{function.ToString("G").ToLower()}(1)"));
+            var actual = _semanticPrinter.PrintElement(new MathFunctionCallOperation(mathFunction, new Constant(1)));
+            Assert.That(actual, Is.EqualTo($"{mathFunction.ToString("G").ToLower()}(1)"));
         }
         
         [Test]

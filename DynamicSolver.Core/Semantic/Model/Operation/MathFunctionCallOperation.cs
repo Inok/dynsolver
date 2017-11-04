@@ -1,22 +1,22 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Semantic.Model
+namespace DynamicSolver.Core.Semantic.Model.Operation
 {
-    public class FunctionCallOperation : IValueSource
+    public class MathFunctionCallOperation : IValueSource
     {
-        public Function Function { get; }
+        public MathFunction MathFunction { get; }
 
         [NotNull]
         public IValueSource Argument { get; }
 
-        public FunctionCallOperation(Function function, [NotNull] IValueSource argument)
+        public MathFunctionCallOperation(MathFunction mathFunction, [NotNull] IValueSource argument)
         {
             if (argument == null) throw new ArgumentNullException(nameof(argument));
-            if (!Enum.IsDefined(typeof(Function), function)) throw new ArgumentOutOfRangeException(nameof(function), "Value should be defined in the Function enum.");
+            if (!Enum.IsDefined(typeof(MathFunction), mathFunction)) throw new ArgumentOutOfRangeException(nameof(mathFunction), "Value should be defined in the Function enum.");
 
 
-            Function = function;
+            MathFunction = mathFunction;
             Argument = argument;
         }
         

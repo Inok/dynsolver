@@ -1,4 +1,8 @@
-﻿using DynamicSolver.Core.Semantic.Model;
+﻿using DynamicSolver.Core.Semantic.Model.Array;
+using DynamicSolver.Core.Semantic.Model.Operation;
+using DynamicSolver.Core.Semantic.Model.Statement;
+using DynamicSolver.Core.Semantic.Model.Struct;
+using DynamicSolver.Core.Semantic.Model.Value;
 
 namespace DynamicSolver.Core.Semantic
 {
@@ -12,7 +16,7 @@ namespace DynamicSolver.Core.Semantic
         protected abstract void Visit(MultiplyOperation multiplyOperation);
         protected abstract void Visit(DivideOperation divideOperation);
         protected abstract void Visit(PowOperation powOperation);
-        protected abstract void Visit(FunctionCallOperation functionCallOperation);
+        protected abstract void Visit(MathFunctionCallOperation mathFunctionCallOperation);
         protected abstract void Visit(StructElementAccessOperation structElementAccessOperation);
         protected abstract void Visit(ArrayAccessOperation arrayAccessOperation);
         protected abstract void Visit(AssignStatement assignStatement);
@@ -69,9 +73,9 @@ namespace DynamicSolver.Core.Semantic
             return null;
         }
 
-        object ISemanticVisitor<object>.Visit(FunctionCallOperation functionCallOperation)
+        object ISemanticVisitor<object>.Visit(MathFunctionCallOperation mathFunctionCallOperation)
         {
-            Visit(functionCallOperation);
+            Visit(mathFunctionCallOperation);
             return null;
         }
 

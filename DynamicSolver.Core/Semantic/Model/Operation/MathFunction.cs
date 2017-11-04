@@ -1,6 +1,6 @@
-﻿namespace DynamicSolver.Core.Semantic.Model
+﻿namespace DynamicSolver.Core.Semantic.Model.Operation
 {
-    public enum Function
+    public enum MathFunction
     {
         Sin,
         Cos,

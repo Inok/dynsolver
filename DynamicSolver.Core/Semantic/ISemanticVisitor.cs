@@ -1,4 +1,8 @@
-﻿using DynamicSolver.Core.Semantic.Model;
+﻿using DynamicSolver.Core.Semantic.Model.Array;
+using DynamicSolver.Core.Semantic.Model.Operation;
+using DynamicSolver.Core.Semantic.Model.Statement;
+using DynamicSolver.Core.Semantic.Model.Struct;
+using DynamicSolver.Core.Semantic.Model.Value;
 
 namespace DynamicSolver.Core.Semantic
 {
@@ -12,9 +16,9 @@ namespace DynamicSolver.Core.Semantic
         T Visit(MultiplyOperation multiplyOperation);
         T Visit(DivideOperation divideOperation);
         T Visit(PowOperation powOperation);
-        T Visit(FunctionCallOperation functionCallOperation);
+        T Visit(MathFunctionCallOperation mathFunctionCallOperation);
         T Visit(ArrayAccessOperation arrayAccessOperation);
-        T Visit(StructElementAccessOperation functionCallOperation);
+        T Visit(StructElementAccessOperation structElementAccessOperation);
 
         T Visit(AssignStatement assignStatement);
         T Visit(BlockStatement blockStatement);

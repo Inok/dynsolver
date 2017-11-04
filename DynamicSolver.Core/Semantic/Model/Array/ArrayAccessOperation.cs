@@ -1,7 +1,7 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Semantic.Model
+namespace DynamicSolver.Core.Semantic.Model.Array
 {
     public class ArrayAccessOperation : IValueSource, IValueTarget
     {

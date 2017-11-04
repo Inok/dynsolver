@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Semantic.Model
+namespace DynamicSolver.Core.Semantic.Model.Statement
 {
     public class BlockStatement : IStatement
     {

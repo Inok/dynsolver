@@ -1,14 +1,14 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Semantic.Model
+namespace DynamicSolver.Core.Semantic.Model.Statement
 {
-    public class ReturnStatement : IStatement
+    public class YieldReturnStatement : IStatement
     {
         [NotNull]
         public IValueSource Source { get; }
-        
-        public ReturnStatement([NotNull] IValueSource source)
+
+        public YieldReturnStatement([NotNull] IValueSource source)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }

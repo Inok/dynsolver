@@ -1,9 +1,9 @@
 ﻿using System;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Semantic.Model
+namespace DynamicSolver.Core.Semantic.Model.Operation
 {
-    public class SubtractOperation : IValueSource
+    public class MultiplyOperation : IValueSource
     {
         [NotNull]
         public IValueSource Left { get; }
@@ -11,7 +11,7 @@ namespace DynamicSolver.Core.Semantic.Model
         [NotNull]
         public IValueSource Right { get; }
 
-        public SubtractOperation([NotNull] IValueSource left, [NotNull] IValueSource right)
+        public MultiplyOperation([NotNull] IValueSource left, [NotNull] IValueSource right)
         {
             Left = left ?? throw new ArgumentNullException(nameof(left));
             Right = right ?? throw new ArgumentNullException(nameof(right));

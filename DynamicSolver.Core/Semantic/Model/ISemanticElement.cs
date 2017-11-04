@@ -1,4 +1,4 @@
-﻿namespace DynamicSolver.Core.Semantic
+﻿namespace DynamicSolver.Core.Semantic.Model
 {
     public interface ISemanticElement
     {

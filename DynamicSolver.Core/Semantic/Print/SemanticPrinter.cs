@@ -1,9 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using DynamicSolver.Core.Collections;
 using DynamicSolver.Core.Semantic.Model;
+using DynamicSolver.Core.Semantic.Model.Array;
+using DynamicSolver.Core.Semantic.Model.Operation;
+using DynamicSolver.Core.Semantic.Model.Statement;
+using DynamicSolver.Core.Semantic.Model.Struct;
+using DynamicSolver.Core.Semantic.Model.Value;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Semantic.Print
@@ -115,29 +119,29 @@ namespace DynamicSolver.Core.Semantic.Print
                 _builder.Append(")");
             }
 
-            protected override void Visit(FunctionCallOperation functionCallOperation)
+            protected override void Visit(MathFunctionCallOperation mathFunctionCallOperation)
             {
-                switch (functionCallOperation.Function)
+                switch (mathFunctionCallOperation.MathFunction)
                 {
-                    case Function.Sin:
+                    case MathFunction.Sin:
                         _builder.Append("sin");
                         break;
-                    case Function.Cos:
+                    case MathFunction.Cos:
                         _builder.Append("cos");
                         break;
-                    case Function.Tg:
+                    case MathFunction.Tg:
                         _builder.Append("tg");
                         break;
-                    case Function.Ctg:
+                    case MathFunction.Ctg:
                         _builder.Append("ctg");
                         break;
-                    case Function.Ln:
+                    case MathFunction.Ln:
                         _builder.Append("ln");
                         break;
-                    case Function.Lg:
+                    case MathFunction.Lg:
                         _builder.Append("lg");
                         break;
-                    case Function.Exp:
+                    case MathFunction.Exp:
                         _builder.Append("exp");
                         break;
                     default:
@@ -145,7 +149,7 @@ namespace DynamicSolver.Core.Semantic.Print
                 }
 
                 _builder.Append("(");
-                _builder.Append(functionCallOperation.Argument.Accept(this));
+                _builder.Append(mathFunctionCallOperation.Argument.Accept(this));
                 _builder.Append(")");
             }
 
