@@ -1,4 +1,5 @@
 ﻿using System;
+using DynamicSolver.Core.Semantic.Model.Type;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Semantic.Model.Array
@@ -9,6 +10,9 @@ namespace DynamicSolver.Core.Semantic.Model.Array
         public ArrayDeclaration Array { get; }
 
         public int Index { get; }
+        
+        [NotNull]
+        public IValueType ValueType { get; }
 
         public ArrayAccessOperation([NotNull] ArrayDeclaration array, int index)
         {
@@ -17,10 +21,12 @@ namespace DynamicSolver.Core.Semantic.Model.Array
 
             Array = array;
             Index = index;
+            ValueType = array.ValueType;
         }
 
         public T Accept<T>(ISemanticVisitor<T> visitor)
         {
+            if (visitor == null) throw new ArgumentNullException(nameof(visitor));
             return visitor.Visit(this);
         }
     }

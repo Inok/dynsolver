@@ -5,6 +5,7 @@ using DynamicSolver.Core.Semantic.Model.Array;
 using DynamicSolver.Core.Semantic.Model.Operation;
 using DynamicSolver.Core.Semantic.Model.Statement;
 using DynamicSolver.Core.Semantic.Model.Struct;
+using DynamicSolver.Core.Semantic.Model.Type;
 using DynamicSolver.Core.Semantic.Model.Value;
 using DynamicSolver.Core.Semantic.Print;
 using NUnit.Framework;
@@ -36,7 +37,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [TestCase(Math.E, "2.71828182845905")]
         public void PrintElement_Constant_PrintsValue(double value, string expected)
         {
-            var actual = _semanticPrinter.PrintElement(new Constant(value));
+            var actual = _semanticPrinter.PrintElement(new RealConstant(value));
 
             Assert.That(actual, Is.EqualTo(expected));
         }
@@ -46,7 +47,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [TestCase("t1")]
         public void PrintElement_Variable_WithExplicitName_PrintsName(string name)
         {
-            var actual = _semanticPrinter.PrintElement(new Variable(name));
+            var actual = _semanticPrinter.PrintElement(new Variable(RealType.Double, name));
 
             Assert.That(actual, Is.EqualTo(name));
         }
@@ -54,28 +55,28 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_Variable_DifferentVariablesWithSameExplicitName_ThrowsInvalidOperationException()
         {
-            var element = new AddOperation(new Variable("x"), new Variable("x"));
+            var element = new AddOperation(new Variable(RealType.Double, "x"), new Variable(RealType.Double, "x"));
             Assert.That(() => _semanticPrinter.PrintElement(element), Throws.InvalidOperationException);
         }
 
         [Test]
         public void PrintElement_Variable_WithNoName_PrintsGeneratedName()
         {
-            var actual = _semanticPrinter.PrintElement(new Variable());
+            var actual = _semanticPrinter.PrintElement(new Variable(RealType.Double));
             Assert.That(actual, Is.EqualTo("_gen$1"));
         }
 
         [Test]
         public void PrintElement_ManyVariables_WithNoName_PrintsDifferentNames()
         {
-            var actual = _semanticPrinter.PrintElement(new AddOperation(new AddOperation(new Variable(), new Variable()), new Variable()));
+            var actual = _semanticPrinter.PrintElement(new AddOperation(new AddOperation(new Variable(RealType.Double), new Variable(RealType.Double)), new Variable(RealType.Double)));
             Assert.That(actual, Is.EqualTo("((_gen$1 + _gen$2) + _gen$3)"));
         }
         
         [Test]
         public void PrintElement_Variable_MultipleWithNoName_PrintsSameName()
         {
-            var variable = new Variable();
+            var variable = new Variable(IntegerType.Int32);
             var actual = _semanticPrinter.PrintElement(new AddOperation(variable, variable));
             Assert.That(actual, Is.EqualTo("(_gen$1 + _gen$1)"));
         }
@@ -83,19 +84,21 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_MinusOperation_PrintsMinusOperator()
         {
-            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Constant(1))), Is.EqualTo("-1"));
-            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Constant(2))), Is.EqualTo("-2"));
-            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Constant(-1))), Is.EqualTo("-(-1)"));
-            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Variable("x"))), Is.EqualTo("-x"));
-            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new MinusOperation(new Variable("x")))), Is.EqualTo("-(-x)"));
-            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new AddOperation(new Variable("x"), new Variable("y")))), Is.EqualTo("-(x + y)"));
-            Assert.That(_semanticPrinter.PrintElement(new SubtractOperation(new MinusOperation(new Variable("x")), new MinusOperation(new Variable("y")))), Is.EqualTo("(-x - -y)"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new IntegerConstant(IntegerType.Int32, 1))), Is.EqualTo("-1"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new IntegerConstant(IntegerType.Int16, 2))), Is.EqualTo("-2"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new RealConstant(RealType.Single, 2))), Is.EqualTo("-2"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new RealConstant(RealType.Double, 0.5))), Is.EqualTo("-0.5"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new IntegerConstant(IntegerType.Int32, -1))), Is.EqualTo("-(-1)"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new Variable(IntegerType.Int32, "x"))), Is.EqualTo("-x"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new MinusOperation(new Variable(IntegerType.Int32, "x")))), Is.EqualTo("-(-x)"));
+            Assert.That(_semanticPrinter.PrintElement(new MinusOperation(new AddOperation(new Variable(IntegerType.Int32, "x"), new Variable(IntegerType.Int32, "y")))), Is.EqualTo("-(x + y)"));
+            Assert.That(_semanticPrinter.PrintElement(new SubtractOperation(new MinusOperation(new Variable(IntegerType.Int32, "x")), new MinusOperation(new Variable(IntegerType.Int32, "y")))), Is.EqualTo("(-x - -y)"));
         }
 
         [Test]
         public void PrintElement_AddOperation_PrintsAddOperator()
         {
-            var actual = _semanticPrinter.PrintElement(new AddOperation(new Constant(1), new Constant(2)));
+            var actual = _semanticPrinter.PrintElement(new AddOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)));
             Assert.That(actual, Is.EqualTo("(1 + 2)"));
         }
 
@@ -103,15 +106,15 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         public void PrintElement_AddOperation_Multiple_PrintsScoped()
         {
             var actual = _semanticPrinter.PrintElement(new AddOperation(
-                new AddOperation(new Constant(1), new Constant(2)),
-                new AddOperation(new Constant(3), new Constant(4))));
+                new AddOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)),
+                new AddOperation(new IntegerConstant(IntegerType.Int32, 3), new IntegerConstant(IntegerType.Int32, 4))));
             Assert.That(actual, Is.EqualTo("((1 + 2) + (3 + 4))"));
         }
         
         [Test]
         public void PrintElement_SubtractOperation_PrintsSubtractOperator()
         {
-            var actual = _semanticPrinter.PrintElement(new SubtractOperation(new Constant(1), new Constant(2)));
+            var actual = _semanticPrinter.PrintElement(new SubtractOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)));
             Assert.That(actual, Is.EqualTo("(1 - 2)"));
         }
 
@@ -119,15 +122,15 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         public void PrintElement_SubtractOperation_Multiple_PrintsScoped()
         {
             var actual = _semanticPrinter.PrintElement(new SubtractOperation(
-                new SubtractOperation(new Constant(1), new Constant(2)),
-                new SubtractOperation(new Constant(3), new Constant(4))));
+                new SubtractOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)),
+                new SubtractOperation(new IntegerConstant(IntegerType.Int32, 3), new IntegerConstant(IntegerType.Int32, 4))));
             Assert.That(actual, Is.EqualTo("((1 - 2) - (3 - 4))"));
         }
         
         [Test]
         public void PrintElement_MultiplyOperation_PrintsMultiplyOperator()
         {
-            var actual = _semanticPrinter.PrintElement(new MultiplyOperation(new Constant(1), new Constant(2)));
+            var actual = _semanticPrinter.PrintElement(new MultiplyOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)));
             Assert.That(actual, Is.EqualTo("(1 * 2)"));
         }
 
@@ -135,15 +138,15 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         public void PrintElement_MultiplyOperation_Multiple_PrintsScoped()
         {
             var actual = _semanticPrinter.PrintElement(new MultiplyOperation(
-                new MultiplyOperation(new Constant(1), new Constant(2)),
-                new MultiplyOperation(new Constant(3), new Constant(4))));
+                new MultiplyOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)),
+                new MultiplyOperation(new IntegerConstant(IntegerType.Int32, 3), new IntegerConstant(IntegerType.Int32, 4))));
             Assert.That(actual, Is.EqualTo("((1 * 2) * (3 * 4))"));
         }
         
         [Test]
         public void PrintElement_DivideOperation_PrintsDivideOperator()
         {
-            var actual = _semanticPrinter.PrintElement(new DivideOperation(new Constant(1), new Constant(2)));
+            var actual = _semanticPrinter.PrintElement(new DivideOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)));
             Assert.That(actual, Is.EqualTo("(1 / 2)"));
         }
 
@@ -151,15 +154,15 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         public void PrintElement_DivideOperation_Multiple_PrintsScoped()
         {
             var actual = _semanticPrinter.PrintElement(new DivideOperation(
-                new DivideOperation(new Constant(1), new Constant(2)),
-                new DivideOperation(new Constant(3), new Constant(4))));
+                new DivideOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)),
+                new DivideOperation(new IntegerConstant(IntegerType.Int32, 3), new IntegerConstant(IntegerType.Int32, 4))));
             Assert.That(actual, Is.EqualTo("((1 / 2) / (3 / 4))"));
         }
         
         [Test]
         public void PrintElement_PowOperation_PrintsPowOperator()
         {
-            var actual = _semanticPrinter.PrintElement(new PowOperation(new Constant(1), new Constant(2)));
+            var actual = _semanticPrinter.PrintElement(new PowOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)));
             Assert.That(actual, Is.EqualTo("(1 ^ 2)"));
         }
 
@@ -167,22 +170,22 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         public void PrintElement_PowOperation_Multiple_PrintsScoped()
         {
             var actual = _semanticPrinter.PrintElement(new PowOperation(
-                new PowOperation(new Constant(1), new Constant(2)),
-                new PowOperation(new Constant(3), new Constant(4))));
+                new PowOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)),
+                new PowOperation(new IntegerConstant(IntegerType.Int32, 3), new IntegerConstant(IntegerType.Int32, 4))));
             Assert.That(actual, Is.EqualTo("((1 ^ 2) ^ (3 ^ 4))"));
         }
 
         [Test]
         public void PrintElement_MathFunctionCallOperation_PrintsFunctionWithCorrectName([Values] MathFunction mathFunction)
         {
-            var actual = _semanticPrinter.PrintElement(new MathFunctionCallOperation(mathFunction, new Constant(1)));
+            var actual = _semanticPrinter.PrintElement(new MathFunctionCallOperation(mathFunction, new IntegerConstant(IntegerType.Int32, 1)));
             Assert.That(actual, Is.EqualTo($"{mathFunction.ToString("G").ToLower()}(1)"));
         }
         
         [Test]
         public void PrintElement_AssignStatement_PrintsAssignStatement()
         {
-            var actual = _semanticPrinter.PrintElement(new AssignStatement(new Variable("x"), new Constant(1)));
+            var actual = _semanticPrinter.PrintElement(new AssignStatement(new Variable(IntegerType.Int32, "x"), new IntegerConstant(IntegerType.Int32, 1)));
             Assert.That(actual, Is.EqualTo("x := 1"));
         }
 
@@ -190,8 +193,8 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         public void PrintElement_AssignStatement_WithComplexArgument_PrintsAssignStatement()
         {
             var actual = _semanticPrinter.PrintElement(new AssignStatement(
-                new Variable("x"),
-                new AddOperation(new Variable("y"), new Constant(1))
+                new Variable(IntegerType.Int32, "x"),
+                new AddOperation(new Variable(IntegerType.Int32, "y"), new IntegerConstant(IntegerType.Int32, 1))
             ));
             Assert.That(actual, Is.EqualTo("x := (y + 1)"));
         }
@@ -199,7 +202,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_AssignStatement_WithSameSourceAndTarget_PrintsAssignStatement()
         {
-            var variable = new Variable("x");
+            var variable = new Variable(IntegerType.Int32, "x");
             var actual = _semanticPrinter.PrintElement(new AssignStatement(variable, variable));
             Assert.That(actual, Is.EqualTo("x := x"));
         }
@@ -207,11 +210,11 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_AssignStatement_WithTargetInsideSource_PrintsAssignStatement()
         {
-            var variable = new Variable("x");
+            var variable = new Variable(IntegerType.Int32, "x");
             var actual = _semanticPrinter.PrintElement(new AssignStatement(
                 variable,
                 new MultiplyOperation(
-                    new AddOperation(variable, new Constant(1)),
+                    new AddOperation(variable, new IntegerConstant(IntegerType.Int32, 1)),
                     variable)
             ));
             Assert.That(actual, Is.EqualTo("x := ((x + 1) * x)"));
@@ -220,13 +223,13 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_BlockStatement_PrintsInnerStatementsByLines()
         {
-            var var1 = new Variable();
-            var var2 = new Variable();
+            var var1 = new Variable(IntegerType.Int32);
+            var var2 = new Variable(IntegerType.Int32);
             var statement = new BlockStatement(new[]
             {
-                new AssignStatement(new Variable("b"), new Variable("a")),
-                new AssignStatement(var1, new Variable("m")),
-                new AssignStatement(new Variable("y"), new Variable("x")),
+                new AssignStatement(new Variable(IntegerType.Int32, "b"), new Variable(IntegerType.Int32, "a")),
+                new AssignStatement(var1, new Variable(IntegerType.Int32, "m")),
+                new AssignStatement(new Variable(IntegerType.Int32, "y"), new Variable(IntegerType.Int32, "x")),
                 new AssignStatement(var2, var1)
             });
 
@@ -240,7 +243,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [TestCase("t1")]
         public void PrintElement_ArrayAccessOperation_WithExplicitName_PrintsName(string name)
         {
-            var actual = _semanticPrinter.PrintElement(new ArrayAccessOperation(new ArrayDeclaration(name, 5), 2));
+            var actual = _semanticPrinter.PrintElement(new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, name, 5), 2));
 
             Assert.That(actual, Is.EqualTo($"{name}[2]"));
         }
@@ -248,23 +251,23 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_ArrayAccessOperation_DifferentVariablesWithSameExplicitName_ThrowsInvalidOperationException()
         {
-            var element = new AddOperation(new ArrayAccessOperation(new ArrayDeclaration("x", 5), 1), new ArrayAccessOperation(new ArrayDeclaration("x", 3), 0));
+            var element = new AddOperation(new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, "x", 5), 1), new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, "x", 3), 0));
             Assert.That(() => _semanticPrinter.PrintElement(element), Throws.InvalidOperationException);
         }
 
         [Test]
         public void PrintElement_ArrayAccessOperation_WithNoName_PrintsGeneratedName()
         {
-            var actual = _semanticPrinter.PrintElement(new ArrayAccessOperation(new ArrayDeclaration(5), 2));
+            var actual = _semanticPrinter.PrintElement(new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, 5), 2));
             Assert.That(actual, Is.EqualTo("_gen$1[2]"));
         }
 
         [Test]
         public void PrintElement_ArrayAccessOperation_WithNoName_PrintsDifferentNames()
         {
-            var arr1 = new ArrayAccessOperation(new ArrayDeclaration(2), 1);
-            var arr2 = new ArrayAccessOperation(new ArrayDeclaration(1), 0);
-            var arr3 = new ArrayAccessOperation(new ArrayDeclaration(3), 2);
+            var arr1 = new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, 2), 1);
+            var arr2 = new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, 1), 0);
+            var arr3 = new ArrayAccessOperation(new ArrayDeclaration(IntegerType.Int32, 3), 2);
             
             var actual = _semanticPrinter.PrintElement(new AddOperation(new AddOperation(arr1, arr2), arr3));
             Assert.That(actual, Is.EqualTo("((_gen$1[1] + _gen$2[0]) + _gen$3[2])"));
@@ -273,7 +276,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_ArrayAccessOperation_MultipleWithExplicitName_PrintsSameName()
         {
-            var arrayDeclaration = new ArrayDeclaration("x", 2);
+            var arrayDeclaration = new ArrayDeclaration(IntegerType.Int32, "x", 2);
             var arrAccess1 = new ArrayAccessOperation(arrayDeclaration, 0);
             var arrAccess2 = new ArrayAccessOperation(arrayDeclaration, 1);
             
@@ -284,7 +287,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_ArrayAccessOperation_MultipleWithNoName_PrintsSameName()
         {
-            var arrayDeclaration = new ArrayDeclaration(2);
+            var arrayDeclaration = new ArrayDeclaration(IntegerType.Int32, 2);
             var arrAccess1 = new ArrayAccessOperation(arrayDeclaration, 0);
             var arrAccess2 = new ArrayAccessOperation(arrayDeclaration, 1);
             
@@ -297,7 +300,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [TestCase("y", "z")]
         public void PrintElement_StructElementAccessOperation_WithExplicitName_PrintsName(string structName, string elementName)
         {
-            var structElement = new StructElementDefinition(elementName);
+            var structElement = new StructElementDefinition(IntegerType.Int32, elementName);
             var structDeclaration = new StructDeclaration(new StructDefinition(structElement), new ElementName(structName));
             
             var actual = _semanticPrinter.PrintElement(new StructElementAccessOperation(structDeclaration, structElement));
@@ -308,10 +311,10 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_StructElementAccessOperation_DifferentStructuresWithSameElementName_Prints()
         {
-            var element1 = new StructElementDefinition("a");
+            var element1 = new StructElementDefinition(IntegerType.Int32, "a");
             var struct1 = new StructDeclaration(new StructDefinition(element1), new ElementName("x"));
             
-            var element2 = new StructElementDefinition("a");
+            var element2 = new StructElementDefinition(IntegerType.Int32, "a");
             var struct2 = new StructDeclaration(new StructDefinition(element2), new ElementName("y"));
 
             var element = new AddOperation(
@@ -325,10 +328,10 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_StructElementAccessOperation_DifferentStructuresWithSameExplicitName_ThrowsInvalidOperationException()
         {
-            var element1 = new StructElementDefinition("y");
+            var element1 = new StructElementDefinition(IntegerType.Int32, "y");
             var struct1 = new StructDeclaration(new StructDefinition(element1), new ElementName("x"));
             
-            var element2 = new StructElementDefinition("z");
+            var element2 = new StructElementDefinition(IntegerType.Int32, "z");
             var struct2 = new StructDeclaration(new StructDefinition(element2), new ElementName("x"));
 
             var element = new AddOperation(
@@ -342,8 +345,8 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_StructElementAccessOperation_DifferentElementsWithExplicitNames_Prints()
         {
-            var element1 = new StructElementDefinition("a");
-            var element2 = new StructElementDefinition("b");
+            var element1 = new StructElementDefinition(IntegerType.Int32, "a");
+            var element2 = new StructElementDefinition(IntegerType.Int32, "b");
             var structDeclaration = new StructDeclaration(new StructDefinition(element1, element2), new ElementName("x"));
 
             var element = new AddOperation(
@@ -357,9 +360,9 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_StructElementAccessOperation_DifferentElementsWithoutName_Prints()
         {
-            var element1 = new StructElementDefinition();
-            var element2 = new StructElementDefinition();
-            var element3 = new StructElementDefinition();
+            var element1 = new StructElementDefinition(IntegerType.Int32);
+            var element2 = new StructElementDefinition(IntegerType.Int32);
+            var element3 = new StructElementDefinition(IntegerType.Int32);
             var structDeclaration = new StructDeclaration(new StructDefinition(element1, element2, element3), new ElementName("x"));
 
             var element = new AssignStatement(
@@ -377,9 +380,9 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_RepeatStatement_Prints()
         {
-            var varX = new Variable("x");
-            var s1 = new AssignStatement(varX, new AddOperation(new Constant(1), new Constant(2)));
-            var s2 = new AssignStatement(new Variable("y"), new MinusOperation(varX));
+            var varX = new Variable(IntegerType.Int32, "x");
+            var s1 = new AssignStatement(varX, new AddOperation(new IntegerConstant(IntegerType.Int32, 1), new IntegerConstant(IntegerType.Int32, 2)));
+            var s2 = new AssignStatement(new Variable(IntegerType.Int32, "y"), new MinusOperation(varX));
             var block = new BlockStatement(new[] {s1, s2});
             
             var repeatStatement = new RepeatStatement(3, block);
@@ -391,7 +394,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_RepeatStatement_Nested_Prints()
         {
-            var statement = new AssignStatement(new Variable("x"), new Constant(1));
+            var statement = new AssignStatement(new Variable(IntegerType.Int32, "x"), new IntegerConstant(IntegerType.Int32, 1));
             
             var innerRepeat = new RepeatStatement(3, statement);
             var rootRepeat = new RepeatStatement(5, innerRepeat);
@@ -410,7 +413,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_ReturnStatement_Prints()
         {
-            var statement = new ReturnStatement(new AddOperation(new Variable("x"), new Constant(1)));
+            var statement = new ReturnStatement(new AddOperation(new Variable(IntegerType.Int32, "x"), new IntegerConstant(IntegerType.Int32, 1)));
 
             var actual = _semanticPrinter.PrintElement(statement);
 
@@ -420,7 +423,7 @@ namespace DynamicSolver.Core.Tests.Semantic.Print
         [Test]
         public void PrintElement_YieldReturnStatement_Prints()
         {
-            var statement = new YieldReturnStatement(new AddOperation(new Variable("x"), new Constant(1)));
+            var statement = new YieldReturnStatement(new AddOperation(new Variable(IntegerType.Int32, "x"), new IntegerConstant(IntegerType.Int32, 1)));
 
             var actual = _semanticPrinter.PrintElement(statement);
 

@@ -1,24 +1,19 @@
 ﻿using System;
+using DynamicSolver.Core.Semantic.Model.Type;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Semantic.Model.Value
 {
-    public class Constant : IValueSource
+    public abstract class Constant : IConstantValue
     {
-        public double Value { get; }
+        [NotNull]
+        public IValueType ValueType { get; }
 
-        public Constant(double value)
+        protected Constant([NotNull] IValueType valueType)
         {
-            if (double.IsNaN(value)) throw new ArgumentException("Value should represent an actual number.");
-            if (double.IsInfinity(value)) throw new ArgumentException("Value should be finite.");
+            ValueType = valueType ?? throw new ArgumentNullException(nameof(valueType));
+        }
 
-            Value = value;
-        }
-        
-        public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)
-        {
-            if (visitor == null) throw new ArgumentNullException(nameof(visitor));
-            return visitor.Visit(this);
-        }
+        public abstract T Accept<T>(ISemanticVisitor<T> visitor);
     }
 }

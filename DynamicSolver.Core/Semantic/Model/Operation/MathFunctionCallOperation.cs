@@ -1,4 +1,5 @@
 ﻿using System;
+using DynamicSolver.Core.Semantic.Model.Type;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Semantic.Model.Operation
@@ -8,6 +9,9 @@ namespace DynamicSolver.Core.Semantic.Model.Operation
         public MathFunction MathFunction { get; }
 
         [NotNull]
+        public IValueType ValueType { get; }
+
+        [NotNull]
         public IValueSource Argument { get; }
 
         public MathFunctionCallOperation(MathFunction mathFunction, [NotNull] IValueSource argument)
@@ -15,12 +19,12 @@ namespace DynamicSolver.Core.Semantic.Model.Operation
             if (argument == null) throw new ArgumentNullException(nameof(argument));
             if (!Enum.IsDefined(typeof(MathFunction), mathFunction)) throw new ArgumentOutOfRangeException(nameof(mathFunction), "Value should be defined in the Function enum.");
 
-
             MathFunction = mathFunction;
             Argument = argument;
+            ValueType = argument.ValueType;
         }
-        
-        public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)
+
+        public T Accept<T>(ISemanticVisitor<T> visitor)
         {
             if (visitor == null) throw new ArgumentNullException(nameof(visitor));
             return visitor.Visit(this);

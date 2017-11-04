@@ -17,7 +17,7 @@ namespace DynamicSolver.Core.Semantic.Model.Statement
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }
         
-        public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)
+        public T Accept<T>(ISemanticVisitor<T> visitor)
         {
             if (visitor == null) throw new ArgumentNullException(nameof(visitor));
             return visitor.Visit(this);

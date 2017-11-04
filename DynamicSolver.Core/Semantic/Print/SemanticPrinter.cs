@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using DynamicSolver.Core.Collections;
 using DynamicSolver.Core.Semantic.Model;
@@ -43,7 +44,12 @@ namespace DynamicSolver.Core.Semantic.Print
                 return _builder.ToString();
             }
 
-            protected override void Visit(Constant constant)
+            protected override void Visit(IntegerConstant constant)
+            {
+                _builder.Append(constant.Value.ToString("D"));
+            }
+
+            protected override void Visit(RealConstant constant)
             {
                 _builder.Append(constant.Value.ToString("G"));
             }
@@ -56,8 +62,9 @@ namespace DynamicSolver.Core.Semantic.Print
 
             protected override void Visit(MinusOperation minusOperation)
             {
-                var shouldAddBracketsAroundOperand = (minusOperation.Operand as Constant)?.Value < 0
-                                                     || (minusOperation.Operand is MinusOperation);
+                var shouldAddBracketsAroundOperand = minusOperation.Operand is MinusOperation
+                                                     || (minusOperation.Operand as IntegerConstant)?.Value < BigInteger.Zero
+                                                     || (minusOperation.Operand as RealConstant)?.Value < 0;
 
                 _builder.Append("-");
 

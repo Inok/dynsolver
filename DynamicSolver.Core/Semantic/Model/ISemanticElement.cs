@@ -1,7 +1,9 @@
-﻿namespace DynamicSolver.Core.Semantic.Model
+﻿using JetBrains.Annotations;
+
+namespace DynamicSolver.Core.Semantic.Model
 {
     public interface ISemanticElement
     {
-        T Accept<T>(ISemanticVisitor<T> visitor);
+        T Accept<T>([NotNull] ISemanticVisitor<T> visitor);
     }
 }

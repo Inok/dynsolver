@@ -1,10 +1,14 @@
 ﻿using System;
+using DynamicSolver.Core.Semantic.Model.Type;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Semantic.Model.Operation
 {
     public class DivideOperation : IValueSource
     {
+        [NotNull]
+        public IValueType ValueType { get; }
+
         [NotNull]
         public IValueSource Left { get; }
 
@@ -15,9 +19,10 @@ namespace DynamicSolver.Core.Semantic.Model.Operation
         {
             Left = left ?? throw new ArgumentNullException(nameof(left));
             Right = right ?? throw new ArgumentNullException(nameof(right));
+            ValueType = MutualValueTypeResolver.GetMutualType(left.ValueType, right.ValueType);
         }
 
-        public T Accept<T>([NotNull] ISemanticVisitor<T> visitor)
+        public T Accept<T>(ISemanticVisitor<T> visitor)
         {
             if (visitor == null) throw new ArgumentNullException(nameof(visitor));
             return visitor.Visit(this);

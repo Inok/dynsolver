@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Linq;
+using DynamicSolver.Core.Semantic.Model.Type;
 using JetBrains.Annotations;
 
 namespace DynamicSolver.Core.Semantic.Model.Struct
 {
     public class StructElementAccessOperation : IValueSource, IValueTarget
     {
+        [NotNull]
+        public IValueType ValueType { get; }
+        
         [NotNull]
         public StructDeclaration StructDeclaration { get; }
 
@@ -23,11 +27,12 @@ namespace DynamicSolver.Core.Semantic.Model.Struct
 
             StructDeclaration = structDeclaration;
             Element = element;
+            ValueType = element.ValueType;
         }
-
 
         public T Accept<T>(ISemanticVisitor<T> visitor)
         {
+            if (visitor == null) throw new ArgumentNullException(nameof(visitor));
             return visitor.Visit(this);
         }
     }

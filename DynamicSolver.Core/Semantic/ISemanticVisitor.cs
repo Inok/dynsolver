@@ -8,7 +8,8 @@ namespace DynamicSolver.Core.Semantic
 {
     public interface ISemanticVisitor<out T>
     {
-        T Visit(Constant constant);
+        T Visit(IntegerConstant constant);
+        T Visit(RealConstant constant);
         T Visit(Variable variable);
         T Visit(MinusOperation minusOperation);
         T Visit(AddOperation addOperation);

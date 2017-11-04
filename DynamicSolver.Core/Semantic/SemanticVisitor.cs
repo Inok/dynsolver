@@ -8,7 +8,8 @@ namespace DynamicSolver.Core.Semantic
 {
     public abstract class SemanticVisitor : ISemanticVisitor<object>
     {
-        protected abstract void Visit(Constant constant);
+        protected abstract void Visit(IntegerConstant constant);
+        protected abstract void Visit(RealConstant constant);
         protected abstract void Visit(Variable variable);
         protected abstract void Visit(MinusOperation minusOperation);
         protected abstract void Visit(AddOperation addOperation);
@@ -25,7 +26,13 @@ namespace DynamicSolver.Core.Semantic
         protected abstract void Visit(ReturnStatement returnStatement);
         protected abstract void Visit(YieldReturnStatement yieldReturnStatement);
 
-        object ISemanticVisitor<object>.Visit(Constant constant)
+        object ISemanticVisitor<object>.Visit(IntegerConstant constant)
+        {
+            Visit(constant);
+            return null;
+        }
+        
+        object ISemanticVisitor<object>.Visit(RealConstant constant)
         {
             Visit(constant);
             return null;
