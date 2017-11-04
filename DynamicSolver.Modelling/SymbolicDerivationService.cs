@@ -5,7 +5,7 @@ using DynamicSolver.Core.Syntax;
 using DynamicSolver.Core.Syntax.Model;
 using JetBrains.Annotations;
 
-namespace DynamicSolver.Core.Derivation
+namespace DynamicSolver.Modelling
 {
     public class SymbolicDerivationService
     {

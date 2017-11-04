@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicSolver.Core.Derivation;
 using DynamicSolver.Core.Execution;
 using DynamicSolver.Core.Syntax.Model;
 using DynamicSolver.Modelling.Solvers;

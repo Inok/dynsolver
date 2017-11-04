@@ -1,9 +1,8 @@
-﻿using DynamicSolver.Core.Derivation;
-using DynamicSolver.Core.Syntax.Model;
+﻿using DynamicSolver.Core.Syntax.Model;
 using DynamicSolver.Core.Syntax.Parser;
 using NUnit.Framework;
 
-namespace DynamicSolver.Core.Tests.Derivation
+namespace DynamicSolver.Modelling.Tests
 {
     [TestFixture]
     public class SymbolicDerivationServiceTests
